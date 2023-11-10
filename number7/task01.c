@@ -53,11 +53,12 @@ int solve1 (double* a, int n){
     int p = 0, q = 0, cnt = 0;
     double sum = 0, srar = 0;
     for (int i = 1; i < n - 1; i ++){
-        if ((a[i] * a[i] < a[i - 1] * a[i + 1]) && !(a[i - 1] * a[i + 1] < 0)){
+        if ((a[i] * a[i] < a[i - 1] * a[i + 1]) && !(a[i - 1] < 0) && !(a[i + 1] < 0)){
             sum += a[i];
             cnt += 1;
         }
     }
+    if (cnt == 0) return n;
     srar = sum / cnt;
     while (p < n){
         if (a[p] >= srar){
