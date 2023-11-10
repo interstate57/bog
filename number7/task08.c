@@ -7,7 +7,8 @@
 int solve8 (const char* name1, double* a, int n);
 int max_suffix_prefix(double* a, int k);
 int equal(double x, double y);
-int main(int argc, char* argv[]){
+int main1(int argc, char* argv[]);
+int main1(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name1;
     char* name2 = 0;
@@ -55,24 +56,28 @@ int solve8 (const char* name1, double* a, int n){
     fp = fopen(name1, "r");
     if (!fp) return ERROR_OPEN;
     while (1){
+        if (k == n){
+            ans += 1;
+            k -= max_suffix_prefix(a, k);
+        }
         if (need_read){
             if (fscanf(fp, "%lf", &current) != 1){
                 break;
             }
             need_read = 0;
         }
-        if (k == n){
-            ans += 1;
-            k-= max_suffix_prefix(a, k);
-        }
         if (!equal(current, a[k])){
-            if (k == 0) need_read = 1;
-            else {
-                k-= max_suffix_prefix(a, k);
+            if (k == 0) {
                 need_read = 1;
             }
+            else {
+                k -= max_suffix_prefix(a, k);
+            }
         }
-        else k += 1;
+        else {
+            k += 1;
+            need_read = 1;
+        }
     }
     if (!feof(fp)){
         fclose(fp);
@@ -92,14 +97,17 @@ int equal(double x, double y){
 int max_suffix_prefix(double* a, int k){
     for (int i = 1; i < k; i ++){
         int f = 1;
-        for (int j = 1; j < k; j ++){
-            if (!equal(a[i + j], a[j])){
+        for (int j = i; j < k; j ++){
+            if (!equal(a[j], a[j-i])){
                 f = 0;
+                break;
+            }
+            else {
             }
         }
         if (f == 1){
             return i;
         }
     }
-    return 0;
+    return k;
 }
