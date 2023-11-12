@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
         return 2;
     }
     t = clock();
-    diff = solve9(a, b, n, m, c);
+    diff = solve2(a, b, n, m, c);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("New array:\n");
     print_array (c, n + m, pa + pb); /* вывод нового состояния массива c */
@@ -141,10 +141,8 @@ int solve2 (double* a, double* b, int n, int m, double* c){
         }
         else{
             c[k] = a[i];
-            c[k + 1] = a[i];
             i += 1;
-            j += 1;
-            k += 2;
+            k += 1;
         }
     }
     if (i == n){

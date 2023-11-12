@@ -4,12 +4,12 @@
 #include <math.h>
 #include "array_io.h"
 #define EPS 1e-14
-int solve4 (double* a, int n);
+int solve6 (double* a, int n);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
-    int task = 4;
+    int task = 6;
     double* a;
     double t;
     int diff = 0;
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
     else init_array(a, n, s);
     print_array(a, n, p);
     t = clock();
-    diff = solve4(a, n);
+    diff = solve6(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
@@ -50,17 +50,24 @@ int main(int argc, char* argv[]){
     free(a);
     return SUCCESS;
 }
-int solve4 (double* a, int n){
+int solve6 (double* a, int n){
     int i, j;
     int ans = 0;
-    double per = 0;
-    for (i = 0; i < n; i ++){
-        for (j = i; j < n - 1; j ++){
-            if (a[j] > a[j + 1]){
-                per = a[j];
-                a[j] = a[j + 1];
-                a[j + 1] = per;
+    for (i = 1; i < n; i ++){
+        int nuzh = -1;
+        double vr = 0;
+        for (j = 0; j < i ; j ++){
+            if (a[j] > a[i]){
+                nuzh = j;
+                break;
             }
+        }
+        if (nuzh != -1){
+            vr = a[i];
+            for (j = i; j > nuzh; j --){
+                a[j] = a[j - 1];
+            }
+            a[nuzh] = vr;
         }
     }
     for (i = 0; i < n - 1; i ++){

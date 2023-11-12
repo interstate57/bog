@@ -4,13 +4,15 @@
 #include <math.h>
 #include "array_io.h"
 #define EPS 1e-14
-int solve4 (double* a, int n);
+int solve8 (double* a, double* b, int n);
+void merge (double* a, double* b, int n, int m, double* c);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
-    int task = 4;
+    int task = 8;
     double* a;
+    double* b;
     double t;
     int diff = 0;
     if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 && sscanf(argv[3], "%d", &s) == 1)){
@@ -41,8 +43,13 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, s);
     print_array(a, n, p);
+    b = (double*)malloc(n * sizeof(double));
+    if (!b){
+        printf("Not enough memory!\n");
+        return 2;
+    }
     t = clock();
-    diff = solve4(a, n);
+    diff = solve8(a, b, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
@@ -50,21 +57,36 @@ int main(int argc, char* argv[]){
     free(a);
     return SUCCESS;
 }
-int solve4 (double* a, int n){
-    int i, j;
-    int ans = 0;
-    double per = 0;
-    for (i = 0; i < n; i ++){
-        for (j = i; j < n - 1; j ++){
-            if (a[j] > a[j + 1]){
-                per = a[j];
-                a[j] = a[j + 1];
-                a[j + 1] = per;
+int solve8 (double* a, double* b, int n){
+    int i;
+    int ans = 0, j = 1;
+    double* a_orig = a;
+    double* c;
+    while (j < n){
+        for (i = 0; i < n; i += 2 * j){
+            if (i + 2 * j >= n){
+                if (i + j >= n){
+                    merge(a + i, a, n - i, 0, b + i);
+                }
+                else{
+                    merge(a + i, a + i + j, j, n - i - j, b + i);
+                }
+                
+            }
+            else{
+                merge(a + i, a + i + j, j, j, b + i);
             }
         }
+        c = a;
+        a = b;
+        b = c;
+        j *= 2;
     }
-    for (i = 0; i < n - 1; i ++){
-        if (a[i] < a[i + 1]) ans += 1;
+    if (a != a_orig){
+        for (int k = 0; k < n; k ++){
+            a_orig[k] = a[k];
+            if (a[k] > a[k - 1] && k != 0) ans += 1;
+        }
     }
     return ans;
 }
@@ -74,5 +96,38 @@ int equal(double x, double y){
     }
     else{
         return 0;
+    }
+}
+void merge (double* a, double* b, int n, int m, double* c){
+    int i = 0, j = 0, k = 0;
+    printf("%d, %d\n", n, m);
+    while (i != n && j != m){
+        if (a[i] < b[j]){
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+        else if (a[i] > b[j]){
+            c[k] = b[j];
+            j += 1;
+            k += 1;
+        }
+        else{
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+    }
+    if (i == n){
+        for (; j < m; j ++){
+            c[k] = b[j];
+            k += 1;
+        }
+    }
+    else if (j == m){
+        for (; i < n; i ++){
+            c[k] = a[i];
+            k += 1;
+        }
     }
 }

@@ -54,11 +54,11 @@ int solve1 (double x, double* a, int n){
     }
     while (inach != ikon){
         s = (inach + ikon) / 2;
-        if (a[s] > x){
-            ikon = s;
+        if (a[s] < x){
+            inach = s + 1;
         }
         else{
-            inach = s + 1;
+            ikon = s;
         }
     }
     return inach;
