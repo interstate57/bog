@@ -54,7 +54,7 @@ int solve1 (double* a, int n){
     int i, j;
     int ans = 0;
     double per = 0;
-    for (i = 0; i < n - 1; i ++){
+    for (i = 0; i < n; i ++){
         for (j = i; j < n - 1; j ++){
             if (a[j] > a[j + 1]){
                 per = a[j];
