@@ -78,6 +78,7 @@ int solve5 (int k, double* a, int n){
         cnt_itog += cnt_current;
     }
     if (f1 == 0) return n;
+    if (cnt_itog == 0) return n;
     srar = sum_itog / cnt_itog;
     while (p < n){
         if (a[p] >= srar){

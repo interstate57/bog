@@ -9,7 +9,7 @@ int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
-    int task = 2;
+    int task = 3;
     double* a;
     double t;
     int res = 0;
@@ -54,12 +54,12 @@ int solve3 (double* a, int n){
     int p = 0, q = 0, cnt_current = 0, f = 0, cnt_max = 0;
     double sum_current = 0, srar = 0, sum_max = 0;
     for (int i = 1; i < n; i ++){
-        if (equal(a[i - 1], a[i]) && f == 0){
+        if (a[i] >= a[i - 1] && f == 0){
             f = 1;
             cnt_current += 2;
             sum_current += a[i - 1] + a[i];
         }
-        else if (equal(a[i - 1], a[i]) && f == 1){
+        else if (a[i] >= a[i - 1] && f == 1){
             cnt_current += 1;
             sum_current += a[i];
         }
@@ -77,6 +77,7 @@ int solve3 (double* a, int n){
         sum_max = sum_current;
         cnt_max = cnt_current;
     }
+    if (cnt_max == 0) return n;
     srar = sum_max / cnt_max;
     while (p < n){
         if (a[p] >= srar){

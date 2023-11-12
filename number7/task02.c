@@ -67,6 +67,7 @@ int solve2 (double* a, int n){
             f = 0;
         }
     }
+    if (cnt == 0) return n;
     srar = sum / cnt;
     while (p < n){
         if (a[p] >= srar){
