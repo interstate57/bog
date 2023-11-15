@@ -85,7 +85,7 @@ int solve8 (double* a, double* b, int n){
     if (a != a_orig){
         for (int k = 0; k < n; k ++){
             a_orig[k] = a[k];
-            if (a[k] > a[k - 1] && k != 0) ans += 1;
+            if (a[k] < a[k - 1] && k != 0) ans += 1;
         }
     }
     return ans;

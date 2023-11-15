@@ -69,7 +69,7 @@ int solve7 (double* a, int n){
         printf("\n");
     }
     for (i = 1; i < n; i ++){
-        if (a[i] > a[i - 1]) ans += 1;
+        if (a[i] < a[i - 1]) ans += 1;
     }
     return ans;
 }

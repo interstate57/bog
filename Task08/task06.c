@@ -70,8 +70,8 @@ int solve6 (double* a, int n){
             a[nuzh] = vr;
         }
     }
-    for (i = 0; i < n - 1; i ++){
-        if (a[i] < a[i + 1]) ans += 1;
+    for (i = 1; i < n; i ++){
+        if (a[i] < a[i - 1]) ans += 1;
     }
     return ans;
 }
