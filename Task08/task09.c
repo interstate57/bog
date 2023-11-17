@@ -59,24 +59,28 @@ void solve9 (double* a, int n){
     if (n <= 1){
         return;
     }
-    printf("Current array:\n");
+    printf("----- На входе: -----\n");
     print_array(a, n, n);
-    printf("\n");
     sr = (n - 1) / 2;
-    printf("Sr = %d; a[sr] = %lf ", sr, a[sr]);
+    printf("Разделяющий элемент: %lf ", a[sr]);
     i = polov_sort(a[sr], a, n);
     printf("i = %d\n", i);
-    printf("Changed array:\n");
     if (i == 0){
         per = a[i];
         a[i] = a[sr];
-        a[sr] = per; 
+        a[sr] = per;
+        solve9(a + 1, n - 1);
     }
+    printf("После свопов:\n");
     print_array(a, n, n);
-    printf("\n");
-    solve9(a + 0, i + 1);
-    solve9(a + i + 1, n - i - 1);
+    if (i > 0) {
+        solve9(a + 0, i);
+        solve9(a + i, n - i);
+    }
+    printf("Отсортировано:\n");
+    print_array(a, n, n);
 }
+
 int equal(double x, double y){
     if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){
         return 1;
