@@ -4,7 +4,7 @@
 #include <math.h>
 #include "array_io.h"
 #define EPS 1e-14
-int solve8 (double* a, double* b, int n);
+void solve8 (double* a, double* b, int n);
 void merge (double* a, double* b, int n, int m, double* c);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
@@ -49,17 +49,18 @@ int main(int argc, char* argv[]){
         return 2;
     }
     t = clock();
-    diff = solve8(a, b, n);
+    solve8(a, b, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
+    diff = difference(a, n);
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     free(a);
     return SUCCESS;
 }
-int solve8 (double* a, double* b, int n){
+void solve8 (double* a, double* b, int n){
     int i;
-    int ans = 0, j = 1;
+    int j = 1;
     double* a_orig = a;
     double* c;
     while (j < n){
@@ -85,10 +86,8 @@ int solve8 (double* a, double* b, int n){
     if (a != a_orig){
         for (int k = 0; k < n; k ++){
             a_orig[k] = a[k];
-            if (a[k] < a[k - 1] && k != 0) ans += 1;
         }
     }
-    return ans;
 }
 int equal(double x, double y){
     if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){

@@ -4,14 +4,13 @@
 #include <math.h>
 #define EPS 1e-14
 #include "array_io.h"
-int solve1 (double x, double* a, int n);
-double maxch(double a, double b);
+int solve3 (double x, double* a, int n);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     double x = 0; 
     char* name = 0;
-    int task = 1;
+    int task = 3;
     double* a;
     double t;
     int res = 0;
@@ -39,9 +38,8 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, s);
     print_array(a, n, p);
-    printf("\n");
     t = clock();
-    res = solve1(x, a, n);
+    res = solve3(x, a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
@@ -50,11 +48,10 @@ int main(int argc, char* argv[]){
     return SUCCESS;
 }
 
-int solve1 (double x, double* a, int n){
+int solve3 (double x, double* a, int n){
     int inuzh = 0, jnuzh = n - 1;
     int i = 0, j = n - 1;
     double vr = 0;
-    printf("%d\n", n);
     while (i <= j){
         while (i < n){
             if (a[i] >= x){
@@ -75,9 +72,6 @@ int solve1 (double x, double* a, int n){
             a[jnuzh] = a[inuzh];
             a[inuzh] = vr;
         }
-        printf("%d, %d\n", inuzh, jnuzh);
-        print_array (a, n, n);
-        printf("\n");
     }
     return i;
 }

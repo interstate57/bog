@@ -3,9 +3,9 @@
 #include <time.h>
 #include "array_io.h"
 int equal(double x, double y);
-int solve2 (double* a, double* b, int n, int m, double* c);
+void solve2 (double* a, double* b, int n, int m, double* c);
 int main(int argc, char* argv[]){
-    int n = 0, pa = 0, sa = 0, m = 0, pb = 0, sb = 0;
+    int n = 0, pa = 0, sa = 0, m = 0, pb = 0, sb = 0, diff = 0;
     char* name1 = 0;
     char* name2 = 0;
     int task = 2;
@@ -13,7 +13,6 @@ int main(int argc, char* argv[]){
     double* b;
     double* c;
     double t;
-    int diff = 0;
     int has_formula_1 = 0, has_formula_2 = 0;
     if (argc == 9 || argc == 8 || argc == 7){
         if (!(sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &pa) == 1 && sscanf(argv[3], "%d", &sa) == 1)){
@@ -115,8 +114,9 @@ int main(int argc, char* argv[]){
         return 2;
     }
     t = clock();
-    diff = solve2(a, b, n, m, c);
+    solve2(a, b, n, m, c);
     t = (clock() - t) / CLOCKS_PER_SEC;
+    diff = difference (c, n + m);
     printf ("New array:\n");
     print_array (c, n + m, pa + pb); /* вывод нового состояния массива c */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
@@ -125,14 +125,13 @@ int main(int argc, char* argv[]){
     free(c);
     return SUCCESS;
 }
-int solve2 (double* a, double* b, int n, int m, double* c){
-    int i = 0, j = 0, k = 0, ans = 0;
+void solve2 (double* a, double* b, int n, int m, double* c){
+    int i = 0, j = 0, k = 0;
     while (i != n && j != m){
         if (a[i] < b[j]){
             c[k] = a[i];
             i += 1;
             k += 1;
-            ans += 1;
         }
         else if (a[i] > b[j]){
             c[k] = b[j];
@@ -157,5 +156,4 @@ int solve2 (double* a, double* b, int n, int m, double* c){
             k += 1;
         }
     }
-    return k;
 }

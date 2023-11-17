@@ -4,7 +4,7 @@
 #include <math.h>
 #include "array_io.h"
 #define EPS 1e-14
-int solve7 (double* a, int n);
+void solve7 (double* a, int n);
 int binpoisk (double x, double* a, int n);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
@@ -42,19 +42,18 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, s);
     print_array(a, n, p);
-    printf("\n");
     t = clock();
-    diff = solve7(a, n);
+    solve7(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
+    diff = difference(a, n);
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     free(a);
     return SUCCESS;
 }
-int solve7 (double* a, int n){
+void solve7 (double* a, int n){
     int i, j;
-    int ans = 0;
     for (i = 1; i < n; i ++){
         int nuzh = binpoisk(a[i], a, i + 1);
         double vr = 0;
@@ -65,13 +64,7 @@ int solve7 (double* a, int n){
             }
             a[nuzh] = vr;
         }
-        print_array(a, n, n);
-        printf("\n");
     }
-    for (i = 1; i < n; i ++){
-        if (a[i] < a[i - 1]) ans += 1;
-    }
-    return ans;
 }
 int equal(double x, double y){
     if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){

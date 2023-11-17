@@ -4,12 +4,13 @@
 #include <math.h>
 #include "array_io.h"
 #define EPS 1e-14
-void solve5 (double* a, int n);
+void solve9 (double* a, int n);
+int polov_sort (double x, double* a, int n);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
-    int task = 5;
+    int task = 7;
     double* a;
     double t;
     int diff = 0;
@@ -42,7 +43,7 @@ int main(int argc, char* argv[]){
     else init_array(a, n, s);
     print_array(a, n, p);
     t = clock();
-    solve5(a, n);
+    solve9(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
     diff = difference(a, n);
     printf ("New array:\n");
@@ -51,23 +52,16 @@ int main(int argc, char* argv[]){
     free(a);
     return SUCCESS;
 }
-void solve5 (double* a, int n){
-    int i, j;
-    double per = 0;
-    for (i = 0; i < n - 1; i ++){
-        int mini = n;
-        double minch = 1e304;
-        for (j = i; j < n; j ++){
-            if (a[j] < minch){
-                mini = j;
-                minch = a[j];
-            }
-        }
-        per = a[i];
-        a[i] = a[mini];
-        a[mini] = per;
-
+void solve9 (double* a, int n){
+    int i = 0, j = n - 1; 
+    double sr = 0;
+    if (n <= 1){
+        return;
     }
+    sr = a[(i + j) / 2];
+    i = polov_sort(sr, a, n);
+    solve9(a + 0, i);
+    solve9(a + i + 1, n - i - 1);
 }
 int equal(double x, double y){
     if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){
@@ -76,4 +70,31 @@ int equal(double x, double y){
     else{
         return 0;
     }
+}
+int polov_sort (double x, double* a, int n){
+    int inuzh = 0, jnuzh = n - 1;
+    int i = 0, j = n - 1;
+    double vr = 0;
+    while (i <= j){
+        while (i < n){
+            if (a[i] >= x){
+                inuzh = i;
+                break;
+            }
+            i += 1;
+        }
+        while (j > -1){
+            if (a[j] < x){
+                jnuzh = j;
+                break;
+            }
+            j -= 1;
+        }
+        if (i <= j){
+            vr = a[jnuzh];
+            a[jnuzh] = a[inuzh];
+            a[inuzh] = vr;
+        }
+    }
+    return i;
 }
