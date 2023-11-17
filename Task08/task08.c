@@ -99,7 +99,6 @@ int equal(double x, double y){
 }
 void merge (double* a, double* b, int n, int m, double* c){
     int i = 0, j = 0, k = 0;
-    printf("%d, %d\n", n, m);
     while (i != n && j != m){
         if (a[i] < b[j]){
             c[k] = a[i];

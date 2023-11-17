@@ -42,6 +42,7 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, s);
     print_array(a, n, p);
+    printf("\n");
     t = clock();
     solve9(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
@@ -53,14 +54,27 @@ int main(int argc, char* argv[]){
     return SUCCESS;
 }
 void solve9 (double* a, int n){
-    int i = 0, j = n - 1; 
-    double sr = 0;
+    int i = 0, sr = 0; 
+    double per = 0;
     if (n <= 1){
         return;
     }
-    sr = a[(i + j) / 2];
-    i = polov_sort(sr, a, n);
-    solve9(a + 0, i);
+    printf("Current array:\n");
+    print_array(a, n, n);
+    printf("\n");
+    sr = (n - 1) / 2;
+    printf("Sr = %d; a[sr] = %lf ", sr, a[sr]);
+    i = polov_sort(a[sr], a, n);
+    printf("i = %d\n", i);
+    printf("Changed array:\n");
+    if (i == 0){
+        per = a[i];
+        a[i] = a[sr];
+        a[sr] = per; 
+    }
+    print_array(a, n, n);
+    printf("\n");
+    solve9(a + 0, i + 1);
     solve9(a + i + 1, n - i - 1);
 }
 int equal(double x, double y){
