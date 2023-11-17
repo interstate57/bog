@@ -1,5 +1,5 @@
 OPTS = -O3 -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-align -Werror -pedantic -pedantic-errors -Wfloat-equal -Wpointer-arith -Wformat-security -Wmissing-format-attribute -Wformat=1 -Wwrite-strings -Wcast-align -Wno-long-long -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -Wdeclaration-after-statement -Wbad-function-cast -Wnested-externs
-all: a01.out a02.out a03.out a04.out a05.out a06.out a07.out a08.out a09.out
+all: a01.out a02.out a03.out a04.out a05.out a06.out a07.out a08.out a09.out rand_test
 a01.out: task01.o array_io.o
 	gcc $(OPTS) task01.o array_io.o -o a01.out
 task01.o: task01.c array_io.h
@@ -38,3 +38,8 @@ a09.out: task09.o array_io.o
 	gcc $(OPTS) task09.o array_io.o -o a09.out
 task09.o: task09.c array_io.h
 	gcc -c $(OPTS) task09.c
+
+rand_sort.o : rand_sort.c array_io.h
+	gcc -c $(OPTS) rand_sort.c
+rand_test : rand_sort.o array_io.o
+	gcc $(OPTS) rand_sort.o array_io.o -o rand_test
