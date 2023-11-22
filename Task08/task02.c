@@ -2,34 +2,37 @@
 #include <stdlib.h>
 #include <time.h>
 #include "array_io.h"
+#include "functions.h"
 int equal(double x, double y);
-void solve2 (double* a, double* b, int n, int m, double* c);
+void solve2 (double* a, double* b, int n, int m, double* c, int (*cmp)(double, double));
 int main(int argc, char* argv[]){
     int n = 0, pa = 0, sa = 0, m = 0, pb = 0, sb = 0, diff = 0;
     char* name1 = 0;
     char* name2 = 0;
     int task = 2;
+    int c = 0;
+    int (*cmp) (double, double);
     double* a;
     double* b;
     double* c;
     double t;
     int has_formula_1 = 0, has_formula_2 = 0;
-    if (argc == 9 || argc == 8 || argc == 7){
-        if (!(sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &pa) == 1 && sscanf(argv[3], "%d", &sa) == 1)){
+    if (argc == 10 || argc == 9 || argc == 8){
+        if (!(sscanf(argv[1], "%d", &c) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &pa) == 1 && sscanf(argv[4], "%d", &sa) == 1)){
             printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
             return 6;
         }
         else{
             has_formula_1 = (sa != 0);
             if (has_formula_1){
-                if (!(sscanf(argv[4], "%d", &m) == 1 && sscanf(argv[5], "%d", &pb) == 1 && sscanf(argv[6], "%d", &sb) == 1)){
+                if (!(sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1 && sscanf(argv[7], "%d", &sb) == 1)){
                     printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
                 has_formula_2 = (sb != 0); 
             }
             else{
-                if (!(sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1 && sscanf(argv[7], "%d", &sb) == 1)){
+                if (!(sscanf(argv[6], "%d", &m) == 1 && sscanf(argv[7], "%d", &pb) == 1 && sscanf(argv[8], "%d", &sb) == 1)){
                     printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
@@ -42,14 +45,23 @@ int main(int argc, char* argv[]){
         return 6;
     }
     if (!has_formula_1 && !has_formula_2){
-        name1 = argv[4];
-        name2 = argv[8];
+        name1 = argv[5];
+        name2 = argv[9];
     }
     else if (!has_formula_1 && has_formula_2){
-        name1 = argv[4];
+        name1 = argv[5];
     }
     else if (has_formula_1 && !has_formula_2){
-        name2 = argv[7];
+        name2 = argv[8];
+    }
+    if (c == 1){
+        cmp = vosrastanie;
+    }
+    else if (c == 2){
+        cmp = ubuvanie;
+    }
+    else{
+        return 6;
     }
     a = (double*)malloc(n * sizeof(double));
     if (!a){
@@ -114,7 +126,7 @@ int main(int argc, char* argv[]){
         return 2;
     }
     t = clock();
-    solve2(a, b, n, m, c);
+    solve2(a, b, n, m, c, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
     diff = difference (c, n + m);
     printf ("New array:\n");
@@ -125,15 +137,15 @@ int main(int argc, char* argv[]){
     free(c);
     return SUCCESS;
 }
-void solve2 (double* a, double* b, int n, int m, double* c){
+void solve2 (double* a, double* b, int n, int m, double* c, int (*cmp)(double, double)){
     int i = 0, j = 0, k = 0;
     while (i != n && j != m){
-        if (a[i] < b[j]){
+        if (cmp(a[i], b[j]) > 0){
             c[k] = a[i];
             i += 1;
             k += 1;
         }
-        else if (a[i] > b[j]){
+        else if (cmp(b[j], a[i]) > 0){
             c[k] = b[j];
             j += 1;
             k += 1;

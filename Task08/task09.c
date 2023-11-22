@@ -3,14 +3,13 @@
 #include <time.h>
 #include <math.h>
 #include "array_io.h"
-#define EPS 1e-14
 void solve9 (double* a, int n);
 int polov_sort (double x, double* a, int n);
 int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
-    int task = 7;
+    int task = 9;
     double* a;
     double t;
     int diff = 0;
@@ -42,7 +41,6 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, s);
     print_array(a, n, p);
-    printf("\n");
     t = clock();
     solve9(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
@@ -56,39 +54,32 @@ int main(int argc, char* argv[]){
 void solve9 (double* a, int n){
     int i = 0, sr = 0; 
     double per = 0;
-    if (n <= 1){
-        return;
+    while (n > 1){
+        sr = (n - 1) / 2;
+        i = polov_sort(a[sr], a, n);
+        if (i > n - i){
+            solve9(a + i, n - i);
+            continue;
+        }
+        else{
+            if (i == 0){
+                per = a[i];
+                a[i] = a[sr];
+                a[sr] = per;
+                a += 1;
+                n -= 1;
+                continue;
+            }
+            if (i > 0) {
+                solve9(a + 0, i);
+                a += i;
+                n -= i;
+                continue;
+            }
+        }
     }
-    printf("----- На входе: -----\n");
-    print_array(a, n, n);
-    sr = (n - 1) / 2;
-    printf("Разделяющий элемент: %lf ", a[sr]);
-    i = polov_sort(a[sr], a, n);
-    printf("i = %d\n", i);
-    if (i == 0){
-        per = a[i];
-        a[i] = a[sr];
-        a[sr] = per;
-        solve9(a + 1, n - 1);
-    }
-    printf("После свопов:\n");
-    print_array(a, n, n);
-    if (i > 0) {
-        solve9(a + 0, i);
-        solve9(a + i, n - i);
-    }
-    printf("Отсортировано:\n");
-    print_array(a, n, n);
 }
 
-int equal(double x, double y){
-    if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){
-        return 1;
-    }
-    else{
-        return 0;
-    }
-}
 int polov_sort (double x, double* a, int n){
     int inuzh = 0, jnuzh = n - 1;
     int i = 0, j = n - 1;
@@ -116,3 +107,4 @@ int polov_sort (double x, double* a, int n){
     }
     return i;
 }
+

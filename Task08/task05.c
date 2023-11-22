@@ -3,25 +3,35 @@
 #include <time.h>
 #include <math.h>
 #include "array_io.h"
-#define EPS 1e-14
-void solve5 (double* a, int n);
-int equal(double x, double y);
+#include "functions.h"
+void solve5 (double* a, int n, int (*cmp)(double, double));
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;
     int task = 5;
+    int c = 0;
+    int (*cmp) (double, double);
     double* a;
     double t;
     int diff = 0;
-    if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 && sscanf(argv[3], "%d", &s) == 1)){
-        printf("Usage: %s n p s [name]\n", argv[0]);
+    if (!((argc == 5 || argc == 6) && sscanf(argv[1], "%d", &c) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1)){
+        printf("Usage: %s c n p s [name]\n", argv[0]);
         return 6;
     }
     if (n <= 0 || p < 0){
-        printf("Usage: %s n p s [name]\n", argv[0]);
+        printf("Usage: %s c n p s [name]\n", argv[0]);
         return 6;
     }
-    if (argc == 5 && s == 0) name = argv[4];
+    if (argc == 6 && s == 0) name = argv[5];
+    if (c == 1){
+        cmp = vosrastanie;
+    }
+    else if (c == 2){
+        cmp = ubuvanie;
+    }
+    else{
+        return 6;
+    }
     a = (double*)malloc(n * sizeof(double));
     if (!a){
         printf("Not enough memory!\n");
@@ -42,7 +52,7 @@ int main(int argc, char* argv[]){
     else init_array(a, n, s);
     print_array(a, n, p);
     t = clock();
-    solve5(a, n);
+    solve5(a, n, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
     diff = difference(a, n);
     printf ("New array:\n");
@@ -51,7 +61,7 @@ int main(int argc, char* argv[]){
     free(a);
     return SUCCESS;
 }
-void solve5 (double* a, int n){
+void solve5 (double* a, int n, int (*cmp)(double, double)){
     int i, j;
     double per = 0;
     for (i = 0; i < n - 1; i ++){

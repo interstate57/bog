@@ -56,6 +56,7 @@ int main(int argc, char* argv[]){
     print_array (a, n, p); /* вывод нового состояния массива a */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     free(a);
+    free(b);
     return SUCCESS;
 }
 void solve8 (double* a, double* b, int n){
