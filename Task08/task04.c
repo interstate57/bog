@@ -54,7 +54,7 @@ int main(int argc, char* argv[]){
     t = clock();
     solve4(a, n, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
-    diff = difference(a, n);
+    diff = difference(a, n, cmp);
     printf ("New array:\n");
     print_array (a, n, p); /* вывод нового состояния массива a */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);

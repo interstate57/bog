@@ -128,7 +128,7 @@ int main(int argc, char* argv[]){
     t = clock();
     solve2(a, b, n, m, c, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
-    diff = difference (c, n + m);
+    diff = difference (c, n + m, cmp);
     printf ("New array:\n");
     print_array (c, n + m, pa + pb); /* вывод нового состояния массива c */
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);

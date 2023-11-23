@@ -73,7 +73,7 @@ int solve3 (double x, double* a, int n, int (*cmp)(double, double)){
             i += 1;
         }
         while (j > -1){
-            if (cmp(a[j], x) >= 0){
+            if (cmp(a[j], x) > 0){
                 jnuzh = j;
                 break;
             }
