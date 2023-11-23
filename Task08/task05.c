@@ -65,10 +65,10 @@ void solve5 (double* a, int n, int (*cmp)(double, double)){
     int i, j;
     double per = 0;
     for (i = 0; i < n - 1; i ++){
-        int mini = n;
-        double minch = 1e304;
+        int mini = i;
+        double minch = a[i];
         for (j = i; j < n; j ++){
-            if (a[j] < minch){
+            if (cmp(minch, a[j]) < 0){
                 mini = j;
                 minch = a[j];
             }
@@ -76,14 +76,5 @@ void solve5 (double* a, int n, int (*cmp)(double, double)){
         per = a[i];
         a[i] = a[mini];
         a[mini] = per;
-
-    }
-}
-int equal(double x, double y){
-    if ((fabs (x - y)) < (EPS * (fabs (x) + fabs (y)))){
-        return 1;
-    }
-    else{
-        return 0;
     }
 }

@@ -5,7 +5,6 @@
 #include "array_io.h"
 #include "functions.h"
 void solve4 (double* a, int n, int (*cmp)(double, double));
-int equal(double x, double y);
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0;
     char* name = 0;

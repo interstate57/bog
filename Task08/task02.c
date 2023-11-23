@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
     int task = 2;
-    int c = 0;
+    int c1 = 0;
     int (*cmp) (double, double);
     double* a;
     double* b;
@@ -18,22 +18,22 @@ int main(int argc, char* argv[]){
     double t;
     int has_formula_1 = 0, has_formula_2 = 0;
     if (argc == 10 || argc == 9 || argc == 8){
-        if (!(sscanf(argv[1], "%d", &c) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &pa) == 1 && sscanf(argv[4], "%d", &sa) == 1)){
-            printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
+        if (!(sscanf(argv[1], "%d", &c1) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &pa) == 1 && sscanf(argv[4], "%d", &sa) == 1)){
+            printf("Usage: %s c n pa sa [name1] m pb sb [name2]\n", argv[0]);
             return 6;
         }
         else{
             has_formula_1 = (sa != 0);
             if (has_formula_1){
                 if (!(sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1 && sscanf(argv[7], "%d", &sb) == 1)){
-                    printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
+                    printf("Usage: %s c n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
                 has_formula_2 = (sb != 0); 
             }
             else{
                 if (!(sscanf(argv[6], "%d", &m) == 1 && sscanf(argv[7], "%d", &pb) == 1 && sscanf(argv[8], "%d", &sb) == 1)){
-                    printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
+                    printf("Usage: %s c n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
                 has_formula_2 = (sb != 0);
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]){
         }
     }
     else {
-        printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
+        printf("Usage: %s c n pa sa [name1] m pb sb [name2]\n", argv[0]);
         return 6;
     }
     if (!has_formula_1 && !has_formula_2){
@@ -54,10 +54,10 @@ int main(int argc, char* argv[]){
     else if (has_formula_1 && !has_formula_2){
         name2 = argv[8];
     }
-    if (c == 1){
+    if (c1 == 1){
         cmp = vosrastanie;
     }
-    else if (c == 2){
+    else if (c1 == 2){
         cmp = ubuvanie;
     }
     else{
