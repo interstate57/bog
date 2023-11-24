@@ -49,6 +49,13 @@ int main(int argc, char* argv[]){
         }
     }
     else init_array(a, n, s);
+    for (int i = 0; i < n - 1; i ++){
+        if (cmp(a[i + 1], a[i]) > 0){
+            printf("Araay a is not an increasing one\n");
+            free(a);
+            return 5;
+        }
+    }
     print_array(a, n, p);
     t = clock();
     res = solve1(x, a, n, cmp);

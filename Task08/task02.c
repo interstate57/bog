@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
     }
     else init_array(a, n, sa);
     for (int i = 0; i < n - 1; i ++){
-        if (a[i] > a[i + 1]){
+        if (cmp(a[i], a[i + 1]) < 0){
             printf("Araay a is not an increasing one\n");
             free(a);
             return 5;
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
     }
     else init_array(b, m, sb);
     for (int i = 0; i < m - 1; i ++){
-        if (b[i] > b[i + 1]){
+        if (cmp(b[i], b[i + 1]) < 0){
             printf("Araay b is not an increasing one\n");
             free(a);
             free(b);
