@@ -70,6 +70,8 @@ int main(int argc, char* argv[]){
 void solve10(double *a, int n, int (*cmp)(double, double)){
     double per = 0;
     heapify(a, n, cmp);
+    printf("\n");
+    print_array(a, n, n);
     for (int i = 1; i < n; i ++){
         per = a[0];
         a[0] = a[n - i];
@@ -83,44 +85,56 @@ void perestroika_snizu(double *a, int n, int (*cmp)(double, double)){
     int wrong = n - 1;
     while (wrong != 0){
         if (cmp(a[wrong], a[parent(wrong)]) >= 0) /*a[wrong] <= a[parent(wrong)]*/{
+            per = a[n - 1];
+            for (int i = n - 1; i > wrong; i = parent(i)){
+                a[i] = a[parent(i)];
+            }
+            a[wrong] = per;
             break;
         }
         else{
-            per = a[wrong];
-            a[wrong] = a[parent(wrong)];
-            a[parent(wrong)] = per;
             wrong = parent(wrong);
         }
     }
 }
 void perestroika_sverhu(double *a, int n, int (*cmp)(double, double)){
-    double per = 0;
-    int wrong = 0;
+    int j = 0;
+    int wrong = 0, dlina = 0;
+    double M = a[0];
+    long long kod = 1;
     while (right_son(wrong) < n){
-        if (cmp(a[left_son(wrong)], a[wrong]) >= 0 /*a[wrong] >= a[left_son(wrong)]*/ && cmp(a[right_son(wrong)], a[wrong]) >= 0 /*a[wrong] >= a[right_son(wrong)]*/){
+        if (cmp(a[left_son(wrong)], M) >= 0 && cmp(a[right_son(wrong)], M) >= 0){
             break;
         }
         else{
-            if (cmp(a[right_son(wrong)], a[left_son(wrong)]) >= 0 /*a[left_son(wrong)] >= a[right_son(wrong)]*/){
-                per = a[wrong];
-                a[wrong] = a[left_son(wrong)];
-                a[left_son(wrong)] = per;
+            kod = kod << 1;
+            dlina += 1;
+            if (cmp(a[right_son(wrong)], a[left_son(wrong)]) >= 0){
                 wrong = left_son(wrong);
             }
             else{
-                per = a[wrong];
-                a[wrong] = a[right_son(wrong)];
-                a[right_son(wrong)] = per;
+                kod += 1;
                 wrong = right_son(wrong);
             }
         }
     }
-    if (left_son(wrong) == n - 1 && cmp(a[wrong], a[left_son(wrong)]) > 0 /*a[wrong] < a[left_son(wrong)]*/){
-        per = a[wrong];
-        a[wrong] = a[left_son(wrong)];
-        a[left_son(wrong)] = per;
+    if (left_son(wrong) == n - 1 && cmp(M, a[left_son(wrong)]) > 0){
+        kod = kod << 1;
+        dlina += 1;
         wrong = left_son(wrong);
     }
+    while (j < wrong){
+        if (((1 << dlina) & kod) == 0){
+            a[j] = a[left_son(j)];
+            j = left_son(j);
+        }
+        else{
+            a[j] = a[right_son(j)];
+            j = right_son(j);
+        }
+        dlina -= 1;
+    }
+    a[wrong] = M;
 }
 int parent(int a){
     return (a - 1) / 2;
@@ -133,6 +147,8 @@ int right_son(int i){
 }
 void heapify(double *a, int n, int (*cmp)(double, double)){
     for (int i = 1; i < n; i ++){
-        perestroika_snizu(a, i + 1, cmp);
+        perestroika_snizu(a, i + 1, cmp);print_array(a, i+1, i+1);
+        printf(" *** \n");
+        print_array(a, i + 1, i + 1);
     }
 }
