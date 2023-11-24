@@ -48,11 +48,11 @@ void print_array (double* a, int n, int p){
         }
     }
 }
-int difference (double* a, int n){
+int difference (double* a, int n, int (*cmp)(double, double)){
     int i;
     int ans = 0;
     for (i = 1; i < n; i ++){
-        if (a[i] < a[i - 1]) ans += 1;
+        if (cmp(a[i], a[i - 1]) > 0) ans += 1;
     }
     return ans;
 }

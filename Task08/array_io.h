@@ -6,5 +6,5 @@
 void print_array (double* a, int n, int p);
 void init_array (double* a, int n, int s);
 int read_array (double*, int, const char*);
-int difference(double* a, int n);
+int difference(double* a, int n, int (*cmp)(double, double));
 double f_i (int s, int n, int i);
