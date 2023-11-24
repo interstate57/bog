@@ -25,7 +25,107 @@ int right_son(int a);
 int difference(double* a, int n, int (*cmp) (double, double));
 void print_array (double* a, int n, int p);
 double randfrom(double min, double max);
-
+int parent(int a);
+void perestroika_snizu(double *a, int n);
+void perestroika_sverhu(double *a, int n);
+void solve10(double *a, int n);
+void heapify(double *a, int n);
+int left_son(int i);
+int right_son(int i);
+void solve10(double *a, int n){
+    double per = 0;
+    heapify(a, n);
+    for (int i = 1; i < n; i ++){
+        per = a[0];
+        a[0] = a[n - i];
+        a[n - i] = per;
+        perestroika_sverhu(a, n - i);
+    }
+}
+// incorrect element is the last element
+void perestroika_snizu(double *a, int n){
+    double per = 0;
+    int wrong = n - 1;
+    while (wrong != 0){
+        if (a[wrong] <= a[parent(wrong)]){
+            break;
+        }
+        else{
+            per = a[wrong];
+            a[wrong] = a[parent(wrong)];
+            a[parent(wrong)] = per;
+            wrong = parent(wrong);
+        }
+    }
+}
+int difference (double* a, int n){
+    int i;
+    int ans = 0;
+    for (i = 1; i < n; i ++){
+        if (a[i] < a[i - 1]) ans += 1;
+    }
+    return ans;
+}
+void print_array (double* a, int n, int p){
+    int i;
+    if (n == 0 || p == 0){
+      printf("Empty array\n");
+      return;
+    }
+    if (p <= n){
+        for (i = 0; i < p; i ++){
+            printf("%lf\n", a[i]);
+        }
+    }
+    else{
+        for (i = 0; i < n; i ++){
+            printf("%lf\n", a[i]);
+        }
+    }
+}
+void perestroika_sverhu(double *a, int n){
+    double per = 0;
+    int wrong = 0;
+    while (right_son(wrong) < n){
+        if (a[wrong] >= a[left_son(wrong)] && a[wrong] >= a[right_son(wrong)]){
+            break;
+        }
+        else{
+            if (a[left_son(wrong)] >= a[right_son(wrong)]){
+                per = a[wrong];
+                a[wrong] = a[left_son(wrong)];
+                a[left_son(wrong)] = per;
+                wrong = left_son(wrong);
+            }
+            else{
+                per = a[wrong];
+                a[wrong] = a[right_son(wrong)];
+                a[right_son(wrong)] = per;
+                wrong = right_son(wrong);
+            }
+        }
+    }
+    if (left_son(wrong) == n - 1 && a[wrong] < a[left_son(wrong)]){
+        per = a[wrong];
+        a[wrong] = a[left_son(wrong)];
+        a[left_son(wrong)] = per;
+        wrong = left_son(wrong);
+    }
+}
+int parent(int a){
+    return (a - 1) / 2;
+}
+int left_son(int i){
+    return i * 2 + 1;
+}
+int right_son(int i){
+    return i * 2 + 2;
+}
+void heapify(double *a, int n){
+    for (int i = 1; i < n; i ++){
+        perestroika_snizu(a, i + 1);
+    }
+}
 double randfrom(double min, double max)
 {
     double range = max - min;
@@ -358,6 +458,69 @@ int main(void)
                     printf("OK\n");
                 }
             }
+        }
+    }
+}
+void solve8 (double* a, double* b, int n){
+    int i;
+    int j = 1;
+    double* a_orig = a;
+    double* c;
+    while (j < n){
+        for (i = 0; i < n; i += 2 * j){
+            if (i + 2 * j >= n){
+                if (i + j >= n){
+                    merge(a + i, a, n - i, 0, b + i);
+                }
+                else{
+                    merge(a + i, a + i + j, j, n - i - j, b + i);
+                }
+                
+            }
+            else{
+                merge(a + i, a + i + j, j, j, b + i);
+            }
+        }
+        c = a;
+        a = b;
+        b = c;
+        j *= 2;
+    }
+    if (a != a_orig){
+        for (int k = 0; k < n; k ++){
+            a_orig[k] = a[k];
+        }
+    }
+}
+void merge (double* a, double* b, int n, int m, double* c){
+    int i = 0, j = 0, k = 0;
+    while (i != n && j != m){
+        if (a[i] < b[j]){
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+        else if (a[i] > b[j]){
+            c[k] = b[j];
+            j += 1;
+            k += 1;
+        }
+        else{
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+    }
+    if (i == n){
+        for (; j < m; j ++){
+            c[k] = b[j];
+            k += 1;
+        }
+    }
+    else if (j == m){
+        for (; i < n; i ++){
+            c[k] = a[i];
+            k += 1;
         }
     }
 }
