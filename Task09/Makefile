@@ -1,0 +1,12 @@
+FLAGS = -O3 -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-align -Werror -pedantic -pedantic-errors -Wfloat-equal -Wpointer-arith -Wformat-security -Wmissing-format-attribute -Wformat=1 -Wwrite-strings -Wcast-align -Wno-long-long -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -Wdeclaration-after-statement -Wbad-function-cast -Wnested-externs
+all: a01.out a02.out
+a01.out: task01.o vspom_functions.o
+	gcc $(FLAGS) task01.o vspom_functions.o -o a01.out
+task01.o: task01.c vspom_functions.h
+	gcc -c $(FLAGS) task01.c 
+vspom_functions.o: vspom_functions.c vspom_functions.h
+	gcc -c $(FLAGS) vspom_functions.c
+a02.out: task02.o vspom_functions.o
+	gcc $(FLAGS) task02.o vspom_functions.o -o a02.out
+task02.o: task02.c vspom_functions.h
+	gcc -c $(FLAGS) task02.c 
