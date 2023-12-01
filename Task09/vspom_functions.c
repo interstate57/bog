@@ -109,12 +109,19 @@ size_t strlen_(const char *s){
     return i;
 }
 char *strcpy_(char *s1, const char *s2){
-    int i;
+    /*int i;
     for(i = 0; s2[i]; i ++){
         s1[i] = s2[i];
     }
     s1[i] = 0;
-    return s1;
+    return s1;*/
+    char * initial = s1;
+    while (*s2){
+        *s1 = *s2;
+        s1++;
+        s2++;
+    }
+    return initial;
 }
 char *strchr_ (const char *s, int ch){
     int i;

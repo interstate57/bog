@@ -18,22 +18,11 @@ int main(int argc, char *argv[]){
         printf("Not enough memmory!");
         return 2;
     }
-    res = (char*)malloc(len * sizeof(char));
-    if (!res){
-        printf("Not enough memmory!");
-        return 2;
-    }
-    res_std = (char*)malloc(len * sizeof(char));
-    if (!res_std){
-        printf("Not enough memmory!");
-        return 2;
-    }
     t = test_2_5(n, &strcpy_, s1, s2, &res);
-    t_std = test_2_5(n, &strcpy, s1, s2, &res_std);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res, t);
+    s1[0] = 0;
+    t_std = test_2_5(n, &strcpy, s1, s2, &res_std);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res_std, t_std);
     free (s1);
-    free (res);
-    free (res_std);
     return 0;
 }
