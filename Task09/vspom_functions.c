@@ -15,8 +15,7 @@ double test_2_5 (size_t n, char* (*p) (char*, const char *), char *s1, const cha
     double t;
     char *r = 0;
     size_t i;
-    size_t len = strlen(s1) + 1;
-    printf("%zu\n", len);
+    size_t len = strlen(s1);
     t = clock();
     for (i = 0; i < n; i ++){
         s1[len] = 0;
@@ -64,6 +63,44 @@ double test_7_8 (size_t n, size_t (*p) (const char*, const char *), const char *
     }
     t = (clock() - t) / CLOCKS_PER_SEC;
     *res = r;
+    return t;
+}
+double test_9 (size_t n, char* (*p) (const char*, const char *), char *s1, const char *s2, char **res){
+    double t;
+    char* r = 0;
+    size_t i = 0;
+    char* otv = (char *)"Not found";
+    t = clock();
+    for (; i < n; i ++){
+        r = (*p)(s1, s2);
+    }
+    t = (clock() - t) / CLOCKS_PER_SEC;
+    *res = r;
+    if (*res == 0){
+        *res = otv;
+    }
+    return t;
+}
+double test_10 (size_t n, char* (*p) (char*, const char *, char**), char *str, const char *delim, char **saveptr, char **res){
+    double t;
+    char *r = 0;
+    size_t i, j;
+    char* otv = (char *)"Not found";
+    size_t len = strlen_(str) + 1;
+    char* copy = (char*)malloc(len * sizeof(char));
+    copy = strcpy_(copy, str);
+    t = clock();
+    for (i = 0; i < n; i ++){
+        j = *saveptr - str - 1;
+        str[j] = copy[j];
+        r = (*p)(str, delim, saveptr);
+    }
+    t = (clock() - t) / CLOCKS_PER_SEC;
+    *res = r;
+    if (*res == 0){
+        *res = otv;
+    }
+    free(copy);
     return t;
 }
 size_t strlen_(const char *s){
@@ -153,4 +190,48 @@ size_t strspn_ (const char *s1, const char *s2){
         }
     }
     return i;
+}
+char *strstr_ (const char *s1, const char *s2){
+    size_t i, j;
+    if (!*s1 && !*s2){
+        return (char*)s1;
+    }
+    for (i = 0; s1[i]; i ++){
+        int f = 0;
+        for (j = 0; s1[i + j]; j ++){
+            if (s2[j] != s1[i + j]){
+                f = 1;
+                break;
+            }
+        }
+        if (f == 0){
+            return (char*)(s1 + i);
+        }
+    }
+    return 0;
+}
+char *strtok_r_ (char *str, const char *delim, char **saveptr){
+    char a[256];
+    size_t i, j, nach;
+    int f = 1;
+    for (i = 0; i < 256; i ++) a[i] = 0;
+    for (i = 0; delim[i]; i ++)
+        a[(unsigned char) delim[i]] = 1;
+    for (i = 0; str[i]; i ++){
+        if (a[(unsigned char) str[i]] == 0){
+            f = 0;
+            break;
+        }
+    }
+    if (f == 1){
+        return NULL;
+    }   
+    nach = i;
+    for (j = i; str[j]; j ++){
+        if (a[(unsigned char) str[j]] == 1){
+            break;
+        }
+    }
+    *saveptr = str + j + 1;
+    return str + nach;
 }
