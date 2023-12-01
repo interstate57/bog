@@ -15,7 +15,7 @@ double test_2_5 (size_t n, char* (*p) (char*, const char *), char *s1, const cha
     double t;
     char *r = 0;
     size_t i;
-    size_t len = strlen(s1);
+    size_t len = strlen_(s1);
     t = clock();
     for (i = 0; i < n; i ++){
         s1[len] = 0;
@@ -130,7 +130,7 @@ char *strrchr_ (const char *s, int ch){
         }
     }
     if (k == -1){
-        return 0;
+        return (ch == 0) ? (char *) (s + i) : 0;
     }
     return (char*)(s + k);
 }
@@ -189,12 +189,15 @@ size_t strspn_ (const char *s1, const char *s2){
 }
 char *strstr_ (const char *s1, const char *s2){
     size_t i, j;
-    if (!*s1 && !*s2){
+    /*if (!*s1 && !*s2){
         return (char*)s1;
-    }
+    }*/
+    if (!*s2)
+        return (char *) s1;
+
     for (i = 0; s1[i]; i ++){
         int f = 0;
-        for (j = 0; s1[i + j]; j ++){
+        for (j = 0; s1[i + j] && s2[j]; j ++){
             if (s2[j] != s1[i + j]){
                 f = 1;
                 break;

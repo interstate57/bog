@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     s2 = argv[2];
-    len = strlen(s2) + 1;
+    len = strlen_(s2) + 1;
     s1 = (char*)malloc(len * sizeof(char));
     if (!s1){
         printf("Not enough memmory!");
