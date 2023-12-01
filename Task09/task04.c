@@ -7,11 +7,12 @@ int main(int argc, char *argv[]){
     char* res;
     char* res_std;
     double t, t_std;
-    if (argc != 4 || sscanf(argv[1], "%lu", &n) != 1 || sscanf(argv[3], "%c", &ch) != 1){
+    if (argc != 4 || sscanf(argv[1], "%lu", &n) != 1){
         printf("Usage: %s count string integer", argv[0]);
         return 1;
     }
     s = argv[2];
+    ch = argv[3][0];
     t = test_3_4(n, &strrchr_, s, ch, &res);
     t_std = test_3_4(n, &strrchr, s, ch, &res_std);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res, t);

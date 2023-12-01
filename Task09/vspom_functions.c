@@ -89,6 +89,7 @@ double test_10 (size_t n, char* (*p) (char*, const char *, char**), char *str, c
     size_t len = strlen_(str) + 1;
     char* copy = (char*)malloc(len * sizeof(char));
     copy = strcpy_(copy, str);
+    *saveptr = str + 1;
     t = clock();
     for (i = 0; i < n; i ++){
         j = *saveptr - str - 1;
@@ -109,28 +110,16 @@ size_t strlen_(const char *s){
     return i;
 }
 char *strcpy_(char *s1, const char *s2){
-    /*int i;
-    for(i = 0; s2[i]; i ++){
-        s1[i] = s2[i];
-    }
-    s1[i] = 0;
-    return s1;*/
     char * initial = s1;
-    while (*s2){
-        *s1 = *s2;
-        s1++;
-        s2++;
-    }
+    while ((*(s1++) = *(s2++))) {};
     return initial;
 }
 char *strchr_ (const char *s, int ch){
-    int i;
-    for(i = 0; s[i]; i ++){
-        if (s[i] == ch){
-            return (char *) (s + i);
-        }
+    for (; *s; s++) {
+        if (*s == ch)
+            return (char *) s;
     }
-    return 0;
+    return (ch == 0) ? (char *) s : 0;
 }
 char *strrchr_ (const char *s, int ch){
     int i;

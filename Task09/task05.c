@@ -26,5 +26,6 @@ int main(int argc, char *argv[]){
     s1 = strcpy_(s1, s);
     t_std = test_2_5(n, &strcat, s1, s2, &res_std);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res_std, t_std);
+    free(s1);
     return 0;
 }
