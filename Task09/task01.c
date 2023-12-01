@@ -14,4 +14,5 @@ int main(int argc, char *argv[]){
     t_std = test_1(n, &strlen, s, &res_std);
     printf ("%s : Task = %d Res = %zd Elapsed = %.2f\n", argv[0], task, res, t);
     printf ("%s : Task = %d Res = %zd Elapsed = %.2f\n", argv[0], task, res_std, t_std);
+    return 0;
 }

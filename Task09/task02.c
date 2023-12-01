@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     s2 = argv[2];
-    len = strlen(s2);
+    len = strlen(s2) + 1;
     s1 = (char*)malloc(len * sizeof(char));
     res = (char*)malloc(len * sizeof(char));
     res_std = (char*)malloc(len * sizeof(char));
@@ -20,4 +20,5 @@ int main(int argc, char *argv[]){
     t_std = test_2_5(n, &strcpy, s1, s2, &res_std);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res, t);
     printf ("%s : Task = %d Res = %s Elapsed = %.2f\n", argv[0], task, res_std, t_std);
+    return 0;
 }
