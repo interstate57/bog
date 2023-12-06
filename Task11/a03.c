@@ -1,0 +1,76 @@
+#include "vspom_functions.h"
+#include "string_io.h"
+void trimm(char *buf);
+int solve3(const char* name1, const char* name2, const char* s, const char* t);
+int main(int argc, char* argv[]){
+    char* name1 = 0;
+    char* name2 = 0;
+    char* s = 0;
+    char* t = 0;
+    int res = 0, task = 3;
+    double t1;
+    if (argc != 5){
+        printf("Usage: %s fname1 fname2 string\n", argv[0]);
+        return 1;
+    }
+    name1 = argv[1];
+    name2 = argv[2];
+    s = argv[3];
+    t = argv[4];
+    t1 = clock();
+    res = solve3(name1, name2, s, t);
+    t1 = (clock() - t1) / CLOCKS_PER_SEC;
+    if (res < SUCCESS){
+        switch (res){
+            case ERROR_OPEN: printf("Cannot open %s;\n", name1); break;
+            case ERROR_READ: printf("Cannot read %s;\n", name1); break;
+            default: printf("Unknown Error %d in file %s;\n", res, name1);
+        }
+    }
+    printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t1);
+    return 0;
+}
+int solve3(const char* name1, const char* name2, const char* s, const char* t){
+    char buf[LEN];
+    int cnt = 0;
+    FILE *fp1;
+    FILE *fp2;
+    if (!(fp2 = fopen(name2, "w"))){
+        return ERROR_OPEN;
+    }
+    if (!(fp1 = fopen(name1, "r"))){
+        return ERROR_OPEN;
+    }
+    while (fgets(buf, LEN, fp1)){
+        int i = 0, len_s = strlen_(s);
+        char* current = buf;
+        while (1){
+            char* f = strstr_(current, s);
+            if (!f){
+                fprintf(fp2, "%s", current);
+                break;
+            }
+            else{
+                *f = 0;
+                fprintf(fp2, "%s", current);
+                fprintf(fp2, "%s", t);
+                current = f + len_s;
+            }
+            
+        }
+    }
+    if (!feof(fp1)){
+        fclose(fp1);
+        return ERROR_READ;
+    }
+    fclose(fp1);
+    return cnt;
+}
+void trimm(char *buf){
+    int i = strlen_(buf) - 1;
+    for (; i >= 0; i--){
+        if (buf[i] == '\n'){
+            buf[i] = 0;
+        }
+    }
+}
