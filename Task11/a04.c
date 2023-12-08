@@ -1,13 +1,14 @@
 #include "vspom_functions.h"
 #include "string_io.h"
 void trimm(char *buf);
-int solve3(const char* name1, const char* name2, const char* s, const char* t);
+void delete_spaces(const char* buf1, char* buf2, const char* spaces);
+int solve4(const char* name1, const char* name2, const char* s, const char* t);
 int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
     char* s = 0;
     char* t = 0;
-    int res = 0, task = 3;
+    int res = 0, task = 4;
     double t1;
     if (argc != 5){
         printf("Usage: %s fname1 fname2 string\n", argv[0]);
@@ -18,7 +19,7 @@ int main(int argc, char* argv[]){
     s = argv[3];
     t = argv[4];
     t1 = clock();
-    res = solve3(name1, name2, s, t);
+    res = solve4(name1, name2, s, t);
     t1 = (clock() - t1) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
@@ -30,9 +31,12 @@ int main(int argc, char* argv[]){
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t1);
     return 0;
 }
-int solve3(const char* name1, const char* name2, const char* s, const char* t){
-    char buf[LEN];
-    int cnt = 0;
+int solve4(const char* name1, const char* name2, const char* s, const char* t){
+    char buf1[LEN];
+    char buf2[LEN];
+    int cnt = 0, i = 0;
+    char spaces[256] = {0};
+    char s1[LEN];
     FILE *fp1;
     FILE *fp2;
     if (!(fp2 = fopen(name2, "w"))){
@@ -41,26 +45,17 @@ int solve3(const char* name1, const char* name2, const char* s, const char* t){
     if (!(fp1 = fopen(name1, "r"))){
         return ERROR_OPEN;
     }
-    while (fgets(buf, LEN, fp1)){
-        int len_s = strlen_(s), k = 0;
-        char* current = buf;
-        while (1){
-            char* f = strstr_(current, s);
-            if (!f){
-                fprintf(fp2, "%s", current);
-                break;
-            }
-            else{
-                *f = 0;
-                fprintf(fp2, "%s", current);
-                fprintf(fp2, "%s", t);
-                current = f + len_s;
-                if (k == 0){
-                    cnt += 1;
-                    k = 1;
-                }
-            }
-            
+    for (i = 0; t[i]; i ++)
+        spaces[(unsigned char) t[i]] = 1;
+    delete_spaces(s, s1, spaces);
+    //printf("s with deleted spaces: %s\n", s1);
+    while (fgets(buf1, LEN, fp1)){
+        trimm(buf1);
+        delete_spaces(buf1, buf2, spaces);
+        //printf("buf with deleted spaces: %s\n", buf2);
+        if (strcmp_(buf2, s1) != 0){
+            cnt++;
+            fprintf(fp2, "%s", buf1);
         }
     }
     if (!feof(fp1)){
@@ -75,6 +70,18 @@ void trimm(char *buf){
     for (; i >= 0; i--){
         if (buf[i] == '\n'){
             buf[i] = 0;
+            break;
         }
     }
 }
+void delete_spaces(const char* buf1, char* buf2, const char* spaces){
+    int i = 0, j = 0;
+    for (; buf1[i]; i ++){
+        if (!spaces[(unsigned int) buf1[i]]){
+            buf2[j] = buf1[i];
+            j += 1;
+        }
+    }
+    buf2[j] = 0;
+}
+//добавить триммы в другие задачи
