@@ -3,7 +3,7 @@
 void trimm(char *buf);
 void delete_spaces(const char* buf1, char* buf2, const char* spaces);
 int sravnenie_bukv(char s1, char s2);
-int solve4(const char* name1, const char* name2, const char* s, const char* t);
+int solve6(const char* name1, const char* name2, const char* s, const char* t);
 int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     int res = 0, task = 6;
     double t1;
     if (argc != 5){
-        printf("Usage: %s fname1 fname2 string\n", argv[0]);
+        printf("Usage: %s fname1 fname2 string string\n", argv[0]);
         return 1;
     }
     name1 = argv[1];
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
     s = argv[3];
     t = argv[4];
     t1 = clock();
-    res = solve4(name1, name2, s, t);
+    res = solve6(name1, name2, s, t);
     t1 = (clock() - t1) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t1);
     return 0;
 }
-int solve4(const char* name1, const char* name2, const char* s, const char* t){
+int solve6(const char* name1, const char* name2, const char* s, const char* t){
     char buf1[LEN];
     char buf2[LEN];
     int cnt = 0, i = 0;

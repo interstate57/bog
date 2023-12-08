@@ -3,7 +3,7 @@
 int sravnenie_bukv(char s1, char s2);
 int min(int a, int b);
 void trimm(char *buf);
-int solve1(const char* fp1, const char* fp2, const char* s);
+int solve2(const char* fp1, const char* fp2, const char* s);
 int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     name2 = argv[2];
     s = argv[3];
     t = clock();
-    res = solve1(name1, name2, s);
+    res = solve2(name1, name2, s);
     t = (clock() - t) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);
     return 0;
 }
-int solve1(const char* name1, const char* name2, const char* s){
+int solve2(const char* name1, const char* name2, const char* s){
     char buf[LEN];
     int cnt = 0;
     FILE *fp1;

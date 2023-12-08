@@ -1,24 +1,26 @@
 #include "vspom_functions.h"
 #include "string_io.h"
 void trimm(char *buf);
-int solve3(const char* name1, const char* name2, const char* s, const char* t);
+int solve8(const char* name1, const char* name2, const char* s, const char* l, const char* r);
 int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
     char* s = 0;
-    char* t = 0;
-    int res = 0, task = 3;
+    char* l = 0;
+    char* r = 0;
+    int res = 0, task = 8;
     double t1;
-    if (argc != 5){
-        printf("Usage: %s fname1 fname2 string string\n", argv[0]);
+    if (argc != 6){
+        printf("Usage: %s fname1 fname2 string string string\n", argv[0]);
         return 1;
     }
     name1 = argv[1];
     name2 = argv[2];
     s = argv[3];
-    t = argv[4];
+    l = argv[4];
+    r = argv[5];
     t1 = clock();
-    res = solve3(name1, name2, s, t);
+    res = solve8(name1, name2, s, l, r);
     t1 = (clock() - t1) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
@@ -30,7 +32,7 @@ int main(int argc, char* argv[]){
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t1);
     return 0;
 }
-int solve3(const char* name1, const char* name2, const char* s, const char* t){
+int solve8(const char* name1, const char* name2, const char* s, const char* l, const char* r){
     char buf[LEN];
     int cnt = 0, len_s = strlen_(s);
     FILE *fp1;
@@ -54,7 +56,9 @@ int solve3(const char* name1, const char* name2, const char* s, const char* t){
             else{
                 *f = 0;
                 fprintf(fp2, "%s", current);
-                fprintf(fp2, "%s", t);
+                fprintf(fp2, "%s", l);
+                fprintf(fp2, "%s", s);
+                fprintf(fp2, "%s", r);
                 current = f + len_s;
                 if (k == 0){
                     cnt += 1;

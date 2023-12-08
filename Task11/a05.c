@@ -2,7 +2,7 @@
 #include "string_io.h"
 void trimm(char *buf);
 void delete_spaces(const char* buf1, char* buf2, const char* spaces);
-int solve4(const char* name1, const char* name2, const char* s, const char* t);
+int solve5(const char* name1, const char* name2, const char* s, const char* t);
 int main(int argc, char* argv[]){
     char* name1 = 0;
     char* name2 = 0;
@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
     int res = 0, task = 5;
     double t1;
     if (argc != 5){
-        printf("Usage: %s fname1 fname2 string\n", argv[0]);
+        printf("Usage: %s fname1 fname2 string string\n", argv[0]);
         return 1;
     }
     name1 = argv[1];
@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
     s = argv[3];
     t = argv[4];
     t1 = clock();
-    res = solve4(name1, name2, s, t);
+    res = solve5(name1, name2, s, t);
     t1 = (clock() - t1) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
@@ -31,11 +31,12 @@ int main(int argc, char* argv[]){
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t1);
     return 0;
 }
-int solve4(const char* name1, const char* name2, const char* s, const char* t){
+int solve5(const char* name1, const char* name2, const char* s, const char* t){
     char buf1[LEN];
     char buf2[LEN];
     int cnt = 0, i = 0;
     char spaces[256] = {0};
+    char digits[256] = {0};
     char s1[LEN];
     FILE *fp1;
     FILE *fp2;
@@ -48,13 +49,22 @@ int solve4(const char* name1, const char* name2, const char* s, const char* t){
     }
     for (i = 0; t[i]; i ++)
         spaces[(unsigned char) t[i]] = 1;
+    for (i = 0; s[i]; i ++)
+        digits[(unsigned char) s[i]] = 1;
     delete_spaces(s, s1, spaces);
     //printf("s with deleted spaces: %s\n", s1);
     while (fgets(buf1, LEN, fp1)){
+        int f = 1;
         trimm(buf1);
         delete_spaces(buf1, buf2, spaces);
         //printf("buf with deleted spaces: %s\n", buf2);
-        if (strcmp_(buf2, s1) == 0){
+        for (i = 0; buf2[i]; i++){
+            if (!digits[(unsigned char) buf2[i]]){
+                f = 0;
+                break;
+            }
+        }
+        if (f == 1){
             cnt++;
             fprintf(fp2, "%s\n", buf1);
         }

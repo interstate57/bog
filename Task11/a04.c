@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
     int res = 0, task = 4;
     double t1;
     if (argc != 5){
-        printf("Usage: %s fname1 fname2 string\n", argv[0]);
+        printf("Usage: %s fname1 fname2 string string\n", argv[0]);
         return 1;
     }
     name1 = argv[1];
