@@ -44,6 +44,7 @@ int solve4(const char* name1, const char* name2, const char* s, const char* t){
         return ERROR_OPEN;
     }
     if (!(fp1 = fopen(name1, "r"))){
+        fclose(fp2);
         return ERROR_OPEN;
     }
     for (i = 0; t[i]; i ++)
@@ -72,9 +73,11 @@ int solve4(const char* name1, const char* name2, const char* s, const char* t){
     }
     if (!feof(fp1)){
         fclose(fp1);
+        fclose(fp2);
         return ERROR_READ;
     }
     fclose(fp1);
+    fclose(fp2);
     return cnt;
 }
 void trimm(char *buf){

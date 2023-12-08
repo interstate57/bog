@@ -39,6 +39,7 @@ int solve1(const char* name1, const char* name2, const char* s){
         return ERROR_OPEN;
     }
     if (!(fp1 = fopen(name1, "r"))){
+        fclose(fp2);
         return ERROR_OPEN;
     }
     while (fgets(buf, LEN, fp1)){
@@ -60,9 +61,11 @@ int solve1(const char* name1, const char* name2, const char* s){
     }
     if (!feof(fp1)){
         fclose(fp1);
+        fclose(fp2);
         return ERROR_READ;
     }
     fclose(fp1);
+    fclose(fp2);
     return cnt;
 }
 int sravnenie_bukv(char s1, char s2){
