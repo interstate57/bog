@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
 int solve7(const char* name1, const char* name2, const char* s, const char* t){
     char buf1[LEN];
     char* buf2;
-    int cnt = 0, i = 0;
+    int cnt = 0;
     char* s1;
     FILE *fp1;
     FILE *fp2;
@@ -49,24 +49,12 @@ int solve7(const char* name1, const char* name2, const char* s, const char* t){
     s1 = (char*) (s + strspn_(s, t));
     //printf("s with deleted spaces: %s\n", s1);
     while (fgets(buf1, LEN, fp1)){
-        int j;
         trimm(buf1);
         buf2 = buf1 + strspn_(buf1, t);
         //printf("buf with deleted spaces: %s\n", buf2);
-        for (i = 0; buf2[i]; i ++){
-            int f = 0;
-            for (j = 0; buf2[i + j] && s1[j]; j ++){
-                if (!sravnenie_bukv(s1[j], buf2[i + j])){
-                    f = 1;
-                    break;
-                }
-            }
-            if (f == 0 && !s1[j]){
-                cnt += 1;
-                fprintf(fp2, "%s\n", buf1);
-                break;
-            }
-            break;
+        if (strstr_(buf2, s1)){
+            cnt += 1;
+            fprintf(fp2, "%s\n", buf1);
         }
     }
     if (!feof(fp1)){

@@ -61,7 +61,6 @@ int solve3(const char* name1, const char* name2, const char* s, const char* t){
                     k = 1;
                 }
             }
-            
         }
     }
     if (!feof(fp1)){

@@ -52,7 +52,6 @@ int solve6(const char* name1, const char* name2, const char* s, const char* t){
     delete_spaces(s, s1, spaces);
     //printf("s with deleted spaces: %s\n", s1);
     while (fgets(buf1, LEN, fp1)){
-        int j;
         trimm(buf1);
         delete_spaces(buf1, buf2, spaces);
         //printf("buf with deleted spaces: %s\n", buf2);
