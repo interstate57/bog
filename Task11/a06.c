@@ -56,19 +56,9 @@ int solve6(const char* name1, const char* name2, const char* s, const char* t){
         trimm(buf1);
         delete_spaces(buf1, buf2, spaces);
         //printf("buf with deleted spaces: %s\n", buf2);
-        for (i = 0; buf2[i]; i ++){
-            int f = 0;
-            for (j = 0; buf2[i + j] && s1[j]; j ++){
-                if (!sravnenie_bukv(s1[j], buf2[i + j])){
-                    f = 1;
-                    break;
-                }
-            }
-            if (f == 0 && !s1[j]){
-                cnt += 1;
-                fprintf(fp2, "%s\n", buf1);
-                break;
-            }
+        if (strstr_(buf2, s1)){
+            cnt += 1;
+            fprintf(fp2, "%s\n", buf1);
         }
     }
     if (!feof(fp1)){
