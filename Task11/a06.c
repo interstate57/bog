@@ -65,7 +65,7 @@ int solve4(const char* name1, const char* name2, const char* s, const char* t){
             }
             if (f == 0 && !s1[j]){
                 cnt += 1;
-                fprintf(fp2, "%s", buf1);
+                fprintf(fp2, "%s\n", buf1);
                 break;
             }
         }

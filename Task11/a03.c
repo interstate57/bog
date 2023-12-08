@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 }
 int solve3(const char* name1, const char* name2, const char* s, const char* t){
     char buf[LEN];
-    int cnt = 0;
+    int cnt = 0, len_s = strlen_(s);
     FILE *fp1;
     FILE *fp2;
     if (!(fp2 = fopen(name2, "w"))){
@@ -42,7 +42,7 @@ int solve3(const char* name1, const char* name2, const char* s, const char* t){
         return ERROR_OPEN;
     }
     while (fgets(buf, LEN, fp1)){
-        int len_s = strlen_(s), k = 0;
+        int k = 0;
         char* current = buf;
         while (1){
             char* f = strstr_(current, s);

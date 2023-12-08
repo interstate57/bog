@@ -55,7 +55,7 @@ int solve4(const char* name1, const char* name2, const char* s, const char* t){
         //printf("buf with deleted spaces: %s\n", buf2);
         if (strcmp_(buf2, s1) != 0){
             cnt++;
-            fprintf(fp2, "%s", buf1);
+            fprintf(fp2, "%s\n", buf1);
         }
     }
     if (!feof(fp1)){
