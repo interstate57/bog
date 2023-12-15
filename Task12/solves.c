@@ -1,5 +1,7 @@
 #include "solves.h"
 #include "vspom_functions.h"
+int sravnenie_bukv(char s1, char s2);
+int dop_funct(const char* buf, const char* s);
 int solve1(char** a, int n, const char* s){
     int i, k;
     int j = 0;
@@ -148,7 +150,69 @@ int solve7(char** a, int n, const char* s){
     if (strcmp_(a[1], s) >= 0) j++;
     res_left = (strcmp_(a[1], s) >= 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
+        int f1 = 0;
         if (res_left && strcmp_(a[i + 1], s) >= 0){
+            if (i != j){
+                free(a[j]);
+                res_left = (strcmp_(a[i], s) >= 0 ? 1 : 0);
+                f1 += 1;
+                a[j] = a[i];
+                a[i] = 0;
+            }
+            j++;
+        }
+        if (!f1)
+            res_left = (strcmp_(a[i], s) >= 0 ? 1 : 0);
+    }
+    if (res_left){
+        if (i != j){
+            free(a[j]);
+            a[j] = a[i];
+            a[i] = 0;
+        }
+        j++;
+    }
+    for(k = j; k < n; k++){
+        if (a[k]){
+            free(a[k]);
+            a[k] = 0;
+        }
+    }
+    return j;
+}
+int sravnenie_bukv(char s1, char s2){
+    if (s1 == s2)
+        return 1;
+    if ((('A' <= s1 && 'Z' >= s1) || ('A' <= s2 && 'Z' >= s2)) && abs(s1 - s2) == 32 && min(s1, s2) >= 65)
+        return 1;
+    return 0;
+}
+int dop_funct(const char* buf, const char* s){
+    int i, j;
+    int cnt = 0;
+    for (i = 0; s[i]; i ++){
+        int f = 0;
+        for (j = 0; s[i + j] && buf[j]; j ++){
+            if (!sravnenie_bukv(buf[j], s[i + j])){
+                f = 1;
+                break;
+            }
+        }
+        if (f == 0 && !buf[j]){
+            cnt == 1;
+            break;
+        }
+    }
+    return cnt;
+}
+int solve8(char** a, int n, const char* s){
+    int i, k;
+    int j = 0;
+    int res_left = 0;
+    if (strcmp_(a[1], s) >= 0) j++;
+    res_left = (dop_funct(a[1], s) == 0 ? 1 : 0);
+    for (i = 1; i < n - 1; i++){
+        if (res_left && dop_funct(a[1], s) == 0){
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
@@ -156,7 +220,7 @@ int solve7(char** a, int n, const char* s){
             }
             j++;
         }
-        res_left = (strcmp_(a[1], s) >= 0 ? 1 : 0);
+        res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
     }
     if (res_left){
         if (i != j){
