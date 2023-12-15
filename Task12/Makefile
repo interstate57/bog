@@ -1,5 +1,5 @@
 FLAGS = -O3 -mfpmath=sse -fstack-protector-all -W -Wall -Wextra -Wunused -Wcast-align -Werror -pedantic -pedantic-errors -Wfloat-equal -Wpointer-arith -Wformat-security -Wmissing-format-attribute -Wformat=1 -Wwrite-strings -Wcast-align -Wno-long-long -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wold-style-definition -Wdeclaration-after-statement -Wbad-function-cast -Wnested-externs
-all: a01.out a02.out a03.out a04.out a05.out a06.out a07.out
+all: a01.out a02.out a03.out a04.out a05.out a06.out a07.out a08.out
 a01.out: a01.o vspom_functions.o solves.o array.o 
 	gcc $(FLAGS) a01.o vspom_functions.o solves.o array.o -o a01.out
 a01.o: a01.c array.c vspom_functions.h solves.h
@@ -34,3 +34,7 @@ a07.out: a07.o vspom_functions.o solves.o array.o
 	gcc $(FLAGS) a07.o vspom_functions.o solves.o array.o -o a07.out
 a07.o: a07.c vspom_functions.h solves.h
 	gcc -c $(FLAGS) a07.c
+a08.out: a08.o vspom_functions.o solves.o array.o 
+	gcc $(FLAGS) a08.o vspom_functions.o solves.o array.o -o a08.out
+a08.o: a08.c vspom_functions.h solves.h
+	gcc -c $(FLAGS) a08.c

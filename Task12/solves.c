@@ -149,7 +149,7 @@ int solve7(char** a, int n, const char* s){
     int j = 0;
     int res_left = 0;
     if (strcmp_(a[1], s) >= 0) j++;
-    res_left = (strcmp_(a[1], s) >= 0 ? 1 : 0);
+    res_left = (strcmp_(a[0], s) >= 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
         int f1 = 0;
         if (res_left && strcmp_(a[i + 1], s) >= 0){
@@ -231,7 +231,7 @@ int solve8(char** a, int n, const char* s){
             j++;
         }
         if (!f1)
-            res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
+        res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
     }
     if (res_left){
         if (i != j){
