@@ -1,6 +1,7 @@
 #include "solves.h"
 #include "vspom_functions.h"
 int sravnenie_bukv(char s1, char s2);
+int min(int a, int b);
 int dop_funct(const char* buf, const char* s);
 int solve1(char** a, int n, const char* s){
     int i, k;
@@ -187,6 +188,12 @@ int sravnenie_bukv(char s1, char s2){
         return 1;
     return 0;
 }
+int min(int a, int b){
+    if (a < b){
+        return a;
+    }
+    return b;
+}
 int dop_funct(const char* buf, const char* s){
     int i, j;
     int cnt = 0;
@@ -199,7 +206,7 @@ int dop_funct(const char* buf, const char* s){
             }
         }
         if (f == 0 && !buf[j]){
-            cnt == 1;
+            cnt = 1;
             break;
         }
     }
@@ -212,15 +219,19 @@ int solve8(char** a, int n, const char* s){
     if (strcmp_(a[1], s) >= 0) j++;
     res_left = (dop_funct(a[1], s) == 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
+        int f1 = 0;
         if (res_left && dop_funct(a[1], s) == 0){
             if (i != j){
                 free(a[j]);
+                f1 += 1;
+                res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
                 a[j] = a[i];
                 a[i] = 0;
             }
             j++;
         }
-        res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
+        if (!f1)
+            res_left = (dop_funct(a[i], s) == 0 ? 1 : 0);
     }
     if (res_left){
         if (i != j){
