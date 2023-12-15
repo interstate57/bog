@@ -126,7 +126,7 @@ int solve6(char** a, int n, const char* s){
     int f = 0;
     size_t len_s = strlen_(s);
     for (i = 0; i < n; i++){
-        int per = strcspn_(s, a[i]);
+        size_t per = strcspn_(s, a[i]);
         if (per != len_s || (per == len_s && f == 0)){
             if (per == len_s && f == 0) f = 1;
             else if (per != len_s && f == 1) f = 0;
@@ -150,7 +150,7 @@ int solve7(char** a, int n, const char* s){
     int i, k;
     int j = 0;
     int res_left = 0;
-    if (strcmp_(a[1], s) >= 0) j++;
+    if ((n > 1) && (strcmp_(a[1], s) >= 0)) j++;
     res_left = (strcmp_(a[0], s) >= 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
         int f1 = 0;
@@ -218,7 +218,7 @@ int solve8(char** a, int n, const char* s){
     int i, k;
     int j = 0;
     int res_left = 0;
-    if (dop_funct(a[1], s) == 0) j++;
+    if ((n > 1) && (dop_funct(a[1], s) == 0)) j++;
     res_left = (dop_funct(a[0], s) == 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
         int f1 = 0;
