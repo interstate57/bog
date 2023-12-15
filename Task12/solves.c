@@ -100,9 +100,10 @@ int solve5(char** a, int n, const char* s){
     size_t len_s = strlen_(s);
     for (i = 0; i < n; i++){
         size_t len_ai = strlen_(a[i]);
-        if (strcmp_(s, a[i] + len_ai - len_s) != 0 || (strcmp_(s, a[i] + len_ai - len_s) == 0 && f == 0)){
-            if (strcmp_(s, a[i] + len_ai - len_s) == 0 && f == 0) f = 1;
-            else if (strcmp_(s, a[i] + len_ai - len_s) != 0 && f == 1) f = 0;
+        int per = strcmp_(s, a[i] + len_ai - len_s);
+        if (per != 0 || (per == 0 && f == 0)){
+            if (per == 0 && f == 0) f = 1;
+            else if (per != 0 && f == 1) f = 0;
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
@@ -125,9 +126,10 @@ int solve6(char** a, int n, const char* s){
     int f = 0;
     size_t len_s = strlen_(s);
     for (i = 0; i < n; i++){
-        if (strcspn_(s, a[i]) != len_s || (strcspn_(s, a[i]) == len_s && f == 0)){
-            if (strcspn_(s, a[i]) == len_s && f == 0) f = 1;
-            else if (strcspn_(s, a[i]) != len_s && f == 1) f = 0;
+        int per = strcspn_(s, a[i]);
+        if (per != len_s || (per == len_s && f == 0)){
+            if (per == len_s && f == 0) f = 1;
+            else if (per != len_s && f == 1) f = 0;
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
@@ -216,11 +218,11 @@ int solve8(char** a, int n, const char* s){
     int i, k;
     int j = 0;
     int res_left = 0;
-    if (strcmp_(a[1], s) >= 0) j++;
-    res_left = (dop_funct(a[1], s) == 0 ? 1 : 0);
+    if (dop_funct(a[1], s) == 0) j++;
+    res_left = (dop_funct(a[0], s) == 0 ? 1 : 0);
     for (i = 1; i < n - 1; i++){
         int f1 = 0;
-        if (res_left && dop_funct(a[1], s) == 0){
+        if (res_left && dop_funct(a[i + 1], s) == 0){
             if (i != j){
                 free(a[j]);
                 f1 += 1;
