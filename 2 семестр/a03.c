@@ -34,6 +34,7 @@ int solve3(const char* in, const char* out, const char* s, const char* t){
     FILE *fin, *fout;
     char buf[LEN];
     int i;
+    int lol = 0;
     int cnt = 0;
     if (!(fin = fopen(in, "r")))
         return ERROR_OPEN;
@@ -47,8 +48,9 @@ int solve3(const char* in, const char* out, const char* s, const char* t){
                 buf[i] = 0;
                 break;
             }
-        if (task3(s, t, buf)){
-            if (task3(s, t, buf) != ERROR_LAST_BACKSLASH){
+        lol = task3(s, t, buf);
+        if (lol){
+            if (lol != ERROR_LAST_BACKSLASH){
                 fprintf(fout, "%s\n", buf);
                 cnt += 1;
             }

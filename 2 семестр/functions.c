@@ -119,17 +119,21 @@ int task4(const char* s, const char* t, char* buf){
         return 1;
     for (i = 0; i < LEN; i++){
         if (!strchr(t, buf[i]) && !slovo){
+            printf("%d\n", buf[i]);
             SLOVA[p] = i;
             slovo = 1;
             p ++;
         }
         else if ((strchr(t, buf[i]) || buf[i] == 0) && slovo){
+            printf("%d\n", buf[i]);
             SLOVA[p] = i;
             slovo = 0;
             p ++;
         }
         else if (buf[i] == 0) break;
     }
+    for (i = 0; i <= p / 2; i++)
+        //printf("%d\n", SLOVA[i]);
     // ---------------------------------------------
     for (i = 0; i <= p / 2; i += 2){
         for (int q = SLOVA[i]; q < SLOVA[i + 1]; q++){
