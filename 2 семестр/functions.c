@@ -65,14 +65,13 @@ int task2(const char* s, char* buf){
 }
 
 int task3(const char* s, const char* t, char* buf){
-    int SLOVA[672];
+    int SLOVA[LEN / 2];
     int i;
     int nach = (s[0] == BACKSLASH && s[1] == '<') ? 2 : 0;
     int k = 0, slovo = 0, j = nach, p = 0;
-    //int dls = strlen(s);
     if ((!buf[0] && !s[0]) || (s[0] == BACKSLASH && s[1] == '<' && !s[2]))
         return 1;
-    for (i = 0; i <= 1233; i++){
+    for (i = 0; i < LEN; i++){
         if (!strchr(t, buf[i]) && !slovo){
             SLOVA[p] = i;
             slovo = 1;
@@ -113,12 +112,12 @@ int task3(const char* s, const char* t, char* buf){
     return 0;
 }
 int task4(const char* s, const char* t, char* buf){
-    int SLOVA[672];
+    int SLOVA[LEN / 2];
     int i;
     int k = 0, slovo = 0, j = 0, p = 0;
     if ((!buf[0] && !s[0]) || (s[0] == BACKSLASH && s[1] == '<' && !s[2]))
         return 1;
-    for (i = 0; i <= 1233; i++){
+    for (i = 0; i < LEN; i++){
         if (!strchr(t, buf[i]) && !slovo){
             SLOVA[p] = i;
             slovo = 1;
