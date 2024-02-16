@@ -14,14 +14,16 @@ int main(int argc, char* argv[]){
     name2 = argv[2];
     s = argv[3];
     t = clock();
-    res = solve1(name1, name2, s);
+    res = solve2(name1, name2, s);
     t = (clock() - t) / CLOCKS_PER_SEC;
     if (res < SUCCESS){
         switch (res){
             case ERROR_OPEN: printf("Cannot open %s;\n", name1); break;
             case ERROR_READ: printf("Cannot read %s;\n", name1); break;
+            case ERROR_LAST_BACKSLASH: printf("Error backslash %s;\n", name1); break;
             default: printf("Unknown Error %d in file %s;\n", res, name1);
         }
+        return 4;
     }
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);
     return 0;
@@ -39,13 +41,20 @@ int solve2(const char* in, const char* out, const char* s){
     }
     while (fgets(buf, LEN, fin)){
         for (i = 0; buf[i]; i++)
-            if (buf[i] == "\n"){
+            if (buf[i] == '\n'){
                 buf[i] = 0;
                 break;
             }
         if (task2(s, buf)){
-            fprintf(fout, "%s\n", buf);
-            cnt += 1;
+            if (task2(s, buf) != ERROR_LAST_BACKSLASH){
+                fprintf(fout, "%s\n", buf);
+                cnt += 1;
+            }
+            else{
+                fclose(fin);
+                fclose(fout);
+                return ERROR_LAST_BACKSLASH;
+            }
         }
     }
     fclose(fout);
