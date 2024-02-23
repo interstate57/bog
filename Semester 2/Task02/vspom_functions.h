@@ -10,5 +10,6 @@
 #define ERROR_LAST_BACKSLASH -3
 int task1(const char* s, char* buf);
 int task2(const char* s, char* buf);
-int task3(const char* s, /*char* buf,*/ const char* out);
+int task3(char* s3, int* s4, char* s5, char* buf);
 int task4(const char* s, char* buf);
+int pattern3(char* s, char*s3, int* s4, char* s5);
