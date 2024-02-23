@@ -1,8 +1,6 @@
 #include "vspom_functions.h"
 #define BACKSLASH '\\'
-int task1(const char* s, char* buf){
-    char s1[LEN];
-    char s2[LEN];
+int pattern1(char* s, char* s1, char* s2){
     int i = 0, is1 = 0, is2 = 0, prev_back = 0;
     while (s[i]){
         if (s[i] == BACKSLASH){
@@ -37,22 +35,22 @@ int task1(const char* s, char* buf){
     }
     s1[is1] = 0;
     s2[is2] = 0;
-    i = 0;
+    return 0;
+}
+int task1(char* s1, char* s2, char* buf){
+    int i = 0;
     while (buf[i]){
         int maybe_equal = 1;
         int j = 0;
-        is1 = 0;
-        is2 = 0;
-        while (s2[is2]){
-            if (s2[is2] == '1'){
-                is1 += 1;
-                is2 += 1;
+        int k = 0;
+        while (s2[k]){
+            if (s2[k] == '1'){
+                k += 1;
                 j += 1;
             }
             else{
-                if (s1[is1] == buf[i + j]){
-                    is1 += 1;
-                    is2 += 1;
+                if (s1[k] == buf[i + j]){
+                    k += 1;
                     j += 1;
                 }
                 else{
