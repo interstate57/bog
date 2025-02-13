@@ -22,4 +22,6 @@ io_status pattern8(const char* s, char*s3, int* s4, char* s5);
 io_status task8(char* s3, int* s4, char* s5, char* buf, int* r);
 io_status pattern7(const char* s, char* s1, char* s2);
 io_status task7(char* s1, char* s2, char* buf, int* r);
-
+io_status task7_r(char* s1, char* s2, char* buf, int* r);
+io_status pattern10(const char* s, char* s1, char* s2, char*s3, char* s4);
+io_status task10(char* s1, char* s2, char* s3, char* s4, char* buf, int* r);

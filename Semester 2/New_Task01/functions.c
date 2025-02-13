@@ -431,6 +431,15 @@ io_status pattern7(const char* s, char* s1, char* s2){
 
 io_status task7(char* s1, char* s2, char* buf, int* r)
 {
+    int cnt = 0;
+    io_status res = task7_r(s1, s2, buf, &cnt);
+    if (cnt > 0)
+        *r += 1;
+    return res;
+}
+
+io_status task7_r(char* s1, char* s2, char* buf, int* r)
+{
     io_status with = 0;
     while (s2[0] == '0') {
         if (!buf[0])
@@ -452,12 +461,125 @@ io_status task7(char* s1, char* s2, char* buf, int* r)
         return SUCCESS;
 
     if (buf[0] == s1[0]) {
-        with = task7(s1 + 1, s2 + 1, buf + 1, r);
+        with = task7_r(s1 + 1, s2 + 1, buf + 1, r);
     }
     if (with){
         *r += 1;
         return SUCCESS;
     }
 
-    return task7(s1 + 1, s2 + 1, buf, r);
+    return task7_r(s1 + 1, s2 + 1, buf, r);
+}
+
+
+io_status pattern10(const char* s, char* s1, char* s2, char*s3, char* s4){
+    int i = 0, j = 0, prev_back = 0;
+    while (s[i]){
+        if (s[i] == BACKSLASH){
+            if (prev_back){
+                s1[j] = s[i];
+                s2[j] = '0';
+                s3[j] = s[i];
+                s4[i] = s[i];
+                j += 1;
+                prev_back = 0;
+                i += 1;
+                continue;
+            }
+            i += 1;
+            prev_back = 1;
+            if (!s[i]) return ERROR_PATTERN;
+        }
+        else if (s[i] == '[' && !prev_back){
+            i += 1;
+            if (!s[i] || s[i] == '['){
+                return ERROR_PATTERN;
+            }
+            s1[j] = '@';
+            s2[j] = '1';
+            if (s[i] == BACKSLASH){
+                if (!s[i + 1])
+                    return ERROR_PATTERN;
+                s3[j] = s[i + 1];
+                i += 1;
+            }
+            else {
+                s3[j] = s[i];
+            }
+            i += 1;
+
+            if (s[i] != '-') {
+                return ERROR_PATTERN;
+            }
+            i += 1;
+
+            if (!s[i] || s[i] == ']'){
+                return ERROR_PATTERN;
+            }
+            if (s[i] == BACKSLASH){
+                if (!s[i + 1])
+                    return ERROR_PATTERN;
+                s4[j] = s[i + 1];
+                i += 1;
+            }
+            else {
+                s4[j] = s[i];
+            }
+            i += 1;
+
+            if (!s[i] || s[i] != ']'){
+                return ERROR_PATTERN;
+            }
+            i += 1;
+            j += 1;
+        }
+        else{
+            if (s[i] == ']' && !prev_back){
+                return ERROR_PATTERN;
+            }
+            s1[j] = s[i];
+            s2[j] = '0';
+            s3[j] = '@';
+            s4[j] = '@';
+            j += 1;
+            i += 1;
+            prev_back = 0;
+        }
+    }
+    s1[j] = 0;
+    s2[j] = 0;
+    s3[j] = 0;
+    s4[j] = 0;
+    return SUCCESS;
+}
+
+
+
+io_status task10(char* s1, char* s2, char* s3, char* s4, char* buf, int* r){
+    int i = 0, maybe_equal = 1;
+    while (s1[i]){
+         if (s2[i] == '0'){
+            if (s1[i] == buf[i]){
+                i += 1;
+            }
+            else{
+                maybe_equal = 0;
+                break;
+            }
+        }
+        else{
+            if (s3[i] <= buf[i] && buf[i] <= s4[i]){
+                i += 1;
+            }
+            else{
+                maybe_equal = 0;
+                break;
+            }
+        }
+    }
+    if (maybe_equal && !buf[i]){
+        *r += 1;
+        return SUCCESS;
+    }
+    return SUCCESS;
 }
