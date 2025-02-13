@@ -1,11 +1,11 @@
 #include "vspom_functions.h"
-io_status solve8(const char* in, const char* out, const char* s, int* r);
+io_status solve7(const char* in, const char* out, const char* s, int* r);
 int main(int argc, char* argv[]){
     char* f_in = 0;
     char* f_out = 0;
     char* s = 0;
     io_status ret;
-    int r = 0, task = 8;
+    int r = 0, task = 7;
     double t = 0;
     if (argc != 4){
         printf("Usage: %s <f_in> <f_out> <s>\n", argv[0]);
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     f_out = argv[2];
     s = argv[3];
     t = clock();
-    ret = solve8(f_in, f_out, s, &r);
+    ret = solve7(f_in, f_out, s, &r);
     t = (clock() - t) / CLOCKS_PER_SEC;
     switch (ret){
         case SUCCESS: printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, r, t); break;
@@ -25,12 +25,11 @@ int main(int argc, char* argv[]){
     }
     return 0;
 }
-io_status solve8(const char* in, const char* out, const char* s, int* r){
+io_status solve7(const char* in, const char* out, const char* s, int* r){
     FILE *fin, *fout;
     char buf[LEN];
-    char s3[LEN];
-    int s4[LEN];
-    char s5[LEN];
+    char s1[LEN];
+    char s2[LEN];
     int i;
     io_status lol;
     io_status kek;
@@ -41,13 +40,9 @@ io_status solve8(const char* in, const char* out, const char* s, int* r){
         fclose(fin);
         return ERROR_OPEN;
     }
-    kek = pattern8(s, s3, s4, s5);
-    //printf("%s\n", s3);
-    /*for (int j = 0; s4[j]; j++){
-        printf("%d", s4[j]);
-    }*/
-    //printf("\n");
-    //printf("%s\n", s5);
+    kek = pattern7(s, s1, s2);
+    printf("%s\n", s1);
+    printf("%s\n", s2);
     if (kek == ERROR_PATTERN){
         fclose(fin);
         fclose(fout);
@@ -60,14 +55,15 @@ io_status solve8(const char* in, const char* out, const char* s, int* r){
                 break;
             }
         per = *r;
-        lol = task8(s3, s4, s5, buf, r);
+        lol = task7(s1, s2, buf, r);
         if (lol == ERROR_PATTERN){
             fclose(fin);
             fclose(fout);
             return ERROR_PATTERN;
         }
         else{
-            if(per != *r) fprintf(fout, "%s\n", buf);
+            if(per != *r) {fprintf(fout, "%s\n", buf);
+            printf("%s\n", buf);}
         }
     }
     fclose(fout);

@@ -20,4 +20,6 @@ io_status pattern6(const char* s, char* s1, char* s2);
 io_status task6(char* s1, char* s2, char* buf, int* r);
 io_status pattern8(const char* s, char*s3, int* s4, char* s5);
 io_status task8(char* s3, int* s4, char* s5, char* buf, int* r);
+io_status pattern7(const char* s, char* s1, char* s2);
+io_status task7(char* s1, char* s2, char* buf, int* r);
 

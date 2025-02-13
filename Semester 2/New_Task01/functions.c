@@ -379,6 +379,85 @@ io_status task8(char* s3, int* s4, char* s5, char* buf, int* r){
         if (s5[i] == '1' && cnt < s4[i]) return SUCCESS;
         j += cnt;
     }
-    *r += 1;
+    if(!buf[j]){
+        *r += 1;
+    }
     return SUCCESS;
+}
+
+io_status pattern7(const char* s, char* s1, char* s2){
+    int i = 0, is1 = 0, is2 = 0, prev_back = 0;
+    while (s[i]){
+        if (s[i] == BACKSLASH){
+            if (prev_back){
+                s1[is1] = s[i];
+                s2[is2] = '0';
+                is1 += 1;
+                is2 += 1;
+                prev_back = 0;
+                i += 1;
+                continue;
+            }
+            i += 1;
+            prev_back = 1;
+            if (!s[i]) return ERROR_PATTERN;
+        }
+        else if (s[i] == '?' && !prev_back){
+            if (i == 0){
+                s1[is1] = s[i];
+                s2[is2] = '0';
+                is1 += 1;
+                is2 += 2;
+                i += 1;
+            }
+            else{
+                s2[is2 - 1] = '1';
+                i += 1;
+            }
+        }
+        else{
+            s1[is1] = s[i];
+            s2[is2] = '0';
+            is1 += 1;
+            is2 += 1;
+            i += 1;
+            prev_back = 0;
+        }
+    }
+    s1[is1] = 0;
+    s2[is2] = 0;
+    return SUCCESS;
+}
+
+io_status task7(char* s1, char* s2, char* buf, int* r)
+{
+    io_status with = 0;
+    while (s2[0] == '0') {
+        if (!buf[0])
+            return SUCCESS;
+
+        if (buf[0] != s1[0])
+            return SUCCESS;
+
+        buf++;
+        s1++;
+        s2++;
+    }
+    if (!s2[0] && !buf[0]){
+        *r += 1;
+        return SUCCESS;
+    }
+
+    if (!s2[0])
+        return SUCCESS;
+
+    if (buf[0] == s1[0]) {
+        with = task7(s1 + 1, s2 + 1, buf + 1, r);
+    }
+    if (with){
+        *r += 1;
+        return SUCCESS;
+    }
+
+    return task7(s1 + 1, s2 + 1, buf, r);
 }
