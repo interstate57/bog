@@ -41,8 +41,6 @@ io_status solve7(const char* in, const char* out, const char* s, int* r){
         return ERROR_OPEN;
     }
     kek = pattern7(s, s1, s2);
-    printf("%s\n", s1);
-    printf("%s\n", s2);
     if (kek == ERROR_PATTERN){
         fclose(fin);
         fclose(fout);

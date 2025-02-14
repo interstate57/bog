@@ -42,12 +42,6 @@ io_status solve8(const char* in, const char* out, const char* s, int* r){
         return ERROR_OPEN;
     }
     kek = pattern8(s, s3, s4, s5);
-    //printf("%s\n", s3);
-    /*for (int j = 0; s4[j]; j++){
-        printf("%d", s4[j]);
-    }*/
-    //printf("\n");
-    //printf("%s\n", s5);
     if (kek == ERROR_PATTERN){
         fclose(fin);
         fclose(fout);

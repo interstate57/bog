@@ -52,15 +52,15 @@ io_status pattern2(const char* s, char* s1, int* s2){
             if (!s[i]) return ERROR_PATTERN;
         }
         else if (s[i] == '$' && !prev_back){
-            *s2 += 1;
-            s1[is1] = s[i];
-            i += 1;
-            if (!s[i]) s1[is1] = 0;
-            else{
-                is1 += 1;
-                *s2 -= 1;
+            if (!s[i + 1]){
+                *s2 += 1;
+                i += 1;
             }
-            
+            else{
+                s1[is1] = s[i];
+                i += 1;
+                is1 += 1;
+            } 
         }
         else{
             s1[is1] = s[i];
@@ -69,6 +69,7 @@ io_status pattern2(const char* s, char* s1, int* s2){
             prev_back = 0;
         }
     }
+    s1[is1] = 0;
     return SUCCESS;
 }
 
@@ -83,7 +84,7 @@ io_status task2(const char* s, char* buf, char* s1, int s2, int* r){
         j = 0;
         k = 0;
         while (s1[j]){
-            if (s[j] != buf[i + k]){
+            if (s1[j] != buf[i + k]){
                 maybe_equal = 0;
                 break;
             }

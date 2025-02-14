@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
 io_status solve2(const char* in, const char* out, const char* s, int* r){
     FILE *fin, *fout;
     char buf[LEN];
-    int s2;
+    int s2 = 0;
     char s1[LEN];
     int i;
     io_status lol;
@@ -41,7 +41,6 @@ io_status solve2(const char* in, const char* out, const char* s, int* r){
         return ERROR_OPEN;
     }
     kek = pattern2(s, s1, &s2);
-    //printf("%d", s2);
     if (kek == ERROR_PATTERN){
         fclose(fin);
         fclose(fout);
