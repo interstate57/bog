@@ -52,8 +52,6 @@ int solve5(char** a, int n, char* s){
         size_t res = strstr(a[i], s) - a[i];
         if (a[i][res + strlen(s)] == 0 && flag == 0){
             flag = 1;
-        }
-        else if (a[i][res + strlen(s)] == 0 && flag == 1){
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
@@ -61,8 +59,17 @@ int solve5(char** a, int n, char* s){
                 j += 1;
             }
         }
+        else if (a[i][res + strlen(s)] == 0 && flag == 1){
+            continue;
+        }
         else{
             flag = 0;
+            if (i != j){
+                free(a[j]);
+                a[j] = a[i];
+                a[i] = 0;
+                j += 1;
+            }
         }
             
     }

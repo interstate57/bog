@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include "array.h"
-int solve4(char** a, int n, char* s);
+int solve7(char** a, int n, char* s);
 int main(int argc, char* argv[]){
     int n = 0, m = 0;
     char* name = 0;
     char** a = 0;
     io_status ret;
     char* s = 0;
-    int res = 0, task = 4;
+    int res = 0, task = 7;
     double t = 0;
     if (!(argc == 5 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &m) == 1)){
         printf("Usage: %s n m name s\n", argv[0]);
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
     }while(0);
     print_array(a, n, m);
     t = clock();
-    res = solve4(a, n, s);
+    res = solve7(a, n, s);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf("New array:\n");
     print_array(a, res, m);
@@ -45,35 +45,27 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-int solve4(char** a, int n, char* s){
-    int i, j, k;
-    int flag = 0;
-    size_t lens = strlen(s);
-    for (i = 0, j = 0; i < n; i++){
-        size_t lenai = strlen(a[i]);
-        if (lens >= lenai && flag == 0){
-            flag = 1;
-            if (i != j){
-                free(a[j]);
-                a[j] = a[i];
-                a[i] = 0;
+int solve7(char** a, int n, char* s){
+    int vspom[n];
+    int j, k, p;
+    int i = 2;
+    vspom[i - 2] = (strcmp(s, a[i - 1]) == 1 ? 1 : 0);
+    vspom[i - 1] = ((strcmp(s, a[i - 2]) == 1) || (strcmp(s, a[i]) == 1) ? 1 : 0);
+    for (i = 3; i < n; i++){
+        vspom[i - 1] = ((strcmp(s, a[i - 2]) == 1) || (strcmp(s, a[i]) == 1) ? 1 : 0);
+    }
+    vspom[i - 1] = (strcmp(s, a[i - 2]) == 1 ? 1 : 0);
+    for (p = 0, j = 0; p < n; p++){
+        if(vspom[p] == 0){
+            if (p != j){
+                free(a[p]);
+                a[j] = a[p];
+                a[p] = 0;
                 j += 1;
             }
         }
-        else if (lens >= lenai && flag == 1){
-            continue;
-        }
-        else{
-            flag = 0;
-            if (i != j){
-                free(a[j]);
-                a[j] = a[i];
-                a[i] = 0;
-                j += 1;
-            }
-        }
-            
     }
     for (k = j; k < n; k++) free(a[k]);
     return j;
 }
+
