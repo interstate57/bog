@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "io_status.h"
 #include "array.h"
 #define LEN 1234
 
@@ -17,7 +16,7 @@ io_status read_array(char** a, int n, const char* name){
             return ERROR_READ;
         }
         for (j = 0; buf[j]; j++){
-            if (buf[j] = "\n"){
+            if (buf[j] == '\n'){
                 buf[j] = 0;
                 break;
             }

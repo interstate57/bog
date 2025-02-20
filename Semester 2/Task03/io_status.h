@@ -1,3 +1,5 @@
+#pragma once
+
 typedef enum io_status_{
     SUCCESS,
     ERROR_OPEN,

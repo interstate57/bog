@@ -2,10 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "io_status.h"
 #include "array.h"
 int solve3(char** a, int n, char* s);
-int main(int argc, char argv[]){
+int main(int argc, char* argv[]){
     int n = 0, m = 0;
     char* name = 0;
     char** a = 0;
@@ -56,7 +55,7 @@ int solve3(char** a, int n, char* s){
                 break;
             }
         }
-        if (cnt == 0){
+        if (cnt != 0){
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
