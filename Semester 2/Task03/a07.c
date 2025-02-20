@@ -49,16 +49,16 @@ int solve7(char** a, int n, char* s){
     int vspom[n];
     int j, k, p;
     int i = 2;
-    vspom[i - 2] = (strcmp(s, a[i - 1]) == 1 ? 1 : 0);
-    vspom[i - 1] = ((strcmp(s, a[i - 2]) == 1) || (strcmp(s, a[i]) == 1) ? 1 : 0);
+    vspom[i - 2] = (strcmp(a[i - 1], s) < 0 ? 1 : 0);
+    vspom[i - 1] = ((strcmp(a[i - 2], s) < 0) || (strcmp(a[i], s) < 0) ? 1 : 0);
     for (i = 3; i < n; i++){
-        vspom[i - 1] = ((strcmp(s, a[i - 2]) == 1) || (strcmp(s, a[i]) == 1) ? 1 : 0);
+        vspom[i - 1] = ((strcmp(a[i - 2], s) < 0) || (strcmp(a[i], s) < 0) ? 1 : 0);
     }
-    vspom[i - 1] = (strcmp(s, a[i - 2]) == 1 ? 1 : 0);
+    vspom[i - 1] = (strcmp(a[i - 2], s) < 0 ? 1 : 0);
     for (p = 0, j = 0; p < n; p++){
         if(vspom[p] == 0){
             if (p != j){
-                free(a[p]);
+                free(a[j]);
                 a[j] = a[p];
                 a[p] = 0;
             }

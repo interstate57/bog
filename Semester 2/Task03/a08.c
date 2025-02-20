@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "array.h"
+#define LEN 1234
 int dop(char* s, char* a);
 int solve8(char** a, int n, char* s);
 int main(int argc, char* argv[]){
@@ -48,16 +49,22 @@ int main(int argc, char* argv[]){
 
 int dop(char* s, char* a){
     int i;
-    for (i = 0; a[i]; i++){
-        if (a[i] >= 'A' && a[i] <= 'Z') a[i] += 'a' - 'A';
+    char a1[LEN];
+    strcpy(a1, a);
+    for (i = 0; a1[i]; i++){
+        if (a1[i] >= 'A' && a1[i] <= 'Z') a1[i] += 'a' - 'A';
     }
-    return (!(strstr(s, a)) ? 0 : 1);
+    return (!(strstr(s, a1)) ? 0 : 1);
 }
 
 int solve8(char** a, int n, char* s){
     int vspom[n];
     int j, k, p;
-    int i = 2;
+    int i;
+    for (i = 0; s[i]; i++){
+        if (s[i] >= 'A' && s[i] <= 'Z') s[i] += 'a' - 'A';
+    }
+    i = 2;
     vspom[i - 2] = (dop(s, a[i - 1]) == 1 ? 1 : 0);
     vspom[i - 1] = ((dop(s, a[i - 2]) == 1) || (dop(s, a[i]) == 1) ? 1 : 0);
     for (i = 3; i < n; i++){
@@ -67,7 +74,7 @@ int solve8(char** a, int n, char* s){
     for (p = 0, j = 0; p < n; p++){
         if(vspom[p] == 0){
             if (p != j){
-                free(a[p]);
+                free(a[j]);
                 a[j] = a[p];
                 a[p] = 0;
             }

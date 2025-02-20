@@ -53,6 +53,7 @@ int dop(char* s, char* a){
             cnt += 1;
             break;
         }
+        i += 1;
     }
     return cnt;
 }
@@ -94,6 +95,7 @@ int solve6(char** a, int n, char* s){
             j += 1;
         }   
     }
+    i -= 1;
     if (i != j){
         free(a[j]);
         a[j] = a[i];
