@@ -53,8 +53,8 @@ int solve2(char** a, int n, char* s){
                 free(a[j]);
                 a[j] = a[i];
                 a[i] = 0;
-                j += 1;
             }
+            j += 1;
         }
     }
     for (k = j; k < n; k++) free(a[k]);

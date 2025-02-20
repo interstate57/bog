@@ -55,13 +55,13 @@ int solve3(char** a, int n, char* s){
                 break;
             }
         }
-        if (cnt != 0){
+        if (cnt == 0){
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
                 a[i] = 0;
-                j += 1;
             }
+            j += 1;
         }
     }
     for (k = j; k < n; k++) free(a[k]);

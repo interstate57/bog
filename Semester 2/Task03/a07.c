@@ -61,8 +61,8 @@ int solve7(char** a, int n, char* s){
                 free(a[p]);
                 a[j] = a[p];
                 a[p] = 0;
-                j += 1;
             }
+            j += 1;
         }
     }
     for (k = j; k < n; k++) free(a[k]);

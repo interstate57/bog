@@ -56,8 +56,8 @@ int solve5(char** a, int n, char* s){
                 free(a[j]);
                 a[j] = a[i];
                 a[i] = 0;
-                j += 1;
             }
+            j += 1;
         }
         else if (a[i][res + strlen(s)] == 0 && flag == 1){
             continue;
@@ -68,8 +68,8 @@ int solve5(char** a, int n, char* s){
                 free(a[j]);
                 a[j] = a[i];
                 a[i] = 0;
-                j += 1;
             }
+            j += 1;
         }
             
     }

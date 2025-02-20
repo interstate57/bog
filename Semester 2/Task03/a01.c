@@ -14,6 +14,7 @@ int main(int argc, char* argv[]){
     double t = 0;
     if (!(argc == 5 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &m) == 1)){
         printf("Usage: %s n m name s\n", argv[0]);
+        return 1;
     }
     name = argv[3];
     s = argv[4];
@@ -48,13 +49,13 @@ int main(int argc, char* argv[]){
 int solve1(char** a, int n, char* s){
     int i, j, k;
     for (i = 0, j = 0; i < n; i++){
-        if (strcmp(s, a[i]) != 1){
+        if (strcmp(s, a[i]) < 1){
             if (i != j){
                 free(a[j]);
                 a[j] = a[i];
                 a[i] = 0;
-                j += 1;
             }
+            j += 1;
         }
     }
     for (k = j; k < n; k++) free(a[k]);

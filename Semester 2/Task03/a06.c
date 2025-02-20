@@ -67,8 +67,8 @@ int solve6(char** a, int n, char* s){
                 free(a[j]);
                 a[j] = a[i - 1];
                 a[i - 1] = 0;
-                j += 1;
             }
+            j += 1;
         }
         else if (dop(s, a[i - 1]) == 0 && flag == 1){
             if (dop(s, a[i]) == 0){
@@ -80,8 +80,8 @@ int solve6(char** a, int n, char* s){
                     free(a[j]);
                     a[j] = a[i - 1];
                     a[i - 1] = 0;
-                    j += 1;
                 }
+                j += 1;
             }
         }
         else{
@@ -90,8 +90,8 @@ int solve6(char** a, int n, char* s){
                 free(a[j]);
                 a[j] = a[i - 1];
                 a[i - 1] = 0;
-                j += 1;
             }
+            j += 1;
         }   
     }
     if (i != j){
