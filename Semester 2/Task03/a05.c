@@ -49,8 +49,17 @@ int solve5(char** a, int n, char* s){
     int i, j, k;
     int flag = 0;
     for (i = 0, j = 0; i < n; i++){
-        size_t res = strstr(a[i], s) - a[i];
-        if (a[i][res + strlen(s)] == 0 && flag == 0){
+        int bad_str = 1;
+        size_t lens = strlen(s);
+        size_t lenai = strlen(a[i]);
+        if (lenai < lens){
+            bad_str = 0;   
+        }
+        else if (strcmp(a[i] + (lenai - lens) , s) != 0){
+            bad_str = 0;
+        }
+
+        if (bad_str == 1 && flag == 0){ 
             flag = 1;
             if (i != j){
                 free(a[j]);
@@ -59,7 +68,7 @@ int solve5(char** a, int n, char* s){
             }
             j += 1;
         }
-        else if (a[i][res + strlen(s)] == 0 && flag == 1){
+        else if (bad_str == 1 && flag == 1){
             continue;
         }
         else{

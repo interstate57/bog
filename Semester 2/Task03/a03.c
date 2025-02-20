@@ -54,6 +54,7 @@ int solve3(char** a, int n, char* s){
                 cnt += 1;
                 break;
             }
+            p += 1;
         }
         if (cnt == 0){
             if (i != j){
