@@ -51,7 +51,7 @@ int solve4(char** a, int n, char* s){
     size_t lens = strlen(s);
     for (i = 0, j = 0; i < n; i++){
         size_t lenai = strlen(a[i]);
-        if (lens >= lenai && flag == 0){
+        if (lenai < lens && flag == 0){
             flag = 1;
             if (i != j){
                 free(a[j]);
@@ -60,7 +60,7 @@ int solve4(char** a, int n, char* s){
             }
             j += 1;
         }
-        else if (lens >= lenai && flag == 1){
+        else if (lenai < lens && flag == 1){
             continue;
         }
         else{
