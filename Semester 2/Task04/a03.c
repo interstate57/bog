@@ -4,6 +4,7 @@
 #include <time.h>
 #include "array.h"
 #include "sravneniya.h"
+#include "sortirovki.h"
 int main(int argc, char* argv[]){
     int n = 0, p = 0, c = 0;
     char* name = 0;
@@ -13,13 +14,14 @@ int main(int argc, char* argv[]){
     int res = 0, task = 3;
     double t = 0;
     int (*f[])(const char* , const char*) = {up_strcmp, down_strcmp, up_len, down_len};
+    int (*cmp)(const char* , const char*);
     int len_f = sizeof(f) / sizeof(f[0]);
     if (!(argc == 6 && sscanf(argv[2], "%d", &c) == 1 && sscanf(argv[3], "%d", &n) == 1 && sscanf(argv[4], "%d", &p) == 1 &&\
         c >= 1 && c <= len_f)){
         printf("Usage: %s x c n p filename\n", argv[0]);
         return 1;
     }
-    int (*cmp)(const char* , const char*) = f[c - 1];
+    cmp = f[c - 1];
     name = argv[5];
     x = argv[1];
     a = (char**)malloc(n * sizeof(char*));

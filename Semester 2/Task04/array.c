@@ -46,3 +46,12 @@ void print_array(char** a, int n, int m){
         printf("%s\n", a[i]);
     }
 }
+
+int difference (char** a, int n, int (*cmp)(const char*, const char*)){
+    int i;
+    int ans = 0;
+    for (i = 1; i < n; i ++){
+        if (cmp(a[i], a[i - 1]) > 0) ans += 1;
+    }
+    return ans;
+}
