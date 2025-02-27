@@ -42,6 +42,7 @@ int main(int argc, char* argv[]){
     b = (char**)malloc(n * sizeof(char*));
     if (!b){
         printf("Not enough memory!\n");
+        delete_array(a, n);
         free(a);
         return 2;
     }

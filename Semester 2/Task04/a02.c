@@ -42,6 +42,14 @@ int main(int argc, char* argv[]){
         free(a);
         return 3;
     }while(0);
+    for (int i = 0; i < n - 1; i ++){
+        if (cmp(a[i + 1], a[i]) < 0){
+            printf("Array a is not an increasing one\n");
+            delete_array(a, n);
+            free(a);
+            return 5;
+        }
+    }
     b = (char**)malloc(m * sizeof(char*));
     if (!b){
         printf("Cannot allocate memory!\n");
@@ -62,6 +70,16 @@ int main(int argc, char* argv[]){
         free(b);
         return 3;
     }while(0);
+    for (int i = 0; i < m - 1; i ++){
+        if (cmp(b[i + 1], a[i]) < 0){
+            printf("Array b is not an increasing one\n");
+            delete_array(a, n);
+            free(a);
+            delete_array(b, m);
+            free(b);
+            return 5;
+        }
+    }
     print_array(a, n, pa);
     print_array(b, m, pb);
     c = (char**)malloc((n + m) * sizeof(char*));
@@ -84,7 +102,6 @@ int main(int argc, char* argv[]){
     free(a);
     delete_array(b, m);
     free(b);
-    delete_array(c, n + m);
     free(c);
     return 0;
 }
