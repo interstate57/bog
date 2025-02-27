@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     int (*f[])(const char* , const char*) = {up_strcmp, down_strcmp, up_len, down_len};
     int len_f = sizeof(f) / sizeof(f[0]);
     int (*cmp)(const char* , const char*);
-    if (!(argc == 8 && sscanf(argv[1], "%d", s) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &pa) == 1 &&\
+    if (!(argc == 8 && sscanf(argv[1], "%d", &s) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &pa) == 1 &&\
         s >= 1 && s <= len_f && sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1)){
         printf("Usage: %s s n pa filename1 m pb filename2\n", argv[0]);
         return 1;

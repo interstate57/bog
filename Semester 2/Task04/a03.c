@@ -45,9 +45,9 @@ int main(int argc, char* argv[]){
     res = sort3(x, a, n, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf("New array:\n");
-    print_array(a, res, p);
+    print_array(a, n, p);
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);
-    delete_array(a, res);
+    delete_array(a, n);
     free(a);
     return 0;
 }

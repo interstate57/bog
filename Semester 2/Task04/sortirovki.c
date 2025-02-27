@@ -10,7 +10,6 @@ int sort1(char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     if (cmp(x, a[n - 1]) > 0){
         return n;
     }
-    printf("1\n");
     while (inach != ikon){
         s = (inach + ikon) / 2;
         if (cmp(x, a[s]) > 0){
@@ -23,20 +22,53 @@ int sort1(char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     return inach;
 }
 
+void sort2 (char** a, char** b, int n, int m, char** c, int (*cmp)(const char*, const char*)){
+    int i = 0, j = 0, k = 0;
+    while (i != n && j != m){
+        if (cmp(a[i], b[j]) < 0){
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+        else if (cmp(b[j], a[i]) < 0){
+            c[k] = b[j];
+            j += 1;
+            k += 1;
+        }
+        else{
+            c[k] = a[i];
+            i += 1;
+            k += 1;
+        }
+    }
+    if (i == n){
+        for (; j < m; j ++){
+            c[k] = b[j];
+            k += 1;
+        }
+    }
+    else if (j == m){
+        for (; i < n; i ++){
+            c[k] = a[i];
+            k += 1;
+        }
+    }
+}
+
 int sort3 (char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     int inuzh = 0, jnuzh = n - 1;
     int i = 0, j = n - 1;
     char* vr = 0;
     while (i <= j){
         while (i < n){
-            if (cmp(x, a[i]) >= 0){
+            if (cmp(x, a[i]) < 0){
                 inuzh = i;
                 break;
             }
             i += 1;
         }
         while (j > -1){
-            if (cmp(a[j], x) > 0){
+            if (cmp(a[j], x) <= 0){
                 jnuzh = j;
                 break;
             }
@@ -56,7 +88,7 @@ void sort4 (char** a, int n, int (*cmp)(const char* , const char*)){
     char* per = 0;
     for (i = 0; i < n; i ++){
         for (j = 0; j < n - 1 - i; j ++){
-            if (cmp(a[j + 1], a[j]) > 0){
+            if (cmp(a[j + 1], a[j]) < 0){
                 per = a[j];
                 a[j] = a[j + 1];
                 a[j + 1] = per;
@@ -72,7 +104,7 @@ void sort5 (char** a, int n, int (*cmp)(const char* , const char*)){
         int mini = i;
         char* minch = a[i];
         for (j = i; j < n; j ++){
-            if (cmp(minch, a[j]) < 0){
+            if (cmp(minch, a[j]) > 0){
                 mini = j;
                 minch = a[j];
             }
@@ -89,7 +121,7 @@ void sort6 (char** a, int n, int (*cmp)(const char* , const char*)){
         int nuzh = -1;
         char* vr = 0;
         for (j = 0; j < i ; j ++){
-            if (cmp(a[i], a[j]) > 0){
+            if (cmp(a[i], a[j]) < 0){
                 nuzh = j;
                 break;
             }
@@ -121,12 +153,12 @@ void sort7 (char** a, int n, int (*cmp)(const char* , const char*)){
 
 int binpoisk (char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     int inach = 0, ikon = n, s = 0;
-    if (cmp(a[n - 1], x) > 0){
+    if (cmp(a[n - 1], x) < 0){
         return n;
     }
     while (inach != ikon){
         s = (inach + ikon) / 2;
-        if (cmp(a[s], x) > 0){
+        if (cmp(a[s], x) < 0){
             inach = s + 1;
         }
         else{
@@ -171,12 +203,12 @@ void sort8 (char** a, char** b, int n, int (*cmp)(const char* , const char*)){
 void merge (char** a, char** b, int n, int m, char** c, int (*cmp)(const char* , const char*)){
     int i = 0, j = 0, k = 0;
     while (i != n && j != m){
-        if (cmp(a[i], b[j]) > 0){
+        if (cmp(a[i], b[j]) < 0){
             c[k] = a[i];
             i += 1;
             k += 1;
         }
-        else if (cmp(b[j], a[i]) > 0){
+        else if (cmp(b[j], a[i]) < 0){
             c[k] = b[j];
             j += 1;
             k += 1;
@@ -236,14 +268,14 @@ int polov_sort (char* x, char** a, int n, int (*cmp)(const char* , const char*))
     char* vr = 0;
     while (i <= j){
         while (i < n){
-            if (cmp(x, a[i]) >= 0){
+            if (cmp(x, a[i]) <= 0){
                 inuzh = i;
                 break;
             }
             i += 1;
         }
         while (j > -1){
-            if (cmp(a[j], x) > 0){
+            if (cmp(a[j], x) < 0){
                 jnuzh = j;
                 break;
             }
