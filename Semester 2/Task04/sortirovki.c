@@ -7,12 +7,13 @@
 
 int sort1(char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     int inach = 0, ikon = n, s = 0;
-    if (cmp(a[n - 1], x) > 0){
+    if (cmp(x, a[n - 1]) > 0){
         return n;
     }
+    printf("1\n");
     while (inach != ikon){
         s = (inach + ikon) / 2;
-        if (cmp(a[s], x) > 0){
+        if (cmp(x, a[s]) > 0){
             inach = s + 1;
         }
         else{
