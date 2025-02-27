@@ -22,38 +22,6 @@ int sort1(char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     return inach;
 }
 
-void sort2 (char** a, char** b, int n, int m, char** c, int (*cmp)(const char*, const char*)){
-    int i = 0, j = 0, k = 0;
-    while (i != n && j != m){
-        if (cmp(a[i], b[j]) < 0){
-            c[k] = a[i];
-            i += 1;
-            k += 1;
-        }
-        else if (cmp(b[j], a[i]) < 0){
-            c[k] = b[j];
-            j += 1;
-            k += 1;
-        }
-        else{
-            c[k] = a[i];
-            i += 1;
-            k += 1;
-        }
-    }
-    if (i == n){
-        for (; j < m; j ++){
-            c[k] = b[j];
-            k += 1;
-        }
-    }
-    else if (j == m){
-        for (; i < n; i ++){
-            c[k] = a[i];
-            k += 1;
-        }
-    }
-}
 
 int sort3 (char* x, char** a, int n, int (*cmp)(const char* , const char*)){
     int inuzh = 0, jnuzh = n - 1;

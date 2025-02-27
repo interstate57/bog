@@ -45,7 +45,7 @@ int main(int argc, char* argv[]){
     diff = difference (a, n, cmp);
     printf("New array:\n");
     print_array(a, n, p);
-    printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, diff, t);
+    printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     delete_array(a, n);
     free(a);
     return 0;

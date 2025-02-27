@@ -45,6 +45,7 @@ int main(int argc, char* argv[]){
     b = (char**)malloc(m * sizeof(char*));
     if (!b){
         printf("Cannot allocate memory!\n");
+        delete_array(a, n);
         free(a);
         return 2;
     }
@@ -56,6 +57,7 @@ int main(int argc, char* argv[]){
             case ERROR_READ: printf("Cannot read file!\n"); break;
             case ERROR_MEMORY: printf("Not enough memory!\n"); break;
         }
+        delete_array(a, n);
         free(a);
         free(b);
         return 3;
@@ -65,19 +67,24 @@ int main(int argc, char* argv[]){
     c = (char**)malloc((n + m) * sizeof(char*));
     if (!c){
         printf("Cannot allocate memory!\n");
+        delete_array(a, n);
         free(a);
+        delete_array(b, m);
         free(b);
         return 2;
     }
     t = clock();
-    sort2(a, b, n, m, c, cmp);
+    merge(a, b, n, m, c, cmp);
     t = (clock() - t) / CLOCKS_PER_SEC;
     diff = difference (c, n + m, cmp);
     printf ("New array:\n");
     print_array (c, n + m, pa + pb);
     printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
+    delete_array(a, n);
     free(a);
+    delete_array(b, m);
     free(b);
+    delete_array(c, n + m);
     free(c);
     return 0;
 }

@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf("New array:\n");
     print_array(a, n, p);
-    printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);
+    printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, res, t);
     delete_array(a, n);
     free(a);
     return 0;
