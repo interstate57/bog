@@ -1,9 +1,10 @@
 #define EPS 1e-14
 #include <math.h>
+#include <stdio.h>
 #include "solve.h"
 
 int equal(double x, double y){
-    if ((fabs (x - y)) < (EPS  * (fabs (x) + fabs (y)))){
+    if ((fabs (x - y)) <= (EPS  * (fabs (x) + fabs (y)))){
         return 1;
     }
     else{
@@ -15,8 +16,9 @@ int solve1(double* a, int n){
     int i, j;
     for (i = 0; i < n; i ++){
         for (j = i + 1; j < n; j++){
-            if (!equal(a[i * n + j], a[i + j * n]))
+            if (!equal(a[i * n + j], a[i + j * n])){
                 return 0;
+            }
         }
     }
     return 1;
@@ -78,6 +80,9 @@ void solve6(double* a, int n, int m, int i, int j){
     double* b = a + m * (i - 1);
     double* c = a + m * (j - 1);
     (void) n;
+
+    if (i == j)
+        return;
     for (k = 0; k < m; k ++){
         vr = b[k];
         b[k] = c[k];
@@ -90,6 +95,9 @@ void solve7(double* a, int n, int m, int i, int j){
     double vr = 0;
     double* b = a + (i - 1);
     double* c = a + (j - 1);
+    
+    if (i == j)
+        return;
     for (k = 0; k < n; k ++){
         vr = b[k * m];
         b[k * m] = c[k * m];

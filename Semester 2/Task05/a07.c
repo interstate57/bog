@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     if (!((argc == 7 || argc == 8) && sscanf(argv[1], "%d", &i) == 1 &&\
         sscanf(argv[2], "%d", &j) == 1 && sscanf(argv[3], "%d", &n) == 1 &&\
         sscanf(argv[4], "%d", &m) == 1 && sscanf(argv[5], "%d", &p) == 1 &&\
-        sscanf(argv[6], "%d", &k) == 1 && (k >= 0 && k <= 4)) || !(k == 0 && argc == 5)){
+        sscanf(argv[6], "%d", &k) == 1 && (k >= 0 && k <= 4)) || (k != 0 && argc == 8)){
         printf("Usage %s i j n m p k [name] \n", argv[0]);
         return 1;
     }
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
         } while(0);
     }
     else{
-        init_matrix(a, n, n, k);
+        init_matrix(a, n, m, k);
     }
     printf("Initial matrix \n");
     print_matrix(a, n, m, p);

@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     char* nameb = 0;
     if (!((argc == 7 || argc == 8 || argc == 9) && sscanf(argv[1], "%d", &n) == 1 &&\
         sscanf(argv[2], "%d", &m) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &k) == 1 &&\
-        sscanf(argv[5], "%d", &ka) == 1 && (ka >= 0 && ka <= 4)) || !(ka == 0 && argc > 7)){
+        sscanf(argv[5], "%d", &ka) == 1 && (ka >= 0 && ka <= 4)) || (ka != 0 && argc > 8)){
         printf("Usage %s n m p ka [namea] kb [nameb] \n", argv[0]);
         return 1;
     }
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]){
     }
     if (nameb){
         io_status retb;
-        retb = read_matrix(a, m, k, namea);
+        retb = read_matrix(b, m, k, nameb);
         do{
             switch(retb){
                 case SUCCESS: continue;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
         } while(0);
     }
     else{
-        init_matrix(a, m, k, kb);
+        init_matrix(b, m, k, kb);
     }
     c = (double*)malloc(n * k * sizeof(double));
     if (!c){
@@ -102,12 +102,12 @@ int main(int argc, char* argv[]){
     printf("Initial matrix a \n");
     print_matrix(a, n, m, p);
     printf("Initial matrix b \n");
-    print_matrix(a, m, 1, p);
+    print_matrix(b, m, k, p);
     t = clock();
     solve10(a, b, c, n, m, k);
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf("Final matrix\n");
-    print_matrix(c, n, 1, p);
+    print_matrix(c, n, k, p);
     printf ("%s : Task = %d Elapsed = %.2f\n", argv[0], task, t);
     free(a);
     free(b);

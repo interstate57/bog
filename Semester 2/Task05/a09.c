@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     char* nameb = 0;
     if (!((argc == 6 || argc == 7 || argc == 8) && sscanf(argv[1], "%d", &n) == 1 &&\
         sscanf(argv[2], "%d", &m) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
-        sscanf(argv[4], "%d", &ka) == 1 && (ka >= 0 && ka <= 4)) || !(ka == 0 && argc > 6)){
+        sscanf(argv[4], "%d", &ka) == 1 && (ka >= 0 && ka <= 4)) || (ka != 0 && argc > 7)){
         printf("Usage %s n m p ka [namea] kb [nameb] \n", argv[0]);
         return 1;
     }

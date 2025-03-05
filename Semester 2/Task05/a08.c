@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     if (!((argc == 8 || argc == 9) && sscanf(argv[1], "%d", &i) == 1 &&\
         sscanf(argv[2], "%d", &j) == 1 && sscanf(argv[3], "%lf", &r) == 1 &&\
         sscanf(argv[4], "%d", &n) == 1 && sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &p) == 1 &&\
-        sscanf(argv[7], "%d", &k) == 1 && (k >= 0 && k <= 4)) || !(k == 0 && argc == 5)){
+        sscanf(argv[7], "%d", &k) == 1 && (k >= 0 && k <= 4)) || (k != 0 && argc == 9)){
         printf("Usage %s i j r n m p k [name] \n", argv[0]);
         return 1;
     }

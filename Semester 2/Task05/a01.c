@@ -6,13 +6,13 @@
 
 int main(int argc, char* argv[]){
     double* a;
-    int n, p, k, res;
-    double t;
+    int n, p, k;
+    double t, res;
     int task = 1;
     char* name = 0;
     if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 &&\
         sscanf(argv[2], "%d", &p) == 1 &&\
-        sscanf(argv[3], "%d", &k) == 1 && (k >= 0 && k <= 4)) || !(k == 0 && argc == 5)){
+        sscanf(argv[3], "%d", &k) == 1 && (k >= 0 && k <= 4)) || (k != 0 && argc == 5)){
         printf("Usage %s n p k [name] \n", argv[0]);
         return 1;
     }
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
     t = clock();
     res = solve1(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
-    printf("Result = %d\n", res);
+    printf("Result = %10.3e\n", res);
     printf ("%s : Task = %d Elapsed = %.2f\n", argv[0], task, t);
     free(a);
     return 0;

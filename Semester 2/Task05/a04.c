@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     char* name = 0;
     if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 &&\
         sscanf(argv[2], "%d", &p) == 1 &&\
-        sscanf(argv[3], "%d", &k) == 1 && (k >= 0 && k <= 4)) || !(k == 0 && argc == 5)){
+        sscanf(argv[3], "%d", &k) == 1 && (k >= 0 && k <= 4)) || (k != 0 && argc == 5)){
         printf("Usage %s n p k [name] \n", argv[0]);
         return 1;
     }
