@@ -77,7 +77,7 @@ int main(int argc, char* argv[]){
     }
     if (nameb){
         io_status retb;
-        retb = read_matrix(a, m, 1, namea);
+        retb = read_matrix(b, m, 1, nameb);
         do{
             switch(retb){
                 case SUCCESS: continue;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
         } while(0);
     }
     else{
-        init_matrix(a, m, 1, kb);
+        init_matrix(b, m, 1, kb);
     }
     c = (double*)malloc(n * 1 * sizeof(double));
     if (!c){
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]){
     printf("Initial matrix a \n");
     print_matrix(a, n, m, p);
     printf("Initial matrix b \n");
-    print_matrix(a, m, 1, p);
+    print_matrix(b, m, 1, p);
     t = clock();
     solve9(a, b, c, n, m);
     t = (clock() - t) / CLOCKS_PER_SEC;
