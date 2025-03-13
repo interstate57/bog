@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     if (argc == 6){
-        if (!(sscanf(argv[5], "%d", &kb) == 1 && (kb > 0 && kb <= 4))){
+        if (!(sscanf(argv[5], "%d", &kb) == 1 && (kb > 0 && kb <= 4) && (ka != 0))){
             printf("Usage %s n m p ka [namea] kb [nameb] \n", argv[0]);
             return 1;
         }

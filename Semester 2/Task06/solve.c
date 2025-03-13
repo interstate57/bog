@@ -90,8 +90,8 @@ double solve11(double* a, int n, int m){
             }
         }
     }
-    per_strok(a, n, m, 1, max_i);
-    per_stolb(a, n, m, 1, max_j);
+    per_strok(a, n, m, 1, max_i + 1);
+    per_stolb(a, n, m, 1, max_j + 1);
     return fabs(a[0]);
 }
 
@@ -116,9 +116,9 @@ double solve7(double* a, int n, int m){
 double solve8(double* a, int n, int m){
     double max_a = 0;
     int i, j;
-    for (i = n - 1; i > 1; i--){
+    for (i = n - 2; i > 0; i--){
         double* b = a + m * (i - 1);
-        for (j = m - 1; j > 1; j--){
+        for (j = m - 2; j > 0; j--){
             b[m + j] = (b[j] + b[m + j + 1] + b[2 * m + j] + b[m + j - 1]) / 5;
         }
     }
@@ -136,7 +136,7 @@ double solve9(double* a, int n, int m){
     int i, j;
     for (i = 1; i < n - 1; i++){
         double* b = a + m * (i - 1);
-        for (j = m - 1; j > 1; j--){
+        for (j = m - 2; j > 0; j--){
             b[m + j] = (b[j] + b[m + j + 1] + b[2 * m + j] + b[m + j - 1]) / 5;
         }
     }
@@ -152,7 +152,7 @@ double solve9(double* a, int n, int m){
 double solve10(double* a, int n, int m){
     double max_a = 0;
     int i, j;
-    for (i = n - 1; i > 1; i--){
+    for (i = n - 2; i > 0; i--){
         double* b = a + m * (i - 1);
         for (j = 1; j < m - 1; j++){
             b[m + j] = (b[j] + b[m + j + 1] + b[2 * m + j] + b[m + j - 1]) / 5;
@@ -209,7 +209,7 @@ double solve5(double* a, double* b, int n, int m){
             }
             sum_str += fabs(sum);
         }
-        max_str = max_zn(sum_str, max_str);
+        max_str = max_zn(sum_str - m, max_str);
     }
     return max_str;
 }
@@ -228,7 +228,7 @@ double solve6(double* a, double* b, int n, int m){
             }
             sum_st += fabs(sum);
         }
-        max_st = max_zn(sum_st, max_st);
+        max_st = max_zn(sum_st - n, max_st);
     }
     return max_st;
 }

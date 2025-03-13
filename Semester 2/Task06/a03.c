@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     if (argc == 7){
-        if (!(sscanf(argv[5], "%d", &kb) == 1 && (kb > 0 && kb <= 4) && sscanf(argv[6], "%d", &kx) == 1 && (kx > 0 && kx <= 4))){
+        if (!(sscanf(argv[5], "%d", &kb) == 1 && (kb > 0 && kb <= 4) && sscanf(argv[6], "%d", &kx) == 1 && (kx > 0 && kx <= 4) && ka != 0)){
             printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
             return 1;
         }
@@ -40,13 +40,13 @@ int main(int argc, char* argv[]){
         }
         if (kb == 0){
             nameb = argv[6];
-            if((sscanf(argv[7], "%d", &kx) == 1 && kx != 0)){
+            if(!(sscanf(argv[7], "%d", &kx) == 1 && kx != 0)){
                 printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
                 return 1;
             }
         }
         else{
-            if((sscanf(argv[6], "%d", &kx) == 1 && kx == 0)){
+            if(!(sscanf(argv[6], "%d", &kx) == 1 && kx == 0)){
                 printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
                 return 1;
             }
@@ -73,13 +73,13 @@ int main(int argc, char* argv[]){
         }
         if (kb == 0){
             nameb = argv[7];
-            if((sscanf(argv[8], "%d", &kx) == 1 && kx != 0)){
+            if(!(sscanf(argv[8], "%d", &kx) == 1 && kx != 0)){
                 printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
                 return 1;
             }
         }
         else{
-            if((sscanf(argv[7], "%d", &kx) == 1 && kx == 0)){
+            if(!(sscanf(argv[7], "%d", &kx) == 1 && kx == 0)){
                 printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
                 return 1;
             }
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]){
             return 1;
         }
         nameb = argv[7];
-        if((sscanf(argv[8], "%d", &kx) == 1 && kx == 0)){
+        if(!(sscanf(argv[8], "%d", &kx) == 1 && kx == 0)){
             printf("Usage %s n m p ka [namea] kb [nameb] kx [namex] \n", argv[0]);
             return 1;
         }
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]){
     }
     if (namex){
         io_status retx;
-        retx = read_matrix(x, m, 1, nameb);
+        retx = read_matrix(x, m, 1, namex);
         do{
             switch(retx){
                 case SUCCESS: continue;
