@@ -58,8 +58,8 @@ int solve1(double* a, int m, int n){
     double min_ = 1e308;
     for (i = 0; i < m; i++){
         for (j = 0; j < n; j++){
-            if (a[i * n + j] < min_){
-                min_ = a[i * n + j];
+            if (fabs(a[i * n + j]) < min_){
+                min_ = fabs(a[i * n + j]);
                 j_ans = j;
             }
         }
@@ -74,8 +74,8 @@ int solve2(double* a, int m, int n){
     double min_ = 1e308;
     for (i = 0; i < m; i++){
         for (j = 0; j < n; j++){
-            if (a[i * n + j] < min_){
-                min_ = a[i * n + j];
+            if (fabs(a[i * n + j]) < min_){
+                min_ = fabs(a[i * n + j]);
                 j_ans = j;
                 i_ans = i;
             }

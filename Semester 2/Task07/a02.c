@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     if (!((argc == 5 || argc == 6) && sscanf(argv[1], "%d", &m) == 1 &&\
         sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
         sscanf(argv[4], "%d", &k) == 1 && (k >= 0 && k <= 4)) || (k != 0 && argc == 6)){
-        printf("Usage %s n m p k [name] \n", argv[0]);
+        printf("Usage %s m n p k [name] \n", argv[0]);
         return 1;
     }
     if (argc == 6)
