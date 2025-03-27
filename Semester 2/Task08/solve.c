@@ -5,9 +5,9 @@
 
 double solve1(double* a, double* x, double* xm, int n, int m){
     int i;
-    xm = x;
+    double res = 0;
     vectcpy(xm, x, n);
-    for (i = 1; i <= m; i ++){
+    for (i = 0; i <= m; i ++){
         vectcpy(x, xm, n);
         proisv_matr_na_vect(a, x, xm, n);
     }
@@ -15,7 +15,9 @@ double solve1(double* a, double* x, double* xm, int n, int m){
         return 1e308;
     }
     else{
-        return skal_proisv(xm, x, n) / skal_proisv(x, x, n);
+        res = skal_proisv(xm, x, n) / skal_proisv(x, x, n);
+        vectcpy(xm, x, n);
+        return res;
     }
 }
 
@@ -122,6 +124,26 @@ void solve9(double* a, double* x, double* b, double* xm, double* r, double* w, i
     }
 }
 
+void solve10(double* a, double* x, double* b, double* xm, double* r, double* w, int n, int m, double tau){
+    int i;
+    vectcpy(xm, x, n);
+    for (i = 1; i <= m; i++){
+        vectcpy(x, xm, n);
+        proisv_matr_na_vect(a, x, r, n);
+        razn_vect(b, r, r, n);
+        umnozh_vect_na_ch(r, r, n, tau);
+        if (!gauss_nizhn(a, r, w, n)){
+            vectcpy(xm, x, n);
+            return;
+        }
+        if (!gauss_verh_dop(a, w, r, n)){
+            vectcpy(xm, x, n);
+            return;
+        }
+        sum_vect(r, x, xm, n);
+    }
+}
+
 double r2_1(double* a, double* xm, int n, double r1){
     int i, j;
     double res = 0;
@@ -135,7 +157,12 @@ double r2_1(double* a, double* xm, int n, double r1){
     for (i = 0; i < n; i++){
         sum += fabs(r1 * xm[i]);
     }
-    return res / sum;
+    if (!equal(sum, 0)){
+        return res / sum;
+    }
+    else{
+        return 1e308;
+    }
 }
 
 double r1_(double* a, double* b, double* xm, int n){
@@ -151,7 +178,12 @@ double r1_(double* a, double* b, double* xm, int n){
     for (i = 0; i < n; i++){
         sum += fabs(b[i]);
     }
-    return res / sum;
+    if (!equal(sum, 0)){
+        return res / sum;
+    }
+    else{
+        return 1e308;
+    }
 }
 
 double r2_(double* xm, int n){
@@ -267,6 +299,21 @@ int gauss_verh(double* a, double* r, double* w, int n){
         }
         if (!equal(a[i * n + i], 0))
             w[i] = r[i] / a[i * n + i];
+        else{
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int gauss_verh_dop(double* a, double* r, double* w, int n){
+    int i, j;
+    for (i = n - 1; i > -1; i++){
+        for (j = n - 1; j < i; j++){
+            r[i] -= a[i * n + j] * w[j];
+        }
+        if (!equal(a[i * n + i], 0))
+            w[i] = r[i] * a[i * n + i] / a[i * n + i];
         else{
             return 0;
         }
