@@ -17,33 +17,33 @@ int main(int argc, char* argv[]){
     if (!((argc == 7 || argc == 8 || argc == 9) && sscanf(argv[1], "%le", &tau) == 1 && sscanf(argv[2], "%d", &m) == 1 &&\
         sscanf(argv[3], "%d", &n) == 1 && sscanf(argv[4], "%d", &p) == 1 &&\
         sscanf(argv[5], "%d", &ka) == 1 && (ka >= 0 && ka <= 4)) || (ka != 0 && argc > 9)){
-        printf("Usage %s m n p ka [namea] kb [nameb] \n", argv[0]);
+        printf("Usage %s tau m n p ka [namea] kb [nameb] \n", argv[0]);
         return 1;
     }
     if (argc == 7){
         if (!(sscanf(argv[6], "%d", &kx) == 1 && (kx > 0 && kx <= 4) && (ka != 0))){
-            printf("Usage %s m n p ka [namea] kb [nameb] \n", argv[0]);
+            printf("Usage %s tau m n p ka [namea] kb [nameb] \n", argv[0]);
             return 1;
         }
     }
     if (argc == 8 && ka == 0){
         namea = argv[6];
         if (!(sscanf(argv[7], "%d", &kx) == 1 && (kx > 0 && kx <= 4))){
-            printf("Usage %s m n p ka [namea] kb [nameb] \n", argv[0]);
+            printf("Usage %s tau m n p ka [namea] kb [nameb] \n", argv[0]);
             return 1;
         }
     }
     else if (argc == 8 && ka != 0){
         if (!(sscanf(argv[6], "%d", &kx) == 1 && kx == 0)){
-            printf("Usage %s m n p ka [namea] kb [nameb] \n", argv[0]);
+            printf("Usage %s tau m n p ka [namea] kb [nameb] \n", argv[0]);
             return 1;
         }
         namex = argv[7];
     }
-    if (argc == 8){
+    if (argc == 9){
         namea = argv[6];
         if (!(sscanf(argv[7], "%d", &kx) == 1 && kx == 0)){
-            printf("Usage %s m n p ka [namea] kb [nameb] \n", argv[0]);
+            printf("Usage %s tau m n p ka [namea] kb [nameb] \n", argv[0]);
             return 1;
         }
         namex = argv[8];
@@ -114,6 +114,8 @@ int main(int argc, char* argv[]){
     print_matrix(a, n, n, p);
     printf("Initial matrix x \n");
     print_matrix(x, n, 1, p);
+    printf("Initial matrix b \n");
+    print_matrix(b, n, 1, p);
     t = clock();
     solve2(a, x, b, xm, n, m, tau);
     r1 = r1_(a, b, xm, n);
