@@ -148,11 +148,13 @@ double r2_1(double* a, double* xm, int n, double r1){
     int i, j;
     double res = 0;
     double sum = 0;
+    double inner_sum = 0;
     for (i = 0; i < n; i++){
+        inner_sum = 0;
         for (j = 0; j < n; j++){
-            res += a[i * n + j] * xm[j];
+            inner_sum += a[i * n + j] * xm[j];
         }
-        res += fabs(res - r1 * xm[i]);
+        res += fabs(inner_sum - r1 * xm[i]);
     }
     for (i = 0; i < n; i++){
         sum += fabs(r1 * xm[i]);
