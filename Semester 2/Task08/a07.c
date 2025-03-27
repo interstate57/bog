@@ -9,9 +9,10 @@ int main(int argc, char* argv[]){
     double* b;
     double* x;
     double* xm;
+    double* r;
     int n, m, p, ka, kx;
     double t, tau, r1, r2;
-    int task = 2;
+    int task = 7;
     char* namea = 0;
     char* namex = 0;
     if (!((argc == 7 || argc == 8 || argc == 9) && sscanf(argv[1], "%le", &tau) == 1 && sscanf(argv[2], "%d", &m) == 1 &&\
@@ -110,12 +111,21 @@ int main(int argc, char* argv[]){
         free(x);
         return 2;
     }
+    r = (double*)malloc(n * 1 * sizeof(double));
+    if (!r){
+        printf("Not enough memory!\n");
+        free(a);
+        free(b);
+        free(x);
+        free(xm);
+        return 2;
+    }
     printf("Initial matrix a \n");
     print_matrix(a, n, n, p);
     printf("Initial matrix x \n");
     print_matrix(x, n, 1, p);
     t = clock();
-    solve2(a, x, b, xm, n, m, tau);
+    solve7(a, x, b, xm, r, n, m, tau);
     r1 = r1_(a, b, xm, n);
     r2 = r2_(xm, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
@@ -126,5 +136,6 @@ int main(int argc, char* argv[]){
     free(b);
     free(x);
     free(xm);
+    free(r);
     return 0;
 }
