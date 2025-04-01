@@ -1,5 +1,7 @@
 #include <math.h>
+#include <stdio.h>
 #include "solve.h"
+#include "array_io.h"
 #define EPS 1e-16
 
 double norma_mtrx(double* a, int n){
@@ -37,10 +39,14 @@ int solve(int n, double* a, double* b, double* x){
     for (i = 0; i < n; i++){
         double del = a[i * n + i];
         if (equal_zero(del, norma)) return -1;
+        print_matrix(a, n, n, n);
+        printf("\n");
+        print_matrix(b, n, 1, n);
+        printf("\n");
         for (j = i; j < n; j++){
             a[i * n + j] /= del;
-            b[i] /= del;
         }
+        b[i] /= del;
         for (k = 0; k < n; k++){
             double chislo = a[k * n + i];
             if (k == i){
@@ -48,8 +54,9 @@ int solve(int n, double* a, double* b, double* x){
             }
             for (j = i; j < n; j++){
                 a[k * n + j] -= chislo * a[i * n + j];
-                b[k] -= chislo * b[i];
             }
+            b[k] -= chislo * b[i];
+            
         }
     }
     vectcpy(x, b, n);
@@ -60,18 +67,6 @@ void vectcpy(double* a, double* b, int n){
     int i;
     for (i = 0; i < n; i++){
         a[i] = b[i];
-    }
-}
-
-void proisv_matr_na_vect(double* a, double* b, double* c, int n){
-    int i, j;
-    for (i = 0; i < n; i++){
-        double sum = 0;
-        double* astr = a + n * i;
-        for (j = 0; j < n; j++){
-            sum += astr[j] * b[j];
-        }
-        c[i] = sum;
     }
 }
 
@@ -92,17 +87,22 @@ double norma_vect(double* a, int n){
 }
 
 double calc_r1(double* a, double* b, double* x, int n, int* error){
+    int i, j;
     double norma_x = 0;
-    double norma_b = 0;
+    double norma_b = norma_vect(b, n);
     *error = 0;
-    proisv_matr_na_vect(a, x, x, n);
-    razn_vect(x, b, x, n);
-    norma_x = norma_vect(x, n);
-    norma_b = norma_vect(b, n);
     if (equal(0., norma_b)){
         *error = 1;
         return -1.;
     }
+    for (i = 0; i < n; i++){
+        double sum = 0;
+        for (j = 0; j < n; j++){
+            sum += a[i * n + j] * x[j];
+        }
+        b[i] = sum - b[i];
+    }
+    norma_x = norma_vect(b, n);
     return norma_x / norma_b;
 }
 
