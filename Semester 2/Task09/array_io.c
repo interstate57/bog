@@ -59,7 +59,7 @@ void init_matrix_b(double* b, int n, double* a){
     for (i = 0; i < n; i++){
         double sum = 0;
         for (k = 0; k <= (n - 1) / 2; k++){
-            sum += a[i * n + 2 * k + 1];
+            sum += a[i * n + 2 * k];
         }
         b[i] = sum;
     }

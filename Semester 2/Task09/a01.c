@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
     printf("Initial matrix a \n");
     print_matrix(a, n, n, p);
     printf("Initial matrix b \n");
-    print_matrix(b, n, 1, p);
+    print_matrix(b, 1, n, p);
     t = clock();
     res = solve(n, a, b, x);
     t = (clock() - t) / CLOCKS_PER_SEC;

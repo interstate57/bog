@@ -39,10 +39,6 @@ int solve(int n, double* a, double* b, double* x){
     for (i = 0; i < n; i++){
         double del = a[i * n + i];
         if (equal_zero(del, norma)) return -1;
-        print_matrix(a, n, n, n);
-        printf("\n");
-        print_matrix(b, n, 1, n);
-        printf("\n");
         for (j = i; j < n; j++){
             a[i * n + j] /= del;
         }
@@ -111,10 +107,10 @@ double calc_r2(double* x, int n){
     double znam = 0;
     int i;
     for (i = 0; i < n; i++){
-        chisl += fabs(x[i] - (i % 2));
+        chisl += fabs(x[i] - ((i + 1) % 2));
     }
     for (i = 0; i < n; i++){
-        znam += (i % 2);
+        znam += ((i + 1) % 2);
     }
     return chisl / znam;
 }
