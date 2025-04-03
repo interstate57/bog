@@ -113,9 +113,9 @@ int main(int argc, char* argv[]){
     printf("Initial matrix a \n");
     print_matrix(a, n, n, p);
     printf("Initial matrix x \n");
-    print_matrix(x, n, 1, p);
+    print_matrix(x, 1, n, p);
     printf("Initial matrix b \n");
-    print_matrix(b, n, 1, p);
+    print_matrix(b, 1, n, p);
     t = clock();
     solve2(a, x, b, xm, n, m, tau);
     r1 = r1_(a, b, xm, n);

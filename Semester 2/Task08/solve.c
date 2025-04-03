@@ -52,6 +52,7 @@ void solve3(double* a, double* x, double* b, double* xm, double* r, int n, int m
         sum_vect(r, b, r, n);
         xk(xm, r, r, n, tau * (-1));
     }
+    vectcpy(xm, x, n);
 }
 
 void solve4(double* a, double* x, double* b, double* xm, double* r, int n, int m){
@@ -73,6 +74,7 @@ void solve4(double* a, double* x, double* b, double* xm, double* r, int n, int m
         sum_vect(r, b, r, n);
         xk(xm, r, r, n, tau * (-1));
     }
+    vectcpy(xm, x, n);
 }
 
 void solve7(double* a, double* x, double* b, double* xm, double* r, int n, int m, double tau){
@@ -252,7 +254,7 @@ void vectcpy(double* a, double* b, int n){
 }
 
 int equal(double x, double y){
-    if ((fabs (x - y)) < (EPS  * (fabs (x) + fabs (y)))){
+    if ((fabs (x - y)) <= (EPS  * (fabs (x) + fabs (y)))){
         return 1;
     }
     else{
@@ -297,8 +299,8 @@ int gauss_nizhn(double* a, double* r, double* w, int n){
 
 int gauss_verh(double* a, double* r, double* w, int n){
     int i, j;
-    for (i = n - 1; i > -1; i++){
-        for (j = n - 1; j < i; j++){
+    for (i = n - 1; i > -1; i--){
+        for (j = n - 1; j > i; j--){
             r[i] -= a[i * n + j] * w[j];
         }
         if (!equal(a[i * n + i], 0))
@@ -312,12 +314,13 @@ int gauss_verh(double* a, double* r, double* w, int n){
 
 int gauss_verh_dop(double* a, double* r, double* w, int n){
     int i, j;
-    for (i = n - 1; i > -1; i++){
-        for (j = n - 1; j < i; j++){
+    for (i = n - 1; i > -1; i--){
+        r[i] = r[i] * a[i * n + i];
+        for (j = n - 1; j > i; j--){
             r[i] -= a[i * n + j] * w[j];
         }
         if (!equal(a[i * n + i], 0))
-            w[i] = r[i] * a[i * n + i] / a[i * n + i];
+            w[i] = r[i] / a[i * n + i];
         else{
             return 0;
         }

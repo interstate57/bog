@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     double* w;
     int n, m, p, ka, kx;
     double t, tau, r1, r2;
-    int task = 9;
+    int task = 10;
     char* namea = 0;
     char* namex = 0;
     if (!((argc == 7 || argc == 8 || argc == 9) && sscanf(argv[1], "%le", &tau) == 1 && sscanf(argv[2], "%d", &m) == 1 &&\
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]){
     printf("Initial matrix b \n");
     print_matrix(b, 1, n, p);
     t = clock();
-    solve9(a, x, b, xm, r, w, n, m, tau);
+    solve10(a, x, b, xm, r, w, n, m, tau);
     r1 = r1_(a, b, xm, n);
     r2 = r2_(xm, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
