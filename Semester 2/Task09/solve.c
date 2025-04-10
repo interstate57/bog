@@ -108,8 +108,6 @@ double calc_r2(double* x, int n){
     int i;
     for (i = 0; i < n; i++){
         chisl += fabs(x[i] - ((i + 1) % 2));
-    }
-    for (i = 0; i < n; i++){
         znam += ((i + 1) % 2);
     }
     return chisl / znam;
