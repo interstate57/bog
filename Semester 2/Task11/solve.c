@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <math.h>
 #include "solve.h"
-#define EPS 1e-16
 
 int count = 0;
 
@@ -12,8 +9,9 @@ int solve1(double (*f) (double), double a, double b, double epsilon, int m, doub
     count += 2;
     if (f_a * f_b > 0) return -1;
     for (it = 0; it < m; it++){
+        double f_c;
         c = (a + b) * 0.5;
-        double f_c = f(c);
+        f_c = f(c);
         count += 1;
         if (f_c * f_a < 0){
             b = c;
@@ -36,8 +34,8 @@ int solve1(double (*f) (double), double a, double b, double epsilon, int m, doub
 int solve2(double (*f) (double), double (*d) (double), double x0, double epsilon, int m, double* x){
     int it;
     double f_x0 = f(x0);
-    count += 1;
     double d_x0 = d(x0);
+    count += 1;
     for (it = 0; it < m; it++){
         if (equal(d_x0, 0)) return -1;
         x0 = x0 - f_x0 / d_x0;
@@ -56,24 +54,27 @@ int solve3(double (*f) (double), double a, double b, double epsilon, int m, doub
     int it;
     double c;
     double f_a = f(a), f_b = f(b);
+    int sgn = (f_a * f_b > 0 ? 1 : -1);
     count += 2;
-    if (f_a * f_b > 0) return -1;
+    if (sgn > 0) return -1;
     for (it = 0; it < m; it++){
+        double f_c;
         if (equal(f_b - f_a, 0)) return -1;
         c = a - f_a * (b - a) / (f_b - f_a);
-        double f_c = f(c);
+        f_c = f(c);
+        //printf("a = %le, b = %le, f_a = %le, f_b = %le, c = %le, f_c = %le\n", a, b, f_a, f_b, c, f_c);
         count += 1;
-        if (f_c * f_a < 0){
-            b = c;
-            f_b = f_c;
-        }
-        else if (f_b * f_c < 0){
-            a = c;
-            f_a = f_c;
-        }
         if (fabs(f_c) < epsilon){
             *x = c;
             return it;
+        }
+        if (f_c * f_a > 0){
+            a = c;
+            f_a = f_c;
+        }
+        else if (f_c * f_b > 0){
+            b = c;
+            f_b = f_c;
         }
         if (fabs(b - a) < epsilon)
             break;
@@ -137,9 +138,10 @@ int solve4(double (*f) (double), double a, double b, double epsilon, int m, doub
     f_a = f(a);
     f_b = f(b);
     for (it = 0; it < m; it++){
+        double f_c;
         if (equal(f_a - f_b, 0)) return -1;
         c = b - f_b * (a - b) / (f_a - f_b);
-        double f_c = f(c);
+        f_c = f(c);
         count += 1;
 
         if (f_c >= f(a)) {
