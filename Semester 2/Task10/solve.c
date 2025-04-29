@@ -144,23 +144,24 @@ double solve7(double x, double epsilon){
 }
 
 double solve8(double x, double epsilon){
-    int step_2 = 0, i = 2;
+    int step_2 = 0, i = 1;
     double dop = 0, sum = 0, slag = 0;
-    while (x >= 2 || x < 1){
-        if (x < 1){
-            x = x * 2;
-            step_2 -= 1;
-        }
-        else{
-            x = x * 0.5;
-            step_2 += 1;
-        }
+    if (x < 0){
+        return 1e308;
+    }
+    while (x >= 2){
+        x = x * 0.5;
+        step_2 += 1;
+    }
+    while (x < 1){
+        x = x * 2;
+        step_2 -= 1;
     }
     dop = x - 1;
     slag = dop;
     do{
-        sum += slag;
-        slag = slag * (-1) * dop / i;
+        sum += slag / i;
+        slag = slag * (-1) * dop;
         i += 1;
     }while(fabs(slag) >= epsilon);
     sum += step_2 * M_LN2;
