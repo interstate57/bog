@@ -69,10 +69,12 @@ int solve3(double (*f) (double), double a, double b, double epsilon, int m, doub
             return it;
         }
         if (f_c * f_a > 0){
+            if (equal(a, c)) return -1;
             a = c;
             f_a = f_c;
         }
         else if (f_c * f_b > 0){
+            if (equal(b, c)) return -1;
             b = c;
             f_b = f_c;
         }
@@ -165,6 +167,33 @@ int solve4(double (*f) (double), double a, double b, double epsilon, int m, doub
         }
         if (fabs(b - a) < epsilon)
             break;
+    }
+    return -1;
+}
+
+int solve8(double (*f) (double), double a, double b, double epsilon, int m, double* x){
+    double h = (a + b) * 0.5;
+    double x_curr = a;
+    double f_x_curr = f(a);
+    int it;
+    double nach = a;
+    double kon = b;
+    count += 1;
+    for (it = 0; it < m; it++){
+        for (x_curr = nach + h; !equal(x_curr, kon + h); x_curr += h){
+            double new_f_x_curr = f(x_curr);
+            count += 1;
+            if (new_f_x_curr < f_x_curr){
+                break;
+            }
+            f_x_curr = new_f_x_curr;
+        }
+        kon = nach;
+        nach = x_curr - h;
+        if (fabs(kon - nach) < epsilon){
+            *x = nach;
+            return it;
+        }
     }
     return -1;
 }

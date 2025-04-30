@@ -13,6 +13,8 @@ int solve3(double (*f) (double), double a, double b, double epsilon, int m, doub
 
 int solve4(double (*f) (double), double a, double b, double epsilon, int m, double* x);
 
+int solve8(double (*f) (double), double a, double b, double epsilon, int m, double* x);
+
 int equal(double x, double y);
 
 double min(double a, double b);
