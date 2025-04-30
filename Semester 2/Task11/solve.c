@@ -183,6 +183,7 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
         for (x_curr = nach + h; !equal(x_curr, kon + h); x_curr += h){
             double new_f_x_curr = f(x_curr);
             count += 1;
+            printf("f_x_curr = %le, x_curr = %le, new_f_x_curr = %le\n", f_x_curr, x_curr, new_f_x_curr);
             if (new_f_x_curr < f_x_curr){
                 break;
             }
@@ -194,6 +195,8 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
             *x = nach;
             return it;
         }
+        if (fabs(h) < epsilon) return -1;
+        h = -h / 10;
     }
     return -1;
 }
