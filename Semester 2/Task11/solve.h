@@ -13,7 +13,13 @@ int solve3(double (*f) (double), double a, double b, double epsilon, int m, doub
 
 int solve4(double (*f) (double), double a, double b, double epsilon, int m, double* x);
 
+int solve7(double (*f) (double), double x0, double epsilon, int m, double* x);
+
 int solve8(double (*f) (double), double a, double b, double epsilon, int m, double* x);
+
+int solve9(double (*f) (double), double a, double b, double epsilon, int m, double* x);
+
+double golden_section(void);
 
 int equal(double x, double y);
 

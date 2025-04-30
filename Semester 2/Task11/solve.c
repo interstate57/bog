@@ -84,47 +84,6 @@ int solve3(double (*f) (double), double a, double b, double epsilon, int m, doub
     return -1;
 }
 
-/*int solve3(double (*f) (double), double a, double b, double epsilon, int m, double* x){
-    int it;
-    double c;
-    double f_a = f(a), f_b = f(b);
-    count += 2;
-    if (f_a * f_b > 0) return -1;
-    for (it = 0; it < m; it++){
-        if (equal(f_b - f_a, 0)) return -1;
-        c = a - f_a * (b - a) / (f_b - f_a);
-        double f_c = f(c);
-        count += 1;
-        double min1 = min(min(a, b), c);
-        double min2 = a + b + c - min1 - max(max(a, b), c);
-        if (equal(f_a, f_b) || !equal(min1, f_c) && !(min2, f_c)) return -1;
-        if (equal(f_c, min1)){
-            if (equal(f_a, min2)){
-                b = a;
-                f_b = f_a;
-            }
-            a = c;
-            f_a = f_c;
-        }
-        else if (equal(f_c, min2)){
-            if (equal(f_b, min1)){
-                a = b;
-                f_a = f_b;
-            }
-            b = c;
-            f_b = f_c;
-        }
-        if (fabs(f_c) < epsilon){
-            *x = c;
-            return it;
-        }
-        if (fabs(b - a) < epsilon)
-            break;
-    }
-    return -1;
-}
-
-*/
 int solve4(double (*f) (double), double a, double b, double epsilon, int m, double* x){
     int it;
     double c;
@@ -171,6 +130,22 @@ int solve4(double (*f) (double), double a, double b, double epsilon, int m, doub
     return -1;
 }
 
+int solve7(double (*f) (double), double x0, double epsilon, int m, double* x){
+    double f_x0 = f(x0);
+    int it;
+    count += 1;
+    for (it = 0; it < m; it++){
+        x0 = f_x0;
+        f_x0 = f(x0);
+        count += 1;
+        if (fabs(f_x0 - x0) < epsilon){
+            *x = f_x0;
+            return it;
+        }
+    }
+    return -1;
+}
+
 int time_to_stop(double start, double end, double curr) {
     if (end >= start && curr > end)
         return 1;
@@ -186,7 +161,6 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
     int it;
     double nach = a;
     double kon = b;
-    count += 1;
     for (it = 0; it < m; it++){
         /*printf("Started: h = %le, nach = %le, kon = %le\n", h, nach, kon);
         if (kon * nach > 0) {
@@ -194,6 +168,7 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
             break;
         }*/
         f_x_curr = f(nach);
+        count += 1;
         for (x_curr = nach; !time_to_stop(nach, kon, x_curr); x_curr += h){
             double new_f_x_curr = f(x_curr);
             count += 1;
@@ -227,6 +202,43 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
         
     }
     return -1;
+}
+
+int solve9(double (*f) (double), double a, double b, double epsilon, int m, double* x){
+    int it;
+    double x1, x2, f_x1, f_x2;
+    double alpha = golden_section();
+    x1 = alpha * a + (1 - alpha) * b;
+    x2 = alpha * b + (1 - alpha) * a;
+    f_x1 = f(x1);
+    f_x2 = f(x2);
+    count += 2;
+    for (it = 0; it < m; it++){
+        if (f_x1 <= f_x2){
+            a = x1;
+            x1 = x2;
+            f_x1 = f_x2;
+            x2 = alpha * b + (1 - alpha) * a;
+            f_x2 = f(x2);
+        }
+        else{
+            b = x2;
+            x2 = x1;
+            f_x2 = f_x1;
+            x1 = alpha * a + (1 - alpha) * b;
+            f_x1 = f(x1);
+        }
+        count += 1;
+        if (fabs(b - a) < epsilon){
+            *x = x1;
+            return it;
+        }
+    }
+    return -1;
+}
+
+double golden_section(void){
+    return (sqrt(5) - 1) * 0.5;
 }
 
 int equal(double x, double y){
