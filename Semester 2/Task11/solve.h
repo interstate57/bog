@@ -20,3 +20,5 @@ int equal(double x, double y);
 double min(double a, double b);
 
 double max(double a, double b);
+
+int time_to_stop(double start, double end, double curr);

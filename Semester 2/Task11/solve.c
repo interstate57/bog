@@ -171,32 +171,60 @@ int solve4(double (*f) (double), double a, double b, double epsilon, int m, doub
     return -1;
 }
 
+int time_to_stop(double start, double end, double curr) {
+    if (end >= start && curr > end)
+        return 1;
+    if (end <= start && curr < end)
+        return 1;
+    return 0;
+}
+
 int solve8(double (*f) (double), double a, double b, double epsilon, int m, double* x){
-    double h = (a + b) * 0.5;
+    double h = (b - a) * 0.1;
     double x_curr = a;
-    double f_x_curr = f(a);
+    double f_x_curr;
     int it;
     double nach = a;
     double kon = b;
     count += 1;
     for (it = 0; it < m; it++){
-        for (x_curr = nach + h; !equal(x_curr, kon + h); x_curr += h){
+        /*printf("Started: h = %le, nach = %le, kon = %le\n", h, nach, kon);
+        if (kon * nach > 0) {
+            printf("XYU!!!\n");
+            break;
+        }*/
+        f_x_curr = f(nach);
+        for (x_curr = nach; !time_to_stop(nach, kon, x_curr); x_curr += h){
             double new_f_x_curr = f(x_curr);
             count += 1;
-            printf("f_x_curr = %le, x_curr = %le, new_f_x_curr = %le\n", f_x_curr, x_curr, new_f_x_curr);
+            //printf("f_x_curr = %le, x_curr = %le, new_f_x_curr = %le, difference: %le\n", f_x_curr, x_curr, new_f_x_curr, new_f_x_curr - f_x_curr);
             if (new_f_x_curr < f_x_curr){
                 break;
             }
             f_x_curr = new_f_x_curr;
         }
-        kon = nach;
-        nach = x_curr - h;
+        //printf("Finished: h = %le, nach = %le, kon = %le\n", h, nach, kon);
         if (fabs(kon - nach) < epsilon){
             *x = nach;
             return it;
         }
-        if (fabs(h) < epsilon) return -1;
-        h = -h / 10;
+        if (time_to_stop(nach, kon, x_curr)){
+            nach = x_curr - h;
+            kon = x_curr - 2 * h;
+        }
+        else{
+            if (equal(nach, x_curr - h)){
+                nach = x_curr;
+                kon = x_curr - h;
+            }
+            else{
+                nach = x_curr;
+                kon = x_curr - 2 * h;
+            }      
+        }
+        //if (fabs(h) < epsilon) return -1;
+        h = (kon - nach) / 10;
+        
     }
     return -1;
 }
