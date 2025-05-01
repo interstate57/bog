@@ -140,7 +140,7 @@ int solve5(double (*f) (double), double a, double b, double epsilon, int m, doub
         double Max = max(max(fabs(y1), fabs(y2)), fabs(y3));
         x4 = x1 + (x1 - x2) * (-y1) / (y1 - y2) + ((x2 - x3) / (y2 - y3) - (x1 - x2) / (y1 - y2)) * y1 * y2 / (y3 - y1);
         y4 = f(x4);
-        printf("x1 = %le, y1 = %le, x2 = %le, y2 = %le, x3 = %le, y3 = %le, x4 = %le, y4 = %le\n", x1, y1, x2, y2, x3, y3, x4, y4);
+        //printf("x1 = %le, y1 = %le, x2 = %le, y2 = %le, x3 = %le, y3 = %le, x4 = %le, y4 = %le\n", x1, y1, x2, y2, x3, y3, x4, y4);
         count += 1;
         if (fabs(y4) > Max){
             return -1;
@@ -270,6 +270,46 @@ int solve9(double (*f) (double), double a, double b, double epsilon, int m, doub
         }
     }
     return -1;
+}
+
+int solve10(double (*f) (double), double a, double b, double epsilon, int m, double* x){
+    int it;
+    double x1 = a, x2 = (a + b) / 2, x3 = b;
+    double y1 = f(x1), y2 = f(x2), y3 = f(x3);
+    double x4, y4;
+    count += 3;
+    for (it = 0; it < m; it++){
+        double Min = min(y1, y3);
+        double B = (y1 - y2) / (x1 - x2) - ((y2 - y3) / (x2 - x3) - (y1 - y2) / (x1 - x2)) * (x1 + x2) / (x3 - x1);
+        double A = ((y2 - y3) / (x2 - x3) - (y1 - y2) / (x1 - x2)) / (x3 - x1);
+        if (equal(A, 0)){
+            return -1;
+        }
+        x4 = -1 * B / (2 * A);
+        y4 = f(x4);
+        //printf("x1 = %le, y1 = %le, x2 = %le, y2 = %le, x3 = %le, y3 = %le, x4 = %le, y4 = %le\n", x1, y1, x2, y2, x3, y3, x4, y4);
+        count += 1;
+        if (y4 < Min){
+            return -1;
+        }
+        if (equal(Min, y1)){
+            x1 = x2;
+            y1 = y2;
+            x2 = x3;
+            y2 = y3;
+            x3 = x4;
+            y3 = y4;
+        }
+        else{
+            x3 = x4;
+            y3 = y4;
+        }
+        if (fabs(y3) < epsilon){
+            *x = x3;
+            return it;
+        }
+    }
+    return -1; 
 }
 
 double golden_section(void){

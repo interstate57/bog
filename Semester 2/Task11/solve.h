@@ -21,6 +21,8 @@ int solve8(double (*f) (double), double a, double b, double epsilon, int m, doub
 
 int solve9(double (*f) (double), double a, double b, double epsilon, int m, double* x);
 
+int solve10(double (*f) (double), double a, double b, double epsilon, int m, double* x);
+
 double golden_section(void);
 
 int equal(double x, double y);
