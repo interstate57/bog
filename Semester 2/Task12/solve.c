@@ -114,20 +114,19 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
         count += 1;
     }
     while(1){
-        int n = 0;
         h *= 0.5;
         if (equal(h, 0)){
             break;
         }
         it += 1;
-        n = (b - a) / h;
-        for (i = 0; i < n; i++){
+        //n = (b - a) / h;
+        for (i = 0; a + (2*i) * h < b; i++){
             sum += h * f(a + (2*i + 1) * h);
             //printf("1\n");
             count += 1;
         }
         snov = sst * 0.5 + sum;
-        printf("snov = %le, sst = %le\n", snov, sst);
+        //printf("snov = %le, sst = %le, sum = %le\n", snov, sst, sum);
         if (fabs(snov - sst) < epsilon){
             *r = snov;
             return it;
@@ -135,27 +134,26 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
         sum = 0;
         sst = snov;
     }
-    /*for(j = 0; j < 10; j++){
-        int n = 0;
-        h *= 0.5;
-        if (equal(h, 0)){
-            break;
+    return -1;
+}
+
+double solve10(double (*f) (double), double a, double epsilon, double* r){
+    double s = 0, h = 1;
+    double b;
+    while (1){
+        double I;
+        int k;
+        b = a + h;
+        k = solve8(f, a, b, epsilon, &I);
+        if (k < 0) break;
+        s += I;
+        if (fabs(I) < epsilon){
+            *r = s;
+            return b;
         }
-        n = (b - a) / h;
-        for (i = 0; i < n; i++){
-            sum += h * f(a + (2*i + 1) * h);
-            //printf("1\n");
-            count += 1;
-        }
-        snov = sst * 0.5 + sum;
-        printf("snov = %le, sst = %le\n", snov, sst);
-        if (fabs(snov - sst) < epsilon){
-            *r = snov;
-            return j;
-        }
-        sum = 0;
-        sst = snov;
-    }*/
+        a = b;
+        h *= 2;
+    }
     return -1;
 }
 

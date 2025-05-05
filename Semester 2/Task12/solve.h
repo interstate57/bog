@@ -21,6 +21,8 @@ double solve7(double (*f) (double), double a, double b, int n);
 
 int solve8(double (*f) (double), double a, double b, double epsilon, double* r);
 
+double solve10(double (*f) (double), double a, double epsilon, double* r);
+
 int equal(double x, double y);
 
 int sgn(double x);
