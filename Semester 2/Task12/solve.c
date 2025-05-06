@@ -137,6 +137,47 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
     return -1;
 }
 
+int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
+    double h = b - a;
+    double sn1 = h / 3 * (f(a) + f(b));
+    double sn2 = 0, sn = 0, s2n = 0, s2n1 = 0, s2n2 = 0;
+    int i;
+    int it = 0;
+    count += 2;
+    for(i = 1; a + 2*i*h < b; i++){
+        sn1 += h * f(a + 2*i*h);
+        count += 1;
+    }
+    for(i = 0; a + (2*i + 1)*h < b; i++){
+        sn2 += h * f(a + (2*i + 1)*h);
+        count += 1;
+    }
+    sn = sn1 + 2 * sn2;
+    while(1){
+        it += 1;
+        h *= 0.5;
+        if (equal(h, 0)){
+            break;
+        }
+        for(i = 0; a + (2*i + 1)*h < b; i++){
+            s2n2 += h * f(a + (2*i + 1)*h);
+            count += 1;
+        }
+        s2n1 = (sn1 + sn2) * 0.5;
+        s2n = s2n1 + s2n2 * 2;
+        //printf("snov = %le, sst = %le, sum = %le\n", snov, sst, sum);
+        if (fabs(s2n - sn) < epsilon){
+            *r = s2n;
+            return it;
+        }
+        sn1 = s2n1;
+        sn2 = s2n2;
+        sn = sn2;
+        s2n2 = 0;
+    }
+    return -1;
+}
+
 double solve10(double (*f) (double), double a, double epsilon, double* r){
     double s = 0, h = 1;
     double b;
