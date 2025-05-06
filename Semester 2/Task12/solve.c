@@ -145,13 +145,17 @@ int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
     int it = 0;
     count += 2;
     for(i = 1; a + 2*i*h < b; i++){
+        printf("1\n");
         sn1 += h * f(a + 2*i*h);
         count += 1;
     }
+    sn1 = 2./3 * sn1;
     for(i = 0; a + (2*i + 1)*h < b; i++){
+        printf("2\n");
         sn2 += h * f(a + (2*i + 1)*h);
         count += 1;
     }
+    sn2 = 4./3 * sn2;
     sn = sn1 + 2 * sn2;
     while(1){
         it += 1;
@@ -160,19 +164,22 @@ int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
             break;
         }
         for(i = 0; a + (2*i + 1)*h < b; i++){
+            //printf("3\n");
             s2n2 += h * f(a + (2*i + 1)*h);
             count += 1;
         }
+        s2n2 = 2./3 * s2n2;
+        //printf("444444444444444444444444444444444444444444444444444444444\n");
         s2n1 = (sn1 + sn2) * 0.5;
         s2n = s2n1 + s2n2 * 2;
-        //printf("snov = %le, sst = %le, sum = %le\n", snov, sst, sum);
+        printf("sn = %le, s2n = %le\n", sn, s2n);
         if (fabs(s2n - sn) < epsilon){
             *r = s2n;
             return it;
         }
         sn1 = s2n1;
         sn2 = s2n2;
-        sn = sn2;
+        sn = s2n;
         s2n2 = 0;
     }
     return -1;
