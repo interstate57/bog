@@ -4,16 +4,19 @@ int count = 0;
 
 double solve1(double (*f) (double), double x, double h){
     if (equal(h, 0)) return 1e308;
+    count += 2;
     return (f(x + h) - f(x)) / h;
 }
 
 double solve2(double (*f) (double), double x, double h){
     if (equal(h, 0)) return 1e308;
+    count += 2;
     return (f(x + h) - f(x - h)) / (2 * h);
 }
 
 double solve3(double (*f) (double), double x, double h){
     if (equal(h, 0)) return 1e308;
+    count += 3;
     return (f(x + h) - 2 * f(x) + f(x - h)) / pow(h, 2);
 }
 
@@ -21,8 +24,10 @@ double solve4(double (*f) (double), double a, double b, int n){
     double h = (b - a) / n;
     double sum = h * 0.5 * (f(a) + f(b));
     int i;
+    count += 2;
     for (i = 1; i < n; i++){
         sum += h * f(a + i * h);
+        count += 1;
     }
     return sum;
 }
@@ -32,30 +37,35 @@ double solve5(double (*f) (double), double a, double b, int n){
     double sum = h * (f(a) + f(b)) / 3;
     double sub_sum = 0;
     int i;
-    for (i = 1; i < n; i++){
-        sub_sum += f(a + 2 * i * h);
+    count += 2;
+    for (i = 1; a + 2 * i * h <= b; i++){
+        sub_sum += h * f(a + 2 * i * h);
+        count += 1;
     }
-    sum += 2 / 3 * h * sub_sum;
+    sum += 2. / 3 * sub_sum;
     sub_sum = 0;
-    for (i = 0; i < n; i++){
-        sub_sum += f(a + (2 * i + 1) * h);
+    for (i = 0; a + (2 * i + 1) * h <= b; i++){
+        sub_sum += f(a + (2 * i + 1) * h) * h ;
+        count += 1;
     }
-    sum += 4 / 3 * h * sub_sum;
+    sum += 4. / 3 * sub_sum;
     return sum;
 }
 
 double solve6(double (*f) (double), double a, double b, int n){
     double h = (b - a) / n;
-    double sum = 2 * f(b) * (2/3 * pow(fabs(a + h * (n - 1)), 3./2) + pow(fabs(b), 3./2) / 3 -\
+    double sum = 2 * f(b) * (2./3 * pow(fabs(a + h * (n - 1)), 3./2) + pow(fabs(b), 3./2) / 3 -\
         (a + h * (n - 1)) * sgn(b) * sqrt(fabs(b)));
     double sub_sum = 0;
     double xi = a;
     int i;
-    sum += 2 * f(a) * (2/3 * pow(fabs(a + h), 3./2) + pow(fabs(a), 3./2) / 3 -\
+    sum += 2 * f(a) * (2./3 * pow(fabs(a + h), 3./2) + pow(fabs(a), 3./2) / 3 -\
         (a + h) * sgn(a) * sqrt(fabs(a)));
+        count += 2;
     for (i = 1; i < n; i++){
         xi += h;
-        sub_sum += f(xi) * (2/3 * (pow(fabs(xi - h), 3./2) + pow(fabs(xi), 3./2) + pow(fabs(xi + h), 3./2)) - sgn(xi) * sqrt(fabs(xi)) * 2 * xi);
+        sub_sum += f(xi) * (2./3 * (pow(fabs(xi - h), 3./2) + pow(fabs(xi), 3./2) + pow(fabs(xi + h), 3./2)) - sgn(xi) * sqrt(fabs(xi)) * 2 * xi);
+        count += 1;
     }
     sum += 2 * sub_sum;
     return sum;
@@ -122,7 +132,7 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
         }
         it += 1;
         //n = (b - a) / h;
-        for (i = 0; a + (2*i) * h < b; i++){
+        for (i = 0; a + (2*i + 1) * h < b; i++){
             sum += h * f(a + (2*i + 1) * h);
             //printf("1\n");
             count += 1;
@@ -172,7 +182,7 @@ int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
         s2n2 = 2./3 * s2n2;
         s2n1 = (sn1 + sn2) * 0.5;
         s2n = s2n1 + s2n2 * 2;
-        printf("sn = %le, s2n = %le\n", sn, s2n);
+        //printf("sn = %le, s2n = %le\n", sn, s2n);
         if (fabs(s2n - sn) < epsilon){
             *r = s2n;
             return it;
