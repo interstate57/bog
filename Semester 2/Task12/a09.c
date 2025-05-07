@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     double (*f_current)(double);
     if (!((argc == 5) && sscanf(argv[1], "%le", &a) &&\
         sscanf(argv[2], "%le", &b) && sscanf(argv[3], "%le", &epsilon) && sscanf(argv[4], "%d", &k) && (k >= 0 && k <= 6))){
-        printf("Usage %s x h k\n", argv[0]);
+        printf("Usage %s a b epsilon k\n", argv[0]);
         return 1;
     }
     f_current = f[k];

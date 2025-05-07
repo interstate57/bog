@@ -7,9 +7,9 @@
 extern int count;
 
 int main(int argc, char* argv[]){
-    double h = 0, x = 0;
+    double h = 0, x = 0, res = 0;
     int k = 0;
-    int task = 1, res = 0;
+    int task = 1;
     double t = 0;
     double (*f[])(double) = {f0, f1, f2, f3, f4, f5, f6};
     double (*f_current)(double);
