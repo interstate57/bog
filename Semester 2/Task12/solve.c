@@ -38,13 +38,13 @@ double solve5(double (*f) (double), double a, double b, int n){
     double sub_sum = 0;
     int i;
     count += 2;
-    for (i = 1; a + 2 * i * h <= b; i++){
+    for (i = 1; a + 2 * i * h < b; i++){
         sub_sum += h * f(a + 2 * i * h);
         count += 1;
     }
     sum += 2. / 3 * sub_sum;
     sub_sum = 0;
-    for (i = 0; a + (2 * i + 1) * h <= b; i++){
+    for (i = 0; a + (2 * i + 1) * h < b; i++){
         sub_sum += f(a + (2 * i + 1) * h) * h ;
         count += 1;
     }
@@ -114,12 +114,19 @@ double solve7(double (*f) (double), double a, double b, int n){
 }
 
 int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
-    double h = b - a;
-    double sst = 0.5 * h * (f(a) + f(b)); 
+    double h = 0;
+    double sst = 0; 
     double snov = 0, sum = 0;
     int i;
-    //int j;
+    double temp = 0;
     int it = 0;
+    if (a > b){
+        temp = a;
+        a = b;
+        b = temp;
+    }
+    h = b - a;
+    sst = 0.5 * h * (f(a) + f(b));
     count += 2;
     for(i = 1; a + i*h < b; i++){
         sst += h * f(a + i*h);
@@ -132,6 +139,9 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
         }
         it += 1;
         //n = (b - a) / h;
+        if (it > 30){
+            break;
+        }
         for (i = 0; a + (2*i + 1) * h < b; i++){
             sum += h * f(a + (2*i + 1) * h);
             //printf("1\n");
@@ -150,29 +160,21 @@ int solve8(double (*f) (double), double a, double b, double epsilon, double* r){
 }
 
 int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
-    double h = b - a;
+    double h = (b - a) / 2;
     double sn1 = h / 3 * (f(a) + f(b));
     double sn2 = 0, sn = 0, s2n = 0, s2n1 = 0, s2n2 = 0;
     int i;
     int it = 0;
-    count += 2;
-    for(i = 1; a + 2*i*h < b; i++){
-        printf("1\n");
-        sn1 += h * f(a + 2*i*h);
-        count += 1;
-    }
-    sn1 = 2./3 * sn1;
-    for(i = 0; a + (2*i + 1)*h < b; i++){
-        printf("2\n");
-        sn2 += h * f(a + (2*i + 1)*h);
-        count += 1;
-    }
-    sn2 = 4./3 * sn2;
+    count += 3;
+    sn2 = 2./3 * f((a + b) / 2) * h;
     sn = sn1 + 2 * sn2;
     while(1){
         it += 1;
         h *= 0.5;
         if (equal(h, 0)){
+            break;
+        }
+        if (it > 27){
             break;
         }
         for(i = 0; a + (2*i + 1)*h < b; i++){
@@ -182,7 +184,7 @@ int solve9(double (*f) (double), double a, double b, double epsilon, double* r){
         s2n2 = 2./3 * s2n2;
         s2n1 = (sn1 + sn2) * 0.5;
         s2n = s2n1 + s2n2 * 2;
-        //printf("sn = %le, s2n = %le\n", sn, s2n);
+        //printf("sn = %le, s2n = %le, diff = %le\n", sn, s2n, fabs(s2n - sn));
         if (fabs(s2n - sn) < epsilon){
             *r = s2n;
             return it;
