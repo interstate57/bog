@@ -25,10 +25,12 @@ int solve10(double (*f) (double), double a, double b, double epsilon, int m, dou
 
 double golden_section(void);
 
-int equal(double x, double y);
+int equal(double x, double y, double epsilon);
 
 double min(double a, double b);
 
 double max(double a, double b);
 
 int time_to_stop(double start, double end, double curr);
+
+int zn_equal(double a, double b);
