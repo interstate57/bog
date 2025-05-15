@@ -208,10 +208,20 @@ int solve5(double (*f) (double), double a, double b, double epsilon, int m, doub
     double y1 = f(x1), y2 = f(x2), y3 = f(x3);
     double x4, y4;
     count += 3;
-    printf("x1 = %le, x2 = %le, x3 = %le\n", x1, x2, x3);
-    printf("y1 = %le, y2 = %le, y3 = %le\n", y1, y2, y3);
     for (it = 0; it < m; it++){
         double Max = max(max(y1, y2), y3);
+        if (equal(x1, x2, epsilon)){
+            *x = x1;
+            return it;
+        }
+        if (equal(x1, x3, epsilon)){
+            *x = x1;
+            return it;
+        }
+        if (equal(x2, x3, epsilon)){
+            *x = x2;
+            return it;
+        }
         if (equal(y1, y2, epsilon) || equal(y1, y3, epsilon) || equal(y2, y3, epsilon)){
             return -1;
         }
@@ -220,7 +230,7 @@ int solve5(double (*f) (double), double a, double b, double epsilon, int m, doub
         //printf("x1 = %le, y1 = %le, x2 = %le, y2 = %le, x3 = %le, y3 = %le, x4 = %le, y4 = %le\n", x1, y1, x2, y2, x3, y3, x4, y4);
         count += 1;
         if (fabs(y4) > Max){
-            printf("1\n");
+            //printf("1\n");
             return -1;
         }
         if (fabs(y4) < epsilon){
@@ -245,8 +255,6 @@ int solve5(double (*f) (double), double a, double b, double epsilon, int m, doub
             x3 = x4;
             y3 = y4;
         }
-        printf("x1 = %le, x2 = %le, x3 = %le, x4 = %le\n", x1, x2, x3, x4);
-        printf("y1 = %le, y2 = %le, y3 = %le, y4 = %le\n", y1, y2, y3, y4);
     }
     return -1; 
 }
