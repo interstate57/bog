@@ -1,7 +1,7 @@
 #include "functions.h"
 
 double f0(double x){
-    return 1 + 0 * x;;
+    return 1 + 0 * x;
 }
 
 double f1(double x){
