@@ -1,0 +1,14 @@
+#pragma once
+#include "list.h"
+
+int solve1(node* head);
+
+int solve2(node* head);
+
+int solve3(node* head);
+
+int solve4(node* head);
+
+int solve5(node* head);
+
+node* solve8(node* head);
