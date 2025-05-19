@@ -116,13 +116,35 @@ node* solve8(node* head){
             prev->next = curr->next;
             free(curr->string);
             free(curr);
-            prev = prev->next;
             curr = prev->next;
         }
         else{
             prev = curr;
             curr = prev->next;
         }
+    }
+    return head;
+}
+
+node* solve9(node* head){
+    node* prev = head;
+    node* curr;
+    node* future;
+    if (!head) return 0;
+    curr = head->next;
+    if (!curr) return 0;
+    future = curr->next;
+    while (future){
+        if (strcmp(curr->string, future->string) >= 0 && strcmp(curr->string, prev->string) >= 0){
+            prev->next = future;
+            free(curr->string);
+            free(curr);
+        }
+        else{
+            prev = curr;
+        }
+        curr = prev->next;
+        future = curr->next;
     }
     return head;
 }

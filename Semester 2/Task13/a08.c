@@ -30,6 +30,7 @@ int main(int argc, char* argv[]){
     head = solve8(head);
     t = (clock() - t) / CLOCKS_PER_SEC;
     len = get_len(head);
+    printf("New list:\n");
     print_list(head, p);
     printf ("%s : Task = %d Length = %d Elapsed = %.2f\n", argv[0], task, len, t);
     delete_list(head);
