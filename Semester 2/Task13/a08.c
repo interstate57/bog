@@ -5,7 +5,7 @@
 #include "list.h"
 #include "solve.h"
 int main(int argc, char* argv[]){
-    int p = 0, res = 0,task = 8, len = 0;
+    int p = 0, task = 8, len = 0;
     char* name = 0;
     io_status ret;
     double t = 0;

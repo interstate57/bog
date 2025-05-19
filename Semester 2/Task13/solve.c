@@ -116,8 +116,8 @@ node* solve8(node* head){
             prev->next = curr->next;
             free(curr->string);
             free(curr);
-            prev = curr;
-            curr = curr->next;
+            prev = prev->next;
+            curr = prev->next;
         }
         else{
             prev = curr;
