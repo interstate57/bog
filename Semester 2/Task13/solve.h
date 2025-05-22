@@ -11,4 +11,10 @@ int solve4(node* head);
 
 int solve5(node* head);
 
+int solve6(node* head);
+
+int solve7(node* head);
+
 node* solve8(node* head);
+
+node* solve9(node* head);

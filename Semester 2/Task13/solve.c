@@ -94,6 +94,50 @@ int solve5(node* head){
     return max;
 }
 
+int solve6(node* head){
+    int cnt = 0, nach = 0;
+    node* prev = head;
+    node* curr;
+    if (!head) return 0;
+    curr = head->next;
+    while (curr){
+        if (strcmp(curr->string, prev->string) == 0 && nach == 0){
+            nach = 1;
+            cnt += 1;
+        }
+        else if (strcmp(curr->string, prev->string) != 0){
+            nach = 0;
+        }
+        prev = curr;
+        curr = prev->next;
+    }
+    return cnt;
+}
+
+int solve7(node* head){
+    int cnt = 0, nach = 0, max = 0;
+    node* prev = head;
+    node* curr;
+    if (!head) return 0;
+    curr = head->next;
+    while (curr){
+        if (strcmp(curr->string, prev->string) == 0 && nach == 0){
+            nach = 1;
+            max = max > cnt ? max : cnt;
+            cnt = 0;
+        }
+        else if (strcmp(curr->string, prev->string) != 0 && nach == 1){
+            nach = 0;
+        }
+        else if (strcmp(curr->string, prev->string) != 0 && nach == 0){
+            cnt += 1;
+        }
+        prev = curr;
+        curr = prev->next;
+    }
+    return max;
+}
+
 node* solve8(node* head){
     node* prev = head;
     node* curr;
