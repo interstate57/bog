@@ -192,3 +192,33 @@ node* solve9(node* head){
     }
     return head;
 }
+
+node* solve10(node* head){
+    node* prev = head;
+    node* curr;
+    node* nach = head;
+    int fl = 0;
+    if (!head) return 0;
+    curr = head->next;
+    while (curr){
+        if (strcmp(prev->string, curr->string) >= 0){
+            free(prev->string);
+            free(prev);
+            prev = curr;
+            head = prev;
+            curr = prev->next;
+            fl = 1;
+        }
+        else if (!(strcmp(prev->string, curr->string) >= 0) && fl == 1){
+            free(prev->string);
+            free(prev);
+            head = curr;
+            prev = curr;
+            curr = prev->next;
+        }
+        else if(fl == 0){
+            break;
+        }
+    }
+    return head;
+}
