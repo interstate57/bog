@@ -15,9 +15,11 @@ int sort1(const data& x, data* a, int n){
         s = (inach + ikon) / 2;
         if (x > a[s]){
             inach = s + 1;
+            printf("nach : %d\n", inach);
         }
         else{
             ikon = s;
+            printf("kon : %d\n", ikon);
         }
     }
     return inach;
@@ -287,5 +289,11 @@ void print_array(data* a, int n, int p){
     int min = (n < p ? n : p);
     for (int i = 0; i < min; i++){
         a[i].print();
+    }
+}
+
+void init_array(data* a, int n, int s){
+    for (int i = 0; i < n; i++){
+        a[i].init(s, n, i);
     }
 }

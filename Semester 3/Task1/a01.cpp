@@ -5,7 +5,7 @@
 #include "data.h"
 #include "sortirovki.h"
 
-int data::p;// = 0;
+int data::p;
 
 int main(int argc, char* argv[]){
     int n = 0, s = 0;
@@ -18,14 +18,14 @@ int main(int argc, char* argv[]){
     int res = 0, task = 1;
     double t = 0;
     FILE* fpx;
-    if (!(argc == 5 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        s != 0)){
-        printf("Usage: %s x c n p filename\n", argv[0]);
+    if (argc == 5 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
+        s == 0){
+        printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
-    else if (!(argc == 6 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        s == 0)){
-        printf("Usage: %s x c n p filename\n", argv[0]);
+    else if (argc == 6 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
+        s != 0){
+        printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
     data::set_p(p);
@@ -46,21 +46,28 @@ int main(int argc, char* argv[]){
         printf("Cannot allocate memory!\n");
         return 2;
     }
-    ret = read_array(a, n, name);
-    do{
-        switch(ret){
-            case SUCCESS: continue;
-            case ERROR_OPEN: printf("Cannot open file!\n"); break;
-            case ERROR_READ: printf("Cannot read file!\n"); break;
-        }
-        delete[] a;
-        return 3;
-    }while(0);
-    for (int i = 0; i < n - 1; i ++){
-        if (a[i + 1] > a[i]){
-            printf("Array a is not an increasing one\n");
+    if (name){
+        ret = read_array(a, n, name);
+        do{
+            switch(ret){
+                case SUCCESS: continue;
+                case ERROR_OPEN: printf("1Cannot open file!\n"); break;
+                case ERROR_READ: printf("Cannot read file!\n"); break;
+            }
             delete[] a;
-            return 5;
+            return 3;
+        }while(0);
+        for (int i = 0; i < n - 1; i ++){
+            if (a[i + 1] > a[i]){
+                printf("Array a is not an increasing one\n");
+                delete[] a;
+                return 5;
+            }
+        }
+    }
+    else{
+        for (int i = 0; i < n; i++){
+            init_array(a, n, s);
         }
     }
     print_array(a, n, p);

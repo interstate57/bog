@@ -30,5 +30,6 @@ int difference(data* a, int n);
 
 void print_array(data* a, int n, int p);
 
+void init_array(data* a, int n, int s);
 
 # endif

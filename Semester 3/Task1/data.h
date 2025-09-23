@@ -56,8 +56,10 @@ public:
         int mi = 0;
         int i = 0;
         double ai = 0;
-        char buf[LEN] = {0};
-        if (!fscanf(fp, buf, LEN)) return ERROR_READ;
+        char buf[LEN] = "57";
+        if (!fgets(buf, LEN, fp)) return ERROR_READ;
+        //if (!fscanf(fp, "%s", buf, LEN)) return ERROR_READ;
+        //std::cout << "buf:" << buf << std::endl;
         std::istringstream iss(buf);
         iss >> mi;
         if (iss.fail()) return ERROR_READ;
@@ -78,7 +80,7 @@ public:
             case 4: m = n - i / 2; break;
         }
         for (int j = 0; j < m; j++){
-            a[j] = j;
+            a[j] = 0;
         }
     }
 };

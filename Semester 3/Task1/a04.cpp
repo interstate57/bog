@@ -17,17 +17,17 @@ int main(int argc, char* argv[]){
     int task = 4;
     double t = 0;
     FILE* fpx;
-    if (!(argc == 4 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
+    if (!(argc == 5 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
      sscanf(argv[3], "%d", &s) == 1 && s != 0)){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
-    else if (!(argc == 5 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
+    else if (!(argc == 6 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
      sscanf(argv[3], "%d", &s) == 1 && s == 0)){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
-    if (argc == 5) name = argv[4];
+    if (argc == 6) name = argv[5];
     if (!(fpx = fopen(name, "r"))) return ERROR_OPEN;
     a = new data[n];
     if (!a){
