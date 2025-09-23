@@ -8,7 +8,7 @@
 int data::p = 0;
 
 int main(int argc, char* argv[]){
-    int n = 0, p = 0, s = 0, diff = 0;
+    int n = 0, s = 0, diff = 0;
     char* name = 0;
     int p = 0;
     data* a = 0;

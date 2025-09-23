@@ -8,7 +8,7 @@
 int data::p = 0;
 
 int main(int argc, char* argv[]){
-    int n = 0, s = 0, m = 0, diff = 0;
+    int n = 0, s = 0, m = 0;
     int p = 0;
     char* name = 0;
     data* a = 0;
@@ -49,7 +49,6 @@ int main(int argc, char* argv[]){
     t = clock();
     res = sort3(a, n, m);
     t = (clock() - t) / CLOCKS_PER_SEC;
-    diff = difference(a, n);
     printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, res, t);
     delete[] a;
     return 0;
