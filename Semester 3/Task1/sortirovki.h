@@ -28,5 +28,7 @@ io_status read_array(data* a, int n, const char* name);
 
 int difference(data* a, int n);
 
+void print_array(data* a, int n, int p);
+
 
 # endif

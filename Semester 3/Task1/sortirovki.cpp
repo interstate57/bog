@@ -282,3 +282,10 @@ int difference(data* a, int n){
     }
     return cnt;
 }
+
+void print_array(data* a, int n, int p){
+    int min = (n < p ? n : p);
+    for (int i = 0; i < min; i++){
+        a[i].print();
+    }
+}
