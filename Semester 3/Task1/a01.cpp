@@ -26,6 +26,7 @@ int main(int argc, char* argv[]){
         printf("Usage: %s x c n p filename\n", argv[0]);
         return 1;
     }
+    data::set_p(p);
     if (argc == 6) name = argv[5];
     namex = argv[1];
     if (!(fpx = fopen(namex, "r"))) return ERROR_OPEN;
@@ -60,9 +61,7 @@ int main(int argc, char* argv[]){
             return 5;
         }
     }
-    for (int i = 0; i < n; i++){
-        a[i].print();
-    }
+    print_array(a, n, p);
     t = clock();
     res = sort1(x, a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
