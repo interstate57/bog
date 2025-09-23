@@ -5,12 +5,14 @@
 #include "data.h"
 #include "sortirovki.h"
 
+int data::p;// = 0;
+
 int main(int argc, char* argv[]){
     int n = 0, s = 0;
-    static int p = 0;
+    //static int p = 0;
     char* name = 0;
     char* namex = 0;
-    data* a = 0;
+    data* a;
     io_status ret, retx;
     data x;
     int res = 0, task = 1;
