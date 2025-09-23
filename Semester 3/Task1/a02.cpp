@@ -3,9 +3,12 @@
 #include <time.h>
 #include "data.h"
 #include "sortirovki.h"
+
+int data::p = 0;
+
 int main(int argc, char* argv[]){
     int n = 0, sa = 0, m = 0, sb = 0, diff = 0;
-    static int pa = 0, pb = 0;
+    int pa = 0, pb = 0;
     char* name1 = 0;
     char* name2 = 0;
     int task = 2;
@@ -55,7 +58,7 @@ int main(int argc, char* argv[]){
     else if (has_formula_1 && !has_formula_2){
         name2 = argv[7];
     }
-
+    data::set_p(pa);
     if (!(fpa = fopen(name1, "r"))) return ERROR_OPEN;
     a = new data[n];
     if (!a){
@@ -79,9 +82,8 @@ int main(int argc, char* argv[]){
             return 5;
         }
     }
-    for (int i = 0; i < n; i++){
-        a[i].print();
-    }
+    print_array(a, n, pa);
+    data::set_p(pb);
     if (!(fpb = fopen(name2, "r"))) return ERROR_OPEN;
     b = new data[m];
     if (!b){
@@ -108,9 +110,8 @@ int main(int argc, char* argv[]){
             return 5;
         }
     }
-    for (int i = 0; i < m; i++){
-        b[i].print();
-    }
+    print_array(b, m, pb);
+    data::set_p(pa + pb);
     c = new data[n + m];
     if (!c){
         printf("Cannot allocate memory!\n");
@@ -121,8 +122,9 @@ int main(int argc, char* argv[]){
     t = clock();
     merge(a, b, n, m, c);
     t = (clock() - t) / CLOCKS_PER_SEC;
+    print_array(c, n + m, pb + pa);
     diff = difference(c, n + m);
-    printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, diff, t);
+    printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     delete[] a;
     delete[] b;
     delete[] c;

@@ -5,11 +5,14 @@
 #include "data.h"
 #include "sortirovki.h"
 
+int data::p = 0;
+
 int main(int argc, char* argv[]){
     int n = 0, p = 0, s = 0, diff = 0;
     char* name = 0;
+    int p = 0;
     data* a = 0;
-    io_status ret, retx;
+    io_status ret;
     data x;
     int task = 7;
     double t = 0;
@@ -41,9 +44,7 @@ int main(int argc, char* argv[]){
         delete[] a;
         return 3;
     }while(0);
-    for (int i = 0; i < n; i++){
-        a[i].print();
-    }
+    print_array(a, n, p);
     t = clock();
     sort7(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;

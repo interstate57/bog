@@ -5,13 +5,16 @@
 #include "data.h"
 #include "sortirovki.h"
 
+int data::p = 0;
+
 int main(int argc, char* argv[]){
-    int n = 0, p = 0, s = 0, m = 0, diff = 0;
+    int n = 0, s = 0, m = 0, diff = 0;
+    int p = 0;
     char* name = 0;
     data* a = 0;
-    io_status ret, retx;
+    io_status ret;
     data x;
-    int res = 0, task = 3;
+    int task = 3, res = 0;
     double t = 0;
     FILE* fpx;
     if (!(argc == 5 && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
@@ -26,6 +29,7 @@ int main(int argc, char* argv[]){
     }
     if (argc == 6) name = argv[5];
     if (!(fpx = fopen(name, "r"))) return ERROR_OPEN;
+
     a = new data[n];
     if (!a){
         printf("Cannot allocate memory!\n");
@@ -41,14 +45,12 @@ int main(int argc, char* argv[]){
         delete[] a;
         return 3;
     }while(0);
-    for (int i = 0; i < n; i++){
-        a[i].print();
-    }
+    print_array(a, n, p);
     t = clock();
-    res = sort1(x, a, n);
+    res = sort3(a, n, m);
     t = (clock() - t) / CLOCKS_PER_SEC;
     diff = difference(a, n);
-    printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, diff, t);
+    printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, res, t);
     delete[] a;
     return 0;
 }
