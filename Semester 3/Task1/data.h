@@ -58,12 +58,11 @@ public:
         double ai = 0;
         char buf[LEN] = "57";
         if (!fgets(buf, LEN, fp)) return ERROR_READ;
-        //if (!fscanf(fp, "%s", buf, LEN)) return ERROR_READ;
-        //std::cout << "buf:" << buf << std::endl;
         std::istringstream iss(buf);
         iss >> mi;
         if (iss.fail()) return ERROR_READ;
         mi = (mi > M ? M : mi);
+        this->m = mi;
         for (i = 0; i < mi; i++){
             iss >> ai;
             if (iss.fail()) return ERROR_READ;

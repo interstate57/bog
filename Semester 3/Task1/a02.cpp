@@ -22,21 +22,24 @@ int main(int argc, char* argv[]){
     io_status retb;
     int has_formula_1 = 0, has_formula_2 = 0;
     if (argc == 9 || argc == 8 || argc == 7){
-        if (!(sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &pa) == 1 && sscanf(argv[3], "%d", &sa) == 1)){
+        if (!(sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &pa) == 1 && sscanf(argv[3], "%d", &sa) == 1 &&\
+        sa >= 0 && sa <= 4)){
             printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
             return 6;
         }
         else{
             has_formula_1 = (sa != 0);
             if (has_formula_1){
-                if (!(sscanf(argv[4], "%d", &m) == 1 && sscanf(argv[5], "%d", &pb) == 1 && sscanf(argv[6], "%d", &sb) == 1)){
+                if (!(sscanf(argv[4], "%d", &m) == 1 && sscanf(argv[5], "%d", &pb) == 1 && sscanf(argv[6], "%d", &sb) == 1 &&\
+                sb >= 0 && sb <= 4)){
                     printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
                 has_formula_2 = (sb != 0); 
             }
             else{
-                if (!(sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1 && sscanf(argv[7], "%d", &sb) == 1)){
+                if (!(sscanf(argv[5], "%d", &m) == 1 && sscanf(argv[6], "%d", &pb) == 1 && sscanf(argv[7], "%d", &sb) == 1 &&\
+                sb >= 0 && sb <= 4)){
                     printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
                     return 6;
                 }
@@ -59,55 +62,69 @@ int main(int argc, char* argv[]){
         name2 = argv[7];
     }
     data::set_p(pa);
-    if (!(fpa = fopen(name1, "r"))) return ERROR_OPEN;
     a = new data[n];
     if (!a){
         printf("Cannot allocate memory!\n");
         return 2;
     }
-    reta = read_array(a, n, name1);
-    do{
-        switch(reta){
-            case SUCCESS: continue;
-            case ERROR_OPEN: printf("Cannot open file!\n"); break;
-            case ERROR_READ: printf("Cannot read file!\n"); break;
-        }
-        delete[] a;
-        return 3;
-    }while(0);
-    for (int i = 0; i < n - 1; i ++){
-        if (a[i + 1] < a[i]){
-            printf("Array a is not an increasing one\n");
+    if(name1){
+        if (!(fpa = fopen(name1, "r"))) return ERROR_OPEN;
+        reta = read_array(a, n, name1);
+        do{
+            switch(reta){
+                case SUCCESS: continue;
+                case ERROR_OPEN: printf("Cannot open file!\n"); break;
+                case ERROR_READ: printf("Cannot read file!\n"); break;
+            }
             delete[] a;
-            return 5;
+            return 3;
+        }while(0);
+        for (int i = 0; i < n - 1; i ++){
+            if (a[i + 1] < a[i]){
+                printf("Array a is not an increasing one\n");
+                delete[] a;
+                return 5;
+            }
+        }
+    }
+    else{
+        for (int i = 0; i < n; i++){
+            init_array(a, n, sa);
         }
     }
     print_array(a, n, pa);
     data::set_p(pb);
-    if (!(fpb = fopen(name2, "r"))) return ERROR_OPEN;
     b = new data[m];
     if (!b){
         printf("Cannot allocate memory!\n");
         delete[] a;
         return 2;
     }
-    retb = read_array(b, m, name2);
-    do{
-        switch(retb){
-            case SUCCESS: continue;
-            case ERROR_OPEN: printf("Cannot open file!\n"); break;
-            case ERROR_READ: printf("Cannot read file!\n"); break;
-        }
-        delete[] a;
-        delete[] b;
-        return 3;
-    }while(0);
-    for (int i = 0; i < m - 1; i ++){
-        if (b[i + 1] < b[i]){
-            printf("Array b is not an increasing one\n");
+    if(name2){
+        if (!(fpb = fopen(name2, "r"))) return ERROR_OPEN;
+        retb = read_array(b, m, name2);
+        do{
+            switch(retb){
+                case SUCCESS: continue;
+                case ERROR_OPEN: printf("Cannot open file!\n"); break;
+                case ERROR_READ: printf("Cannot read file!\n"); break;
+            }
             delete[] a;
             delete[] b;
-            return 5;
+            return 3;
+        }while(0);
+        for (int i = 0; i < m - 1; i ++){
+            if (b[i + 1] < b[i]){
+                printf("Array b is not an increasing one\n");
+                delete[] a;
+                delete[] b;
+                return 5;
+            }
+        }
+    }
+    else{
+        for (int i = 0; i < m; i++){
+            init_array(b, m, sb);
         }
     }
     print_array(b, m, pb);

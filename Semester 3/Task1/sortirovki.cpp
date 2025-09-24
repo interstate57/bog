@@ -15,11 +15,9 @@ int sort1(const data& x, data* a, int n){
         s = (inach + ikon) / 2;
         if (x > a[s]){
             inach = s + 1;
-            printf("nach : %d\n", inach);
         }
         else{
             ikon = s;
-            printf("kon : %d\n", ikon);
         }
     }
     return inach;
