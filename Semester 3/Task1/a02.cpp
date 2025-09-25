@@ -94,6 +94,7 @@ int main(int argc, char* argv[]){
         }
     }
     print_array(a, n, pa);
+    printf("\n");
     data::set_p(pb);
     b = new data[m];
     if (!b){
@@ -131,6 +132,7 @@ int main(int argc, char* argv[]){
         }
     }
     print_array(b, m, pb);
+    printf("\n");
     data::set_p(pa + pb);
     c = new data[n + m];
     if (!c){

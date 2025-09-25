@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     int task = 3, res = 0;
     double t = 0;
     if (argc == 5 && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
-     sscanf(argv[4], "%d", &s) == 1 && s > 0 && s < 5){
+     sscanf(argv[4], "%d", &s) == 1 && (s < 1 || s > 4)){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
@@ -31,6 +31,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     if (argc == 6) name = argv[5];
+    data::set_p(p);
     a = new data[n];
     if (!a){
         printf("Cannot allocate memory!\n");
@@ -52,9 +53,11 @@ int main(int argc, char* argv[]){
         init_array(a, n, s);
     }
     print_array(a, n, p);
+    printf("\n");
     t = clock();
     res = sort3(a, n, m);
     t = (clock() - t) / CLOCKS_PER_SEC;
+    print_array(a, n, p);
     printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, res, t);
     delete[] a;
     return 0;

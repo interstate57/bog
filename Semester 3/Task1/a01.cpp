@@ -19,12 +19,16 @@ int main(int argc, char* argv[]){
     double t = 0;
     FILE* fpx;
     if (argc == 5 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        (s <= 0 || s >= 5)){
+        (s < 1 || s > 4)){
         printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
     else if (argc == 6 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
         s != 0){
+        printf("Usage: %s x n p s filename\n", argv[0]);
+        return 1;
+    }
+    else if (argc != 5 && argc != 6){
         printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
@@ -62,13 +66,14 @@ int main(int argc, char* argv[]){
         init_array(a, n, s);
     }
     for (int i = 0; i < n - 1; i ++){
-        if (a[i + 1] > a[i]){
+        if (a[i + 1] < a[i]){
             printf("Array a is not an increasing one\n");
             delete[] a;
             return 5;
         }
     }
     print_array(a, n, p);
+    printf("\n");
     t = clock();
     res = sort1(x, a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
