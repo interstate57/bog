@@ -68,7 +68,10 @@ int main(int argc, char* argv[]){
         return 2;
     }
     if(name1){
-        if (!(fpa = fopen(name1, "r"))) return ERROR_OPEN;
+        if (!(fpa = fopen(name1, "r"))) {
+            delete[] a;
+            return ERROR_OPEN;
+        }    
         reta = read_array(a, n, name1);
         do{
             switch(reta){
@@ -81,9 +84,7 @@ int main(int argc, char* argv[]){
         }while(0);
     }
     else{
-        for (int i = 0; i < n; i++){
-            init_array(a, n, sa);
-        }
+        init_array(a, n, sa);
     }
     for (int i = 0; i < n - 1; i ++){
         if (a[i + 1] < a[i]){
@@ -101,7 +102,11 @@ int main(int argc, char* argv[]){
         return 2;
     }
     if(name2){
-        if (!(fpb = fopen(name2, "r"))) return ERROR_OPEN;
+        if (!(fpb = fopen(name2, "r"))){
+            delete[] a;
+            delete[] b;
+            return ERROR_OPEN;
+        } 
         retb = read_array(b, m, name2);
         do{
             switch(retb){
@@ -115,9 +120,7 @@ int main(int argc, char* argv[]){
         }while(0);
     }
     else{
-        for (int i = 0; i < m; i++){
-            init_array(b, m, sb);
-        }
+        init_array(b, m, sb);
     }
     for (int i = 0; i < m - 1; i ++){
         if (b[i + 1] < b[i]){

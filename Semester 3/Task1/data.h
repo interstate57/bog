@@ -78,6 +78,7 @@ public:
             case 3: m = i / 2; break;
             case 4: m = n - i / 2; break;
         }
+        m = (m > M ? M : m);
         for (int j = 0; j < m; j++){
             a[j] = 0;
         }

@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
     double t = 0;
     FILE* fpx;
     if (!(argc == 4 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
-     sscanf(argv[3], "%d", &s) == 1 && s != 0)){
+     sscanf(argv[3], "%d", &s) == 1 && s >= 1 && s <= 4)){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
@@ -29,22 +29,28 @@ int main(int argc, char* argv[]){
         return 1;
     }
     if (argc == 5) name = argv[4];
-    if (!(fpx = fopen(name, "r"))) return ERROR_OPEN;
+    
     a = new data[n];
     if (!a){
         printf("Cannot allocate memory!\n");
         return 2;
     }
-    ret = read_array(a, n, name);
-    do{
-        switch(ret){
-            case SUCCESS: continue;
-            case ERROR_OPEN: printf("Cannot open file!\n"); break;
-            case ERROR_READ: printf("Cannot read file!\n"); break;
-        }
-        delete[] a;
-        return 3;
-    }while(0);
+    if (name){
+        if (!(fpx = fopen(name, "r"))) return ERROR_OPEN;
+        ret = read_array(a, n, name);
+        do{
+            switch(ret){
+                case SUCCESS: continue;
+                case ERROR_OPEN: printf("Cannot open file!\n"); break;
+                case ERROR_READ: printf("Cannot read file!\n"); break;
+            }
+            delete[] a;
+            return 3;
+        }while(0);
+    }
+    else{
+        init_array(a, n, s);
+    }
     b = new data[n];
     if (!b){
         printf("Cannot allocate memory!\n");

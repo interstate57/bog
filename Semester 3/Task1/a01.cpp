@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
     double t = 0;
     FILE* fpx;
     if (argc == 5 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        s == 0){
+        (s <= 0 || s >= 5)){
         printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
@@ -57,17 +57,15 @@ int main(int argc, char* argv[]){
             delete[] a;
             return 3;
         }while(0);
-        for (int i = 0; i < n - 1; i ++){
-            if (a[i + 1] > a[i]){
-                printf("Array a is not an increasing one\n");
-                delete[] a;
-                return 5;
-            }
-        }
     }
     else{
-        for (int i = 0; i < n; i++){
-            init_array(a, n, s);
+        init_array(a, n, s);
+    }
+    for (int i = 0; i < n - 1; i ++){
+        if (a[i + 1] > a[i]){
+            printf("Array a is not an increasing one\n");
+            delete[] a;
+            return 5;
         }
     }
     print_array(a, n, p);
