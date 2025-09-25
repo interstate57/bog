@@ -16,13 +16,17 @@ int main(int argc, char* argv[]){
     data x;
     int task = 3, res = 0;
     double t = 0;
-    if (!((argc == 5 || argc == 6) && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
-     sscanf(argv[4], "%d", &s) == 1 && s > 0 && s < 5 && argc == 6)){
+    if (argc == 5 && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
+     sscanf(argv[4], "%d", &s) == 1 && s > 0 && s < 5){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
-    else if (!(argc == 6 && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
-     sscanf(argv[4], "%d", &s) == 1 && s == 0 && argc == 5)){
+    else if (argc == 6 && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 &&\
+     sscanf(argv[4], "%d", &s) == 1 && s != 0){
+        printf("Usage: %s m n p s filename\n", argv[0]);
+        return 1;
+    }
+    else if (argc != 5 && argc != 6){
         printf("Usage: %s m n p s filename\n", argv[0]);
         return 1;
     }
