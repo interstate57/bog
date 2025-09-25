@@ -25,29 +25,26 @@ int sort1(const data& x, data* a, int n){
 
 
 int sort3 (data* a, int n, int m){
-    int inuzh = 0, jnuzh = n - 1;
     int i = 0, j = n - 1;
     data vr;
     data am = a[m];
     while (i <= j){
         while (i < n){
             if (am < a[i]){
-                inuzh = i;
                 break;
             }
             i += 1;
         }
         while (j > -1){
             if (am >= a[j]){ //***
-                jnuzh = j;
                 break;
             }
             j -= 1;
         }
         if (i <= j){
-            vr = a[jnuzh];
-            a[jnuzh] = a[inuzh];
-            a[inuzh] = vr;
+            vr = a[j];
+            a[j] = a[i];
+            a[i] = vr;
         }
     }
     return i;
@@ -207,25 +204,33 @@ void sort9 (data* a, int n){
     int i = 0, sr = 0; 
     data per;
     while (n > 1){
-        sr = (n - 1) / 2;
+        i = 0;
+        sr = n / 2;
         i = polov_sort(a[sr], a, n);
+        printf("i = : \n");
+        print_array(a, n, 10);
+        printf("\n");
         if (i > n - i){
-            sort9(a + i, n - i);
+            sort9(a + i + 1, n - i);
+            printf("i > n - 1 : \n");
+            print_array(a, n, 10);
+            printf("\n");
+            n = i;
             continue;
         }
         else{
             if (i == 0){
-                per = a[i];
-                a[i] = a[sr];
-                a[sr] = per;
                 a += 1;
                 n -= 1;
                 continue;
             }
             if (i > 0) {
                 sort9(a + 0, i);
-                a += i;
-                n -= i;
+                printf("i > 0 : \n");
+                print_array(a, n, 10);
+                printf("\n");
+                a = a + i + 1;
+                n = n - i - 1;
                 continue;
             }
         }
@@ -233,28 +238,25 @@ void sort9 (data* a, int n){
 }
 
 int polov_sort (data x, data* a, int n){
-    int inuzh = 0, jnuzh = n - 1;
     int i = 0, j = n - 1;
     data vr;
-    while (i <= j){
-        while (i < n){
+    while (i < j){
+        while (i < n - 1){
             if (x <= a[i]){
-                inuzh = i;
                 break;
             }
             i += 1;
         }
-        while (j > -1){
-            if (a[j] < x){
-                jnuzh = j;
+        while (j > 0){
+            if (a[j] <= x){
                 break;
             }
             j -= 1;
         }
-        if (i <= j){
-            vr = a[jnuzh];
-            a[jnuzh] = a[inuzh];
-            a[inuzh] = vr;
+        if (i < j){
+            vr = a[j];
+            a[j] = a[i];
+            a[i] = vr;
         }
     }
     return i;
