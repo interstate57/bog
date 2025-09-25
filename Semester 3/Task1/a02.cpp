@@ -79,17 +79,17 @@ int main(int argc, char* argv[]){
             delete[] a;
             return 3;
         }while(0);
-        for (int i = 0; i < n - 1; i ++){
-            if (a[i + 1] < a[i]){
-                printf("Array a is not an increasing one\n");
-                delete[] a;
-                return 5;
-            }
-        }
     }
     else{
         for (int i = 0; i < n; i++){
             init_array(a, n, sa);
+        }
+    }
+    for (int i = 0; i < n - 1; i ++){
+        if (a[i + 1] < a[i]){
+            printf("Array a is not an increasing one\n");
+            delete[] a;
+            return 5;
         }
     }
     print_array(a, n, pa);
@@ -113,18 +113,18 @@ int main(int argc, char* argv[]){
             delete[] b;
             return 3;
         }while(0);
-        for (int i = 0; i < m - 1; i ++){
-            if (b[i + 1] < b[i]){
-                printf("Array b is not an increasing one\n");
-                delete[] a;
-                delete[] b;
-                return 5;
-            }
-        }
     }
     else{
         for (int i = 0; i < m; i++){
             init_array(b, m, sb);
+        }
+    }
+    for (int i = 0; i < m - 1; i ++){
+        if (b[i + 1] < b[i]){
+            printf("Array b is not an increasing one\n");
+            delete[] a;
+            delete[] b;
+            return 5;
         }
     }
     print_array(b, m, pb);
