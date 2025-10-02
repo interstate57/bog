@@ -5,25 +5,22 @@
 #include "student.h"
 #include "sortirovki.h"
 
-
 int main(int argc, char* argv[]){
-    int n = 0, s = 0;
-    int p = 0;
+    int n = 0, s = 0, diff = 0;
     char* name = 0;
-    char* namex = 0;
-    int xv = 0;
+    int p = 0;
     student* a;
+    student* b;
     io_status ret;
-    int res = 0, task = 1;
+    student x;
+    int task = 8;
     double t = 0;
-    if (!((argc == 6 || argc == 7) && sscanf(argv[2], "%d", &xv) == 1 && sscanf(argv[3], "%d", &n) == 1 && sscanf(argv[4], "%d", &p) == 1 &&\
-        sscanf(argv[5], "%d", &s) == 1)){
-        printf("Usage: %s x_name x_value n p s filename\n", argv[0]);
+   if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
+     sscanf(argv[3], "%d", &s) == 1)){
+        printf("Usage: %s n p s filename\n", argv[0]);
         return 1;
     }
-    if (argc == 7) name = argv[6];
-    namex = argv[1];
-    student x(namex, xv);
+    if (argc == 5) name = argv[4];
     a = new student[n];
     if (!a){
         printf("Cannot allocate memory!\n");
@@ -31,7 +28,7 @@ int main(int argc, char* argv[]){
     }
     if (name){
         if (s != 0){
-            printf("Usage: %s x_name x_value n p s filename\n", argv[0]);
+            printf("Usage: %s n p s filename\n", argv[0]);
             delete[] a;
             return 1;
         }
@@ -50,25 +47,27 @@ int main(int argc, char* argv[]){
     }
     else{
         if (s < 1 || s > 4){
-            printf("Usage: %s x_name x_value n p s filename\n", argv[0]);
+            printf("Usage: %s n p s filename\n", argv[0]);
             delete[] a;
             return 1;
         }
         init_array(a, n, s);
     }
-    for (int i = 0; i < n - 1; i ++){
-        if (a[i + 1] < a[i]){
-            printf("Array a is not an increasing one\n");
-            delete[] a;
-            return 5;
-        }
+    b = new student[n];
+    if (!b){
+        printf("Cannot allocate memory!\n");
+        delete[] a;
+        return 2;
     }
     print_array(a, n, p);
     printf("\n");
     t = clock();
-    res = sort1(x, a, n);
+    sort8(a, b, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
-    printf ("%s : Task = %d Res = %d Elapsed = %.2f\n", argv[0], task, res, t);
+    print_array(a, n, p);
+    diff = difference(a, n);
+    printf ("%s : Task = %d Diff = %d Elapsed = %.2f\n", argv[0], task, diff, t);
     delete[] a;
+    delete[] b;
     return 0;
 }

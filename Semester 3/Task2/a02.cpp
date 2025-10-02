@@ -15,8 +15,6 @@ int main(int argc, char* argv[]){
     student* b;
     student* c;
     double t;
-    FILE* fpa;
-    FILE* fpb;
     io_status reta;
     io_status retb;
     int has_formula_1 = 0, has_formula_2 = 0;
@@ -47,7 +45,7 @@ int main(int argc, char* argv[]){
         }
     }
     else {
-        printf("Usage: %s c n pa sa [name1] m pb sb [name2]\n", argv[0]);
+        printf("Usage: %s n pa sa [name1] m pb sb [name2]\n", argv[0]);
         return 6;
     }
     if (!has_formula_1 && !has_formula_2){
@@ -65,11 +63,7 @@ int main(int argc, char* argv[]){
         printf("Cannot allocate memory!\n");
         return 2;
     }
-    if(name1){
-        if (!(fpa = fopen(name1, "r"))) {
-            delete[] a;
-            return -1;
-        }    
+    if(name1){    
         reta = read_array(a, n, name1);
         do{
             switch(reta){
@@ -102,11 +96,6 @@ int main(int argc, char* argv[]){
         return 2;
     }
     if(name2){
-        if (!(fpb = fopen(name2, "r"))){
-            delete[] a;
-            delete[] b;
-            return -1;
-        } 
         retb = read_array(b, m, name2);
         do{
             switch(retb){

@@ -23,6 +23,9 @@ public:
         name = x.name; x.name = nullptr;
         value = x.value; x.value = 0;
     }
+    student (char* name, int value){
+        init (name, value);
+    }
     ~student (){
         erase ();
     }
@@ -75,20 +78,20 @@ public:
     }
 private:
     io_status init (const char * n, int v){
-    value = v;
-    if (n != nullptr){
-        size_t len = strlen (n);
-        name = new char [len + 1];
-        if (name != nullptr){
-            for (size_t i = 0; i <= len; i++)
-            name[i] = n[i];
+        value = v;
+        if (n != nullptr){
+            size_t len = strlen (n);
+            name = new char [len + 1];
+            if (name != nullptr){
+                for (size_t i = 0; i <= len; i++)
+                    name[i] = n[i];
+            }
+            else
+                return io_status::memory;
         }
         else
-            return io_status::memory;
-    }
-    else
-        name = nullptr;
-    return io_status::success;
+            name = nullptr;
+        return io_status::success;
     }
     void erase (){
         value = 0;
