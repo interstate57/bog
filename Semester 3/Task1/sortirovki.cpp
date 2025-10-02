@@ -25,29 +25,7 @@ int sort1(const data& x, data* a, int n){
 
 
 int sort3 (data* a, int n, int m){
-    int i = 0, j = n - 1;
-    data vr;
-    data am = a[m];
-    while (i <= j){
-        while (i < n){
-            if (am < a[i]){
-                break;
-            }
-            i += 1;
-        }
-        while (j > -1){
-            if (am >= a[j]){ //***
-                break;
-            }
-            j -= 1;
-        }
-        if (i <= j){
-            vr = a[j];
-            a[j] = a[i];
-            a[i] = vr;
-        }
-    }
-    return i;
+    return polov_sort(a[m], a, n);
 }
 
 void sort4 (data* a, int n){
@@ -207,14 +185,8 @@ void sort9 (data* a, int n){
         i = 0;
         sr = n / 2;
         i = polov_sort(a[sr], a, n);
-        printf("i = : \n");
-        print_array(a, n, 10);
-        printf("\n");
-        if (i > n - i){
-            sort9(a + i + 1, n - i);
-            printf("i > n - 1 : \n");
-            print_array(a, n, 10);
-            printf("\n");
+        if (i > n - i && n - i - 1 > 1){
+            sort9(a + i + 1, n - i - 1);
             n = i;
             continue;
         }
@@ -226,9 +198,6 @@ void sort9 (data* a, int n){
             }
             if (i > 0) {
                 sort9(a + 0, i);
-                printf("i > 0 : \n");
-                print_array(a, n, 10);
-                printf("\n");
                 a = a + i + 1;
                 n = n - i - 1;
                 continue;
@@ -254,9 +223,13 @@ int polov_sort (data x, data* a, int n){
             j -= 1;
         }
         if (i < j){
-            vr = a[j];
-            a[j] = a[i];
-            a[i] = vr;
+            if (a[i] == a[j]){
+                i++;
+            } else {
+                vr = a[j];
+                a[j] = a[i];
+                a[i] = vr;
+            }
         }
     }
     return i;
@@ -294,6 +267,17 @@ void print_array(data* a, int n, int p){
 
 void init_array(data* a, int n, int s){
     for (int i = 0; i < n; i++){
-        a[i].init(s, n, i);
+        a[i].init(s, n, i + 1);
     }
+}
+
+int f(int s, int n, int i){
+    int res = 0;
+    switch(s){
+            case 1: res = i; break;
+            case 2: res = n - i; break;
+            case 3: res = i / 2; break;
+            case 4: res = n - i / 2; break;
+        }
+    return res;
 }

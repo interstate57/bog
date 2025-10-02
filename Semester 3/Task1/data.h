@@ -41,6 +41,8 @@ public:
     { return m >= x.m; }
     int operator<= (const data& x) const
     { return m <= x.m; }
+    int operator== (const data& x) const
+    { return m == x.m; }
     // Print data in a line (not more than p): m a[0] a[1] ... a[m-1]
     void print (FILE * fp = stdout) const
     {
@@ -72,14 +74,9 @@ public:
     }
     // Init data by formulae with number s for a_i, i=1, ..., n
     void init (int s, int n, int i){
-        switch(s){
-            case 1: m = i; break;
-            case 2: m = n - i; break;
-            case 3: m = i / 2; break;
-            case 4: m = n - i / 2; break;
-        }
-        m = (m > M ? M : m);
-        for (int j = 0; j < m; j++){
+        int len = get_M();
+        m = f(s, n, i);
+        for (int j = 0; j < len; j++){
             a[j] = 0;
         }
     }

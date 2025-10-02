@@ -16,18 +16,8 @@ int main(int argc, char* argv[]){
     data x;
     int task = 5;
     double t = 0;
-    FILE* fpx;
-    if (argc == 4 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
-     sscanf(argv[3], "%d", &s) == 1 && (s < 1 || s > 4)){
-        printf("Usage: %s n p s filename\n", argv[0]);
-        return 1;
-    }
-    else if (argc == 5 && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
-     sscanf(argv[3], "%d", &s) == 1 && s != 0){
-        printf("Usage: %s n p s filename\n", argv[0]);
-        return 1;
-    }
-    else if (argc != 4 && argc != 5){
+    if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
+     sscanf(argv[3], "%d", &s) == 1)){
         printf("Usage: %s n p s filename\n", argv[0]);
         return 1;
     }
@@ -39,7 +29,11 @@ int main(int argc, char* argv[]){
         return 2;
     }
     if (name){
-        if (!(fpx = fopen(name, "r"))) return ERROR_OPEN;
+        if (s != 0){
+            printf("Usage: %s n p s filename\n", argv[0]);
+            delete[] a;
+            return 1;
+        }
         ret = read_array(a, n, name);
         do{
             switch(ret){
@@ -52,6 +46,11 @@ int main(int argc, char* argv[]){
         }while(0);
     }
     else{
+        if (s < 1 || s > 4){
+            printf("Usage: %s n p s filename\n", argv[0]);
+            delete[] a;
+            return 1;
+        }
         init_array(a, n, s);
     }
     print_array(a, n, p);

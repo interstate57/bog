@@ -32,4 +32,6 @@ void print_array(data* a, int n, int p);
 
 void init_array(data* a, int n, int s);
 
+int f(int s, int n, int i);
+
 # endif

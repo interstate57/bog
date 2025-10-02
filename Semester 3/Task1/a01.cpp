@@ -18,17 +18,7 @@ int main(int argc, char* argv[]){
     int res = 0, task = 1;
     double t = 0;
     FILE* fpx;
-    if (argc == 5 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        (s < 1 || s > 4)){
-        printf("Usage: %s x n p s filename\n", argv[0]);
-        return 1;
-    }
-    else if (argc == 6 && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1 &&\
-        s != 0){
-        printf("Usage: %s x n p s filename\n", argv[0]);
-        return 1;
-    }
-    else if (argc != 5 && argc != 6){
+    if (!((argc == 5 || argc == 6) && sscanf(argv[2], "%d", &n) == 1 && sscanf(argv[3], "%d", &p) == 1 && sscanf(argv[4], "%d", &s) == 1)){
         printf("Usage: %s x n p s filename\n", argv[0]);
         return 1;
     }
@@ -51,6 +41,11 @@ int main(int argc, char* argv[]){
         return 2;
     }
     if (name){
+        if (s != 0){
+            printf("Usage: %s x n p s filename\n", argv[0]);
+            delete[] a;
+            return 1;
+        }
         ret = read_array(a, n, name);
         do{
             switch(ret){
@@ -63,6 +58,11 @@ int main(int argc, char* argv[]){
         }while(0);
     }
     else{
+        if (s < 1 || s > 4){
+            printf("Usage: %s x n p s filename\n", argv[0]);
+            delete[] a;
+            return 1;
+        }
         init_array(a, n, s);
     }
     for (int i = 0; i < n - 1; i ++){
