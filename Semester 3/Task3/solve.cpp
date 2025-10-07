@@ -4,20 +4,114 @@
 #include "solve.h"
 
 int solve1(student* a, int n){
-    int j = 1;
+    int j = 1, k = 0;
     if (n == 0) return 0;
     for (int i = 1; i < n; i++){
-        if (a[i] < a[j - 1]){
-            delete (a+i);
-            continue;
+        if (k == 0){
+            if (a[i] < a[i - 1]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
         }
         else{
-            if (i != j){
-                a[j] = (student&&)a[i];
+            if (a[i] < a[j - 1]){
+                k = 0;
+                continue;
             }
-            j++;
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
         }
     }
+    return j;
+}
+
+
+
+int solve2(student* a, int n){
+    int j = 2, k = 0;
+    student temp;
+    if (n == 0) return 0;
+    for (int i = 2; i < n; i++){
+        if (k == 0){
+            if (a[i] > a[i - 1] && a[i] > a[i - 2]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+        else{
+            if (a[i] > a[j - 1] && a[i] > a[j - 2]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+    }
+    return j;
+}
+
+int solve3(student* a, int n){
+    int j = 1, k = 0;
+    int i;
+    if (n == 0) return 0;
+    for (i = 1; i < n - 1; i++){
+        printf("%d ", k);
+        if (k == 0){
+            if (a[i] < a[i - 1] && a[i] < a[i + 1]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+        else{
+            if (a[i] < a[j - 1] && a[i] < a[i + 1]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+    }
+    j += 1;
+    if (i != j){
+        a[j] = (student&&)a[n - 1];
+    }
+    printf("\n");
     return j;
 }
 

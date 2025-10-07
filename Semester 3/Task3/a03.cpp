@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
     int p = 0;
     student* a = 0;
     io_status ret;
-    int task = 1;
+    int task = 3;
     double t = 0;
     if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
      sscanf(argv[3], "%d", &s) == 1)){
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]){
     print_array(a, n, p);
     printf("\n");
     t = clock();
-    res = solve1(a, n);
+    res = solve3(a, n);
     t = (clock() - t) / CLOCKS_PER_SEC;
     print_array(a, n, res);
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);

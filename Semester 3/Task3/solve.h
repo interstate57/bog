@@ -4,6 +4,10 @@
 
 int solve1(student* a, int n);
 
+int solve2(student* a, int n);
+
+int solve3(student* a, int n);
+
 io_status read_array(student* a, int n, const char* name);
 
 void print_array(student* a, int n, int p);
