@@ -79,7 +79,6 @@ int solve3(student* a, int n){
     int i;
     if (n == 0) return 0;
     for (i = 1; i < n - 1; i++){
-        printf("%d ", k);
         if (k == 0){
             if (a[i] < a[i - 1] && a[i] < a[i + 1]){
                 k = 0;
@@ -107,11 +106,93 @@ int solve3(student* a, int n){
             }
         }
     }
-    j += 1;
     if (i != j){
         a[j] = (student&&)a[n - 1];
     }
-    printf("\n");
+    j++;
+    return j;
+}
+
+int solve4(student* a, int n){
+    int j = 2, k = 0;
+    int i;
+    if (n == 0) return 0;
+    for (i = 2; i < n - 2; i++){
+        if (k == 0){
+            if (a[i] > a[i - 1] && a[i] > a[i - 2] && a[i] > a[i + 1] && a[i] > a[i + 2]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+        else{
+            if (a[i] > a[j - 1] && a[i] > a[j - 2] && a[i] > a[i + 1] && a[i] > a[i + 2]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+    }
+    for (int m = i; m < n; m++){
+        if (m != j){
+            a[j] = (student&&)a[m];
+        }
+        j++;
+    }
+    return j;
+}
+
+int solve5(student* a, int n){
+    int j = 0, k = 0;
+    int i;
+    if (n == 0) return 0;
+    if (a[0] <= a[1]){
+        j = 1;
+        k = 1;
+    } 
+    else{
+        j = 0;
+    }
+    for (i = 2; i < n; i++){
+        if (k == 0){
+            if (a[i] <= a[i - 1]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+        else{
+            if (a[i] <= a[j - 1]){
+                k = 0;
+                continue;
+            }
+            else{
+                k = 1;
+                if (i != j){
+                    a[j] = (student&&)a[i];
+                }
+                j++;
+            }
+        }
+    }
     return j;
 }
 
