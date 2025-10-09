@@ -4,8 +4,8 @@ all: a01.out a02.out a03.out a04.out a05.out a06.out a07.out a08.out a09.out
 a0%.out : a0%.o sortirovki.o
 	g++ $(FLAGS) $^ -o $@
 a0%.o : a0%.cpp student.h
-	g++ -c -g -DM=10 $(FLAGS) $<
+	g++ -c -g $(FLAGS) $<
 sortirovki.o : sortirovki.cpp sortirovki.h student.h
-	g++ -c -g -DM=10 $(FLAGS) $<
+	g++ -c -g $(FLAGS) $<
 clean:
 	rm -f *.o

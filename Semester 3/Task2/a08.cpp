@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     student x;
     int task = 8;
     double t = 0;
-   if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
+    if (!((argc == 4 || argc == 5) && sscanf(argv[1], "%d", &n) == 1 && sscanf(argv[2], "%d", &p) == 1 &&\
      sscanf(argv[3], "%d", &s) == 1)){
         printf("Usage: %s n p s filename\n", argv[0]);
         return 1;

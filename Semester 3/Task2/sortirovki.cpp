@@ -34,15 +34,15 @@ void sort4 (student* a, int n){
     for (i = 0; i < n; i ++){
         for (j = 0; j < n - 1 - i; j ++){
             if (a[j + 1] < a[j]){
-                per = a[j];
-                a[j] = a[j + 1];
-                a[j + 1] = per;
+                per = (student&&)a[j];
+                a[j] = (student&&)a[j + 1];
+                a[j + 1] = (student&&)per;
             }
         }
     }
 }
 
-void sort5 (student* a, int n){
+void sort5_old (student* a, int n){
     int i, j;
     student per;
     for (i = 0; i < n - 1; i ++){
@@ -51,12 +51,28 @@ void sort5 (student* a, int n){
         for (j = i; j < n; j ++){
             if (minch > a[j]){
                 mini = j;
-                minch = a[j];
+                minch = (student&&)a[j];
             }
         }
-        per = a[i];
-        a[i] = a[mini];
-        a[mini] = per;
+        per = (student&&)a[i];
+        a[i] = (student&&)a[mini];
+        a[mini] = (student&&)per;
+    }
+}
+
+void sort5 (student* a, int n){
+    int i, j;
+    student per;
+    for (i = 0; i < n - 1; i ++){
+        int mini = i;
+        for (j = i; j < n; j ++){
+            if (a[mini] > a[j]){
+                mini = j;
+            }
+        }
+        per = (student&&)a[i];
+        a[i] = (student&&)a[mini];
+        a[mini] = (student&&)per;
     }
 }
 
@@ -72,11 +88,11 @@ void sort6 (student* a, int n){
             }
         }
         if (nuzh != -1){
-            vr = a[i];
+            vr = (student&&)a[i];
             for (j = i; j > nuzh; j --){
-                a[j] = a[j - 1];
+                a[j] = (student&&)a[j - 1];
             }
-            a[nuzh] = vr;
+            a[nuzh] = (student&&)vr;
         }
     }
 }
@@ -87,11 +103,11 @@ void sort7 (student* a, int n){
         int nuzh = binpoisk(a[i], a, i + 1);
         student vr;
         if (nuzh != i + 1){
-            vr = a[i];
+            vr = (student&&)a[i];
             for (j = i; j > nuzh; j --){
-                a[j] = a[j - 1];
+                a[j] = (student&&)a[j - 1];
             }
-            a[nuzh] = vr;
+            a[nuzh] = (student&&)vr;
         }
     }
 }
@@ -140,7 +156,7 @@ void sort8 (student* a, student* b, int n){
     }
     if (a != a_orig){
         for (int k = 0; k < n; k ++){
-            a_orig[k] = a[k];
+            a_orig[k] = (student&&)a[k];
         }
     }
 }
@@ -226,9 +242,9 @@ int polov_sort (student x, student* a, int n){
             if (a[i] == a[j]){
                 i++;
             } else {
-                vr = a[j];
-                a[j] = a[i];
-                a[i] = vr;
+                vr = (student&&)a[j];
+                a[j] = (student&&)a[i];
+                a[i] = (student&&)vr;
             }
         }
     }
