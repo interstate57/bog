@@ -24,6 +24,9 @@ class student
             name = x.name; x.name = nullptr;
             value = x.value; x.value = 0;
         }
+        student (char* name, int value){
+            init (name, value);
+        }
         ~student (){
             erase ();
         }

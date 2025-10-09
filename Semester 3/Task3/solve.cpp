@@ -37,9 +37,32 @@ int solve1(student* a, int n){
     return j;
 }
 
+/*int solve2(student* a, int n){
+    student * prev = a + 1;
+    student * prevprev = a;
+    int i;
+    int j = 2;
+    int remove_prevprev, remove_prev;
+    if (a[2] > a[1] && a[2] > a[0])
+        remove_prevprev = 1;
+    if (a[3] > a[1] && a[3] > a[2])
+        remove_prev = 1;
+    for (i = 2; i < n; i++){
+        if (a[i] > *prev && a[i] > *prevprev){
+            prevprev = prev;
+            prev = a+i;
+            i++;
+        }
+        else{
+            
+        }
+    }
+
+}*/
 
 
-int solve2(student* a, int n){
+
+int solve2_xyu(student* a, int n){
     int j = 2, k = 0;
     student temp;
     if (n == 0) return 0;
@@ -154,44 +177,129 @@ int solve4(student* a, int n){
     return j;
 }
 
-int solve5(student* a, int n){
-    int j = 0, k = 0;
+int solve6(student *a, int n, student &x){
     int i;
-    if (n == 0) return 0;
-    if (a[0] <= a[1]){
-        j = 1;
-        k = 1;
-    } 
-    else{
-        j = 0;
-    }
-    for (i = 2; i < n; i++){
-        if (k == 0){
-            if (a[i] <= a[i - 1]){
-                k = 0;
-                continue;
-            }
-            else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
+    int j = 0;
+	if (n == 0) return 0;
+	for (i = 0; i < n; i++){
+		if (a[i] >= x){
+			if (j != i)
+				a[j] = (student &&)a[i];
+			j++;
+		}
+	}
+	return j;
+}
+
+int solve7(student *a, int n, student &x){
+    int i;
+    int j = 0, k = 0;
+	if (n == 0) return 0;
+    for (i = 0; i < n; i++){
+		if (a[i] < x && k == 0){
+			k = 1;
+            if (j != i)
+				a[j] = (student &&)a[i];
+            j++;
+		}
+        else if (a[i] >= x){
+            if (j != i)
+				a[j] = (student &&)a[i];
+			j++;
+            k = 0;
+        }
+	}
+    return j;
+}
+
+int solve8(student *a, int n, student &x){
+    int i;
+    int j = 0, k = 0;
+	if (n == 0) return 0;
+    for (i = 0; i < n; i++){
+		if (a[i] < x && k == 0){
+			k = 1;
+            if (j != i)
+				a[j] = (student &&)a[i];
+            j++;
+		}
+        else if (a[i] >= x){
+            if (k == 2){
+                if (j != i-1)
+                    a[j] = (student &&)a[i-1];
                 j++;
             }
+            if (j != i)
+				a[j] = (student &&)a[i];
+			j++;
+            k = 0;
         }
         else{
-            if (a[i] <= a[j - 1]){
-                k = 0;
-                continue;
+            if (k == 1) k = 2;
+        }
+	}
+    if (k == 2){
+        if (j != i-1)
+            a[j] = (student &&)a[i-1];
+        j++;
+    }
+    return j;
+}
+
+int solve9(student *a, int n, student &x){
+    int i;
+    int j = 1;
+    int fl_pred = (a[0] < x) ? 1 : 0;
+	if (n == 0) return 0;
+    for (i = 1; i < n - 1; i++){
+		if (fl_pred || a[i + 1] < x){
+            fl_pred = (a[i] < x) ? 1 : 0;
+        }
+        else{
+            fl_pred = (a[i] < x) ? 1 : 0;
+            if (j != i)
+				a[j] = (student &&)a[i];
+			j++;
+        }
+	}
+    if (i != j){
+        a[j] = (student&&)a[n - 1];
+    }
+    j++;
+    return j;
+}
+
+int solve10(student *a, int n, student &x){
+    int i;
+    int j = 0, k = 0;
+	if (n == 0) return 0;
+    for (i = 1; i < n; i++){
+		if (a[i] > a[i - 1]){
+			k = 1;
+		}
+        else{
+            if (k == 1){
+                if (a[i - 1] >= x){
+                    j = i - 1;
+                }
             }
             else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
+                if (j != i - 1)
+                    a[j] = (student&&)a[i - 1];
                 j++;
             }
+            k = 0;
         }
+	}
+    if (k == 1){
+        if (a[i - 1] >= x){
+            j = i - 1;
+        }
+    }
+    else{
+        if (j != i - 1)
+            a[j] = (student&&)a[i - 1];
+        j++;
     }
     return j;
 }
