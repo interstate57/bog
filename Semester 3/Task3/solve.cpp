@@ -37,65 +37,60 @@ int solve1(student* a, int n){
     return j;
 }
 
-/*int solve2(student* a, int n){
-    student * prev = a + 1;
-    student * prevprev = a;
-    int i;
+
+int solve2(student* a, int n){
+    int fli = 0;
+    if (n < 3) return n;
+    int fli2 = (a[2] > a[1] && a[2] > a[0]) ? 1 : 0;
+    if (n == 3) return 3 - fli2;
+    int fli1 = (a[3] > a[2] && a[3] > a[1]) ? 1 : 0;
+    if (n == 4){
+        if (fli2){
+            if (fli1) return 2;
+            else{
+                a[2] = (student&&)a[3];
+                return 3;
+            }
+        }
+        else{
+            return 4 - fli1;
+        }
+    }
     int j = 2;
-    int remove_prevprev, remove_prev;
-    if (a[2] > a[1] && a[2] > a[0])
-        remove_prevprev = 1;
-    if (a[3] > a[1] && a[3] > a[2])
-        remove_prev = 1;
-    for (i = 2; i < n; i++){
-        if (a[i] > *prev && a[i] > *prevprev){
-            prevprev = prev;
-            prev = a+i;
-            i++;
+    int i;
+    for (i = 4; i < n; i++){
+        if (a[i] > a[i - 1] && a[i] > a[i - 2]){
+            fli = 1;
         }
         else{
-            
+            fli = 0;
         }
+        //printf("\n");
+        //printf("i = %d, fli2 = %d, fli1 = %d, fli = %d, j = %d\n", i, fli2, fli1, fli, j);
+        if (fli2 != 1){
+            if (i - 2 != j)
+                a[j] = (student&&)a[i - 2];
+            j++;
+        }
+        fli2 = fli1;
+        fli1 = fli;
+        //print_array(a, n, 11);
     }
-
-}*/
-
-
-
-int solve2_xyu(student* a, int n){
-    int j = 2, k = 0;
-    student temp;
-    if (n == 0) return 0;
-    for (int i = 2; i < n; i++){
-        if (k == 0){
-            if (a[i] > a[i - 1] && a[i] > a[i - 2]){
-                k = 0;
-                continue;
-            }
-            else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
-                j++;
-            }
-        }
-        else{
-            if (a[i] > a[j - 1] && a[i] > a[j - 2]){
-                k = 0;
-                continue;
-            }
-            else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
-                j++;
-            }
-        }
+    if (fli2 == 0){
+        if (i - 2 != j)
+            a[j] = (student&&)a[i - 2];
+        j++;
     }
+    if (fli1 == 0){
+        if (i - 1 != j)
+            a[j] = (student&&)a[i - 1];
+        j++;
+    }
+    //printf("\n");
     return j;
 }
+
+
 
 int solve3(student* a, int n){
     int j = 1, k = 0;
@@ -284,8 +279,8 @@ int solve10(student *a, int n, student &x){
                 }
             }
             else{
-                if (j != i - 1)
-                    a[j] = (student&&)a[i - 1];
+                if (j != i )
+                    a[j] = (student&&)a[i];
                 j++;
             }
             k = 0;
