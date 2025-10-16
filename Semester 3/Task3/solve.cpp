@@ -5,7 +5,7 @@
 
 int solve1(student* a, int n){
     int j = 1, k = 0;
-    if (n == 0) return 0;
+    if (n <= 1) return n;
     for (int i = 1; i < n; i++){
         if (k == 0){
             if (a[i] < a[i - 1]){
@@ -95,7 +95,7 @@ int solve2(student* a, int n){
 int solve3(student* a, int n){
     int j = 1, k = 0;
     int i;
-    if (n == 0) return 0;
+    if (n <= 2) return n;
     for (i = 1; i < n - 1; i++){
         if (k == 0){
             if (a[i] < a[i - 1] && a[i] < a[i + 1]){
@@ -132,43 +132,87 @@ int solve3(student* a, int n){
 }
 
 int solve4(student* a, int n){
-    int j = 2, k = 0;
+    if (n <= 4) return n;
+    int fli = 0;
+    int fli2 = (a[2] > a[1] && a[2] > a[0] && a[2] > a[3] && a[2] > a[4]) ? 1 : 0;
+    if (n == 5){
+        if (fli2){
+            a[2] = (student&&)a[3];
+            a[3] = (student&&)a[4];
+            return 4;
+        }
+        else return n;
+    }
+    int fli1 = (a[3] > a[2] && a[3] > a[1] && a[3] > a[4] && a[3] > a[5]) ? 1 : 0;
+    int j = 2;
     int i;
-    if (n == 0) return 0;
-    for (i = 2; i < n - 2; i++){
-        if (k == 0){
-            if (a[i] > a[i - 1] && a[i] > a[i - 2] && a[i] > a[i + 1] && a[i] > a[i + 2]){
-                k = 0;
-                continue;
+    for (i = 4; i < n - 2; i++){
+        if (a[i] > a[i - 1] && a[i] > a[i - 2] && a[i] > a[i + 1] && a[i] > a[i + 2]){
+            fli = 1;
+        }
+        else{
+            fli = 0;
+        }
+        //printf("\n");
+        //printf("i = %d, fli2 = %d, fli1 = %d, fli = %d, j = %d\n", i, fli2, fli1, fli, j);
+        if (fli2 != 1){
+            if (i - 2 != j)
+                a[j] = (student&&)a[i - 2];
+            j++;
+        }
+        fli2 = fli1;
+        fli1 = fli;
+        //print_array(a, n, 11);
+    }
+    if (n == 5){
+        if (fli2){
+            a[2] = (student&&)a[3];
+            a[3] = (student&&)a[4];
+            return 4;
+        }
+        else return n;
+    }
+    if (n == 6){
+        if (fli2){
+            if (fli1){
+                a[2] = (student&&)a[4];
+                a[3] = (student&&)a[5];
+                return 4;
             }
             else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
-                j++;
+                a[2] = (student&&)a[3];
+                a[3] = (student&&)a[4];
+                a[4] = (student&&)a[5];
+                return 5;
             }
         }
         else{
-            if (a[i] > a[j - 1] && a[i] > a[j - 2] && a[i] > a[i + 1] && a[i] > a[i + 2]){
-                k = 0;
-                continue;
+            if (fli1){
+                a[3] = (student&&)a[4];
+                a[4] = (student&&)a[5];
+                return 5;
             }
             else{
-                k = 1;
-                if (i != j){
-                    a[j] = (student&&)a[i];
-                }
-                j++;
+                return 6;
             }
         }
     }
-    for (int m = i; m < n; m++){
-        if (m != j){
-            a[j] = (student&&)a[m];
-        }
+    if (fli2 == 0){
+        if (i - 2 != j)
+            a[j] = (student&&)a[i - 2];
         j++;
     }
+    if (fli1 == 0){
+        if (i - 1 != j)
+            a[j] = (student&&)a[i - 1];
+        j++;
+    }
+    for (; i < n; i++){
+        if (j != i)
+            a[j] = (student&&)a[i];
+        j++;
+    }
+    //printf("\n");
     return j;
 }
 
@@ -244,8 +288,20 @@ int solve8(student *a, int n, student &x){
 int solve9(student *a, int n, student &x){
     int i;
     int j = 1;
+    if (n <= 1) return n;
+    if (n == 2){
+        if (a[1] < x){
+            if (a[0] < x) return 0;
+            else{
+                a[0] = (student&&)a[1];
+                return 1;
+            }
+        }
+        else{
+            return 2 - ((a[0] < x) ? 1 : 0); 
+        }
+    }
     int fl_pred = (a[0] < x) ? 1 : 0;
-	if (n == 0) return 0;
     for (i = 1; i < n - 1; i++){
 		if (fl_pred || a[i + 1] < x){
             fl_pred = (a[i] < x) ? 1 : 0;
