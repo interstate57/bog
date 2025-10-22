@@ -226,6 +226,40 @@ class list2
             new_head->set_prev(nullptr);
             head = new_head;
         }
+        void solve2 (unsigned int k){
+            list2_node* curr;
+            int fl = 0;
+            for(curr = head; curr->get_next(); curr = curr->get_next()){
+            }
+            list2_node* tail = curr;
+            for (curr = tail; curr; ){
+                unsigned int cnt = 0;
+                list2_node* pr = curr;
+                while(cnt <= k){
+                    if (pr->get_prev() == nullptr) break;
+                    pr = pr->get_prev();
+                    if (*curr > *pr){
+                        fl = 1;
+                        break;
+                    }
+                    cnt++;
+                }
+                if (fl == 1){
+                    list2_node* priv = curr->get_prev();
+                    if (curr->get_prev()){
+                        curr->get_prev()->set_next(curr->get_next());
+                    }
+                    if (curr->get_next()){
+                        curr->get_next()->set_prev(curr->get_prev());
+                    }
+                    delete curr;
+                    curr = priv;
+                }
+                else{
+                    curr = curr->get_prev();
+                }
+            }
+        }
 };
 
 #endif
