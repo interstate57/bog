@@ -173,6 +173,7 @@ class list2
                 }
                 *tail = (list2_node&&) buf;
                 curr->set_next(tail);
+                tail->set_prev(curr);
                 curr = tail;
             }
             if (!feof(fp)){
@@ -211,13 +212,12 @@ class list2
             unsigned int cnt = 0;
             if (k % len == 0) return;
             k = k % len;
-            for(curr = head->get_next(); curr; curr = curr->get_next()){
+            for(curr = head; curr; curr = curr->get_next()){
                 if (cnt == (len - k)) break;
                 cnt++;
             }
             list2_node* new_head = curr;
-            for(; cnt < len; curr = curr->get_next()){
-                cnt++;
+            for(; curr->get_next(); curr = curr->get_next()){
             }
             list2_node* tail = curr;
             tail->set_next(head);
