@@ -382,7 +382,7 @@ class list2
             list2_node* nach_ud = nullptr;
             list2_node* kon_ud = nullptr;;
             if (k <= 0) return;
-            for (curr = head; curr->get_next(); ){
+            for (curr = head; curr->get_next(); curr = curr->get_next()){
                 if (*curr == *(curr->get_next())){
                     if (fl == 0){
                         cnt1 += 1;
@@ -420,9 +420,10 @@ class list2
                         }
                         else{
                             list2_node* dop = nach_ud;
+                            list2_node* cmp = kon_ud->get_next();
                             nach_ud->get_prev()->set_next(kon_ud->get_next());
-                            kon_ud->get_next()->set_prev(nach_ud->get_prev());
-                            while (dop != kon_ud->get_next()){
+                            cmp->set_prev(nach_ud->get_prev());
+                            while (dop != cmp){
                                 list2_node* dopdop = dop->get_next();
                                 delete dop;
                                 dop = dopdop;
@@ -433,9 +434,9 @@ class list2
                             nach_ud = curr->get_next();
                         }
                     }
-                    curr = curr->get_next();
                 }
             }
+            
             if (fl == 3){
                 if (cnt2 <= k){
                     cnt2 = 1;
@@ -443,16 +444,17 @@ class list2
                 }
                 else{
                     list2_node* dop = nach_ud;
+                    list2_node* cmp = kon_ud->get_next();
                     nach_ud->get_prev()->set_next(kon_ud->get_next());
-                    kon_ud->get_next()->set_prev(nach_ud->get_prev());
-                    while (dop != kon_ud->get_next()){
+                    cmp->set_prev(nach_ud->get_prev());
+                    while (dop != cmp){
                         list2_node* dopdop = dop->get_next();
                         delete dop;
                         dop = dopdop;
                     }
                     cnt1 = cnt2;
+                    cnt2 = 1;
                     fl = 2;
-                    nach_ud = curr->get_next();
                 }
             }
         }
