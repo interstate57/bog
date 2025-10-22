@@ -8,7 +8,7 @@ int main(int argc, char* argv[]){
     char* name = 0;
     int r = 0;
     io_status ret;
-    int task = 1, k = 0;
+    int task = 3, k = 0;
     double t = 0;
     unsigned int len1 = 0, len2 = 0;
     FILE* fp;
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
     a.print(r);
     printf("\n");
     t = clock();
-    a.solve1(k);
+    a.solve3(k);
     t = (clock() - t) / CLOCKS_PER_SEC;
     len2 = a.get_length();
     a.print(r);

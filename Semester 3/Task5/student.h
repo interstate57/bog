@@ -1,4 +1,4 @@
-#ifndef student_H
+ #ifndef student_H
 #define student_H
 #include <stdio.h>
 #include <iostream>
@@ -206,10 +206,10 @@ class list2
             }
             return cnt;
         }
-        void solve1 (unsigned int k){
-            unsigned int len = get_length();
+        void solve1 (int k){
+            int len = (int) get_length();
             list2_node* curr;
-            unsigned int cnt = 0;
+            int cnt = 0;
             if (k % len == 0) return;
             k = k % len;
             for(curr = head; curr; curr = curr->get_next()){
@@ -226,16 +226,16 @@ class list2
             new_head->set_prev(nullptr);
             head = new_head;
         }
-        void solve2 (unsigned int k){
+        void solve2 (int k){
             list2_node* curr;
-            int fl = 0;
             for(curr = head; curr->get_next(); curr = curr->get_next()){
             }
             list2_node* tail = curr;
             for (curr = tail; curr; ){
-                unsigned int cnt = 0;
+                int cnt = 0;
+                int fl = 0;
                 list2_node* pr = curr;
-                while(cnt <= k){
+                while(cnt < k){
                     if (pr->get_prev() == nullptr) break;
                     pr = pr->get_prev();
                     if (*curr > *pr){
@@ -257,6 +257,202 @@ class list2
                 }
                 else{
                     curr = curr->get_prev();
+                }
+            }
+        }
+        void solve3 (int k){
+            list2_node* curr;
+            for (curr = head; curr; ){
+                int cnt = 0;
+                int fl = 0;
+                list2_node* pr = curr;
+                while(cnt < k){
+                    if (pr->get_next() == nullptr) break;
+                    pr = pr->get_next();
+                    if (*curr > *pr){
+                        fl = 1;
+                        break;
+                    }
+                    cnt++;
+                }
+                if (fl == 1){
+                    list2_node* sl = curr->get_next();
+                    if (curr->get_prev()){
+                        curr->get_prev()->set_next(curr->get_next());
+                    }
+                    if (curr->get_next()){
+                        curr->get_next()->set_prev(curr->get_prev());
+                    }
+                    if (curr == head) head = sl;
+                    delete curr;
+                    curr = sl;
+                }
+                else{
+                    curr = curr->get_next();
+                }
+            }
+        }
+        void solve5 (int k){
+            list2_node* curr;
+            int cnt = 1;
+            int sch = 0;
+            if (k <= 0) return;
+            for (curr = head; curr; ){
+                list2_node* pr = curr;
+                if (cnt == 1){
+                    sch = 0;
+                    while(true){
+                        if (pr->get_next() == nullptr) break;
+                        pr = pr->get_next();
+                        if (*curr == *pr){
+                            cnt += 1;
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                }
+                if (cnt > k){
+                    sch += 1;
+                    list2_node* sl = curr->get_next();
+                    if (curr->get_prev()){
+                        curr->get_prev()->set_next(curr->get_next());
+                    }
+                    if (curr->get_next()){
+                        curr->get_next()->set_prev(curr->get_prev());
+                    }
+                    if (curr == head) head = sl;
+                    delete curr;
+                    curr = sl;
+                    if (sch == cnt) cnt = 1;
+                }
+                else{
+                    cnt = 1;
+                    curr = curr->get_next();
+                }
+            }
+        }
+        void solve6 (int k){
+            list2_node* curr;
+            int cnt = 1;
+            int sch = 0;
+            if (k <= 0) return;
+            for (curr = head; curr; ){
+                list2_node* pr = curr;
+                if (cnt == 1){
+                    sch = 0;
+                    list2_node* next;
+                    while(true){
+                        if (pr->get_next() == nullptr) break;
+                        next = pr->get_next();
+                        if (*pr >= *next){
+                            cnt += 1;
+                        }
+                        else{
+                            break;
+                        }
+                        pr = next;
+                    }
+                }
+                if (cnt > k){
+                    sch += 1;
+                    list2_node* sl = curr->get_next();
+                    if (curr->get_prev()){
+                        curr->get_prev()->set_next(curr->get_next());
+                    }
+                    if (curr->get_next()){
+                        curr->get_next()->set_prev(curr->get_prev());
+                    }
+                    if (curr == head) head = sl;
+                    delete curr;
+                    curr = sl;
+                    if (sch == cnt) cnt = 1;
+                }
+                else{
+                    cnt = 1;
+                    curr = curr->get_next();
+                }
+            }
+        }
+        void solve7 (int k){
+            list2_node* curr;
+            int cnt1 = 1;
+            int cnt2 = 1;
+            int fl = 0;
+            list2_node* nach_ud = nullptr;
+            list2_node* kon_ud = nullptr;;
+            if (k <= 0) return;
+            for (curr = head; curr->get_next(); ){
+                if (*curr == *(curr->get_next())){
+                    if (fl == 0){
+                        cnt1 += 1;
+                        fl = 1;
+                    }
+                    else if (fl == 1){
+                        cnt1 += 1;
+                    }
+                    else if (fl == 2){
+                        kon_ud = curr->get_prev();
+                        cnt2 += 1;
+                        fl = 3;
+                    }
+                    else if (fl == 3){
+                        cnt2 += 1;
+                    }
+                }
+                else{
+                    if (fl == 0 || fl == 2){
+                    }
+                    else if (fl == 1){
+                        if (cnt1 <= k){
+                            cnt1 = 1;
+                            fl = 0;
+                        }
+                        else{
+                            nach_ud = curr->get_next();
+                            fl = 2;
+                        }
+                    }
+                    else if (fl == 3){
+                        if (cnt2 <= k){
+                            cnt2 = 1;
+                            fl = 2;
+                        }
+                        else{
+                            list2_node* dop = nach_ud;
+                            nach_ud->get_prev()->set_next(kon_ud->get_next());
+                            kon_ud->get_next()->set_prev(nach_ud->get_prev());
+                            while (dop != kon_ud->get_next()){
+                                list2_node* dopdop = dop->get_next();
+                                delete dop;
+                                dop = dopdop;
+                            }
+                            cnt1 = cnt2;
+                            cnt2 = 1;
+                            fl = 2;
+                            nach_ud = curr->get_next();
+                        }
+                    }
+                    curr = curr->get_next();
+                }
+            }
+            if (fl == 3){
+                if (cnt2 <= k){
+                    cnt2 = 1;
+                    fl = 2;
+                }
+                else{
+                    list2_node* dop = nach_ud;
+                    nach_ud->get_prev()->set_next(kon_ud->get_next());
+                    kon_ud->get_next()->set_prev(nach_ud->get_prev());
+                    while (dop != kon_ud->get_next()){
+                        list2_node* dopdop = dop->get_next();
+                        delete dop;
+                        dop = dopdop;
+                    }
+                    cnt1 = cnt2;
+                    fl = 2;
+                    nach_ud = curr->get_next();
                 }
             }
         }

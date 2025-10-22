@@ -8,12 +8,12 @@ int main(int argc, char* argv[]){
     char* name = 0;
     int r = 0;
     io_status ret;
-    int task = 2;
+    int task = 2, k = 0;
     double t = 0;
-    unsigned int k = 0, len1 = 0, len2 = 0;
+    unsigned int len1 = 0, len2 = 0;
     FILE* fp;
     list2 a;
-    if (!((argc == 4) && sscanf(argv[1], "%d", &r) == 1 && sscanf(argv[3], "%u", &k) == 1)){
+    if (!((argc == 4) && sscanf(argv[1], "%d", &r) == 1 && sscanf(argv[3], "%d", &k) == 1)){
         printf("Usage: %s r filename k\n", argv[0]);
         return 1;
     }
