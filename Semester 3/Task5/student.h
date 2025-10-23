@@ -207,6 +207,7 @@ class list2
             return cnt;
         }
         void solve1 (int k){
+            if (k < 0) return;
             int len = (int) get_length();
             list2_node* curr;
             int cnt = 0;
@@ -227,6 +228,7 @@ class list2
             head = new_head;
         }
         void solve2 (int k){
+            if (k <= 0) return;
             list2_node* curr;
             for(curr = head; curr->get_next(); curr = curr->get_next()){
             }
@@ -261,6 +263,7 @@ class list2
             }
         }
         void solve3 (int k){
+            if (k <= 0) return;
             list2_node* curr;
             for (curr = head; curr; ){
                 int cnt = 0;
@@ -296,7 +299,7 @@ class list2
             list2_node* curr;
             int cnt = 1;
             int sch = 0;
-            if (k <= 0) return;
+            if (k < 0) return;
             for (curr = head; curr; ){
                 list2_node* pr = curr;
                 if (cnt == 1){
@@ -336,7 +339,7 @@ class list2
             list2_node* curr;
             int cnt = 1;
             int sch = 0;
-            if (k <= 0) return;
+            if (k < 0) return;
             for (curr = head; curr; ){
                 list2_node* pr = curr;
                 if (cnt == 1){
@@ -381,7 +384,7 @@ class list2
             int fl = 0;
             list2_node* nach_ud = nullptr;
             list2_node* kon_ud = nullptr;;
-            if (k <= 0) return;
+            if (k < 0) return;
             for (curr = head; curr->get_next(); curr = curr->get_next()){
                 if (*curr == *(curr->get_next())){
                     if (fl == 0){
@@ -436,11 +439,8 @@ class list2
                     }
                 }
             }
-            
             if (fl == 3){
                 if (cnt2 <= k){
-                    cnt2 = 1;
-                    fl = 2;
                 }
                 else{
                     list2_node* dop = nach_ud;
@@ -452,9 +452,51 @@ class list2
                         delete dop;
                         dop = dopdop;
                     }
-                    cnt1 = cnt2;
-                    cnt2 = 1;
-                    fl = 2;
+                }
+            }
+        }
+        void solve8 (int k){
+            list2_node* curr;
+            int cnt = 0;
+            int fl = 0;
+            list2_node* nach_ud = nullptr;
+            list2_node* kon_ud = nullptr;;
+            if (k < 0) return;
+            for (curr = head; curr->get_next(); curr = curr->get_next()){
+                if (*curr <= *(curr->get_next())){
+                    if (fl == 0){
+                        fl = 1;
+                    }
+                    else if (fl == 1){
+                    }
+                    else if (fl == 2){
+                        kon_ud = curr->get_prev();
+                        fl = 1;
+                        if (cnt > k){
+                            list2_node* dop = nach_ud;
+                            list2_node* cmp = kon_ud->get_next();
+                            nach_ud->get_prev()->set_next(kon_ud->get_next());
+                            cmp->set_prev(nach_ud->get_prev());
+                            while (dop != cmp){
+                                list2_node* dopdop = dop->get_next();
+                                delete dop;
+                                dop = dopdop;
+                            }
+                        }
+                        nach_ud = nullptr;
+                        kon_ud = nullptr;
+                    }
+                }
+                else{
+                    if (fl == 0){
+                    }
+                    else if (fl == 1){
+                        nach_ud = curr->get_next();
+                        fl = 2;
+                    }
+                    else if (fl == 2){
+                        cnt += 1;
+                    }
                 }
             }
         }
