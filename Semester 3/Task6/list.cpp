@@ -259,7 +259,10 @@ list_node* sr(list_node* head){
         else prev = a;
         a = a->get_next();
     }
-    prev->set_next(a->get_next());
+    if (a != nullptr){
+        prev->set_next(a->get_next());
+        a->set_next(nullptr);
+    }
     return a;
 }
 
@@ -298,6 +301,10 @@ void delenie(list_node* head, list_node** greater_head, list_node** equal_head, 
             greater = curr;
         }
     }
+    if (less) less->set_next(nullptr);
+    if (greater) greater->set_next(nullptr);
+    if (equal) equal->set_next(nullptr);
+    
 }
 
 list_node* qqsort(list_node* head){
@@ -308,19 +315,30 @@ list_node* qqsort(list_node* head){
     list_node* less_head = nullptr;
     
     delenie(head, &greater_head, &equal_head, &less_head);
-    qqsort(greater_head);
-    qqsort(less_head);
+    greater_head = qqsort(greater_head);
+    less_head = qqsort(less_head);
 
     return skleit(greater_head, equal_head, less_head);
 }
 
 list_node* skleit(list_node* greater, list_node* equal, list_node* less){
+    list_node* head;
+    if (less)
+        head = less;
+    else if (equal)
+        head = equal;
+    else
+        head = greater;
     list_node* curr = less;
-    for (; curr->get_next(); curr = curr->get_next());
-    curr->set_next(equal);
-    for (; curr->get_next(); curr = curr->get_next());
-    curr->set_next(greater);
-    return less;
+    for (; curr && curr->get_next(); curr = curr->get_next());
+    if (curr)
+        curr->set_next(equal);
+    else
+        curr = equal;
+    for (; curr && curr->get_next(); curr = curr->get_next());
+    if (curr)
+        curr->set_next(greater);
+    return head;
 }
 
 
