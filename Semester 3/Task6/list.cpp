@@ -128,7 +128,7 @@ int list::diff(){
     return diff;
 }
 
-int list::get_length(){
+int length_(list_node* head){
     int cnt = 0;
     list_node* curr;
     for (curr = head; curr; curr = curr->get_next()){
@@ -137,7 +137,11 @@ int list::get_length(){
     return cnt;
 }
 
-list_node* merge(list_node* a, list_node* b, list_node** res_tail) {
+int list::get_length(){
+    return length_(head);
+}
+
+list_node* merge(list_node* a, list_node* b, list_node** res_tail){
     list_node* new_head = nullptr;
     list_node* new_tail = nullptr;
     list_node* curra = a;
@@ -146,36 +150,44 @@ list_node* merge(list_node* a, list_node* b, list_node** res_tail) {
         if (*curra < *currb){
             if (new_head == nullptr){
                 new_head = curra;
-                new_tail = curra;
             }
             else{
                 new_tail->set_next(curra);
-                new_tail = curra;
             }
+            new_tail = curra;
             curra = curra->get_next();
         }
         else{
             if (new_head == nullptr){
                 new_head = currb;
-                new_tail = currb;
             }
             else{
                 new_tail->set_next(currb);
-                new_tail = currb;
             }
+            new_tail = currb;
             currb = currb->get_next();
         }
     }
     if (curra == nullptr){
         while (currb){
-            new_tail->set_next(currb);
+            if (new_head == nullptr){
+                new_head = currb;
+            }
+            else{
+                new_tail->set_next(currb);
+            }
             new_tail = currb;
             currb = currb->get_next();
         }
     }
     else{
         while (curra){
-            new_tail->set_next(curra);
+            if (new_head == nullptr){
+                new_head = curra;
+            }
+            else{
+                new_tail->set_next(curra);
+            }
             new_tail = curra;
             curra = curra->get_next();
         }
@@ -184,7 +196,7 @@ list_node* merge(list_node* a, list_node* b, list_node** res_tail) {
     return new_head;
 }
 
-list_node* circumcise(list_node** current_head, int len) {
+list_node* circumcise(list_node** current_head, int len){
     list_node* head = *current_head;
     list_node* tmp = head;
     list_node* tail = nullptr;
@@ -199,7 +211,7 @@ list_node* circumcise(list_node** current_head, int len) {
     return head;
 }
 
-void list::sort4() {
+void list::sort4(){
     int n = get_length();
     int j = 1;
     while (j < n) {
@@ -210,20 +222,18 @@ void list::sort4() {
             list_node* second = nullptr;
             list_node* res = nullptr;
             list_node *res_tail = nullptr;
-            if (i + 2*j >= n) { // это последняя парочка или даже уже не парочка
-                if (i+j >= n) { // первый какой есть, второго нет
+            if (i + 2*j >= n) { 
+                if (i+j >= n) { 
                     first = circumcise(&curr, n-i);
-                    res = merge(first, second, &res_tail);first = circumcise(&curr, j);
-                second = circumcise(&curr, j);
-                res = merge(first, second, &res_tail);
+                    res = merge(first, second, &res_tail);
                 }
-                else { // первый длины j, второй что осталось
+                else{ 
                     first = circumcise(&curr, j);
                     second = circumcise(&curr, n-i-j);
                     res = merge(first, second, &res_tail);
                 }
             }
-            else { // отрезаем два раза по j
+            else {
                 first = circumcise(&curr, j);
                 second = circumcise(&curr, j);
                 res = merge(first, second, &res_tail);
@@ -240,34 +250,80 @@ void list::sort4() {
     }
 }
 
-/*void sort8 (student* a, student* b, int n){
-    int i;
-    int j = 1;
-    student* a_orig = a;
-    //student* c;
-    while (j < n){
-        for (i = 0; i < n; i += 2 * j){
-            if (i + 2 * j >= n){
-                if (i + j >= n){
-                    merge(a + i, a, n - i, 0, b + i);
-                }
-                else{
-                    merge(a + i, a + i + j, j, n - i - j, b + i);
-                }
-                
+list_node* sr(list_node* head){
+    list_node* a = head;
+    list_node* b;
+    list_node* prev = nullptr;
+    for (b = head; b && b->get_next(); b = b->get_next()->get_next()){
+        if (prev == nullptr) prev = head;
+        else prev = a;
+        a = a->get_next();
+    }
+    prev->set_next(a->get_next());
+    return a;
+}
+
+void delenie(list_node* head, list_node** greater_head, list_node** equal_head, list_node** less_head){
+    list_node* less = nullptr;
+    list_node* greater = nullptr;
+    list_node* mid = sr(head);
+    list_node* equal = mid;
+    list_node* curr;
+    for (curr = head; curr; curr = curr->get_next()){
+        if (*curr < *mid){
+            if (*less_head == nullptr){
+                *less_head = curr;
             }
             else{
-                merge(a + i, a + i + j, j, j, b + i);
+                less->set_next(curr);
             }
+            less = curr;
         }
-        c = a;
-        a = b;
-        b = c;
-        j *= 2;
-    }
-    if (a != a_orig){
-        for (int k = 0; k < n; k ++){
-            a_orig[k] = (student&&)a[k];
+        else if (*curr == *mid){
+            if (*equal_head == nullptr){
+                *equal_head = curr;
+            }
+            else{
+                equal->set_next(curr);
+            }
+            equal = curr;
+        }
+        else{
+            if (*greater_head == nullptr){
+                *greater_head = curr;
+            }
+            else{
+                greater->set_next(curr);
+            }
+            greater = curr;
         }
     }
-}*/
+}
+
+list_node* qqsort(list_node* head){
+    int n = length_(head);
+    if (n < 2) return head;
+    list_node* greater_head = nullptr;
+    list_node* equal_head = nullptr;
+    list_node* less_head = nullptr;
+    
+    delenie(head, &greater_head, &equal_head, &less_head);
+    qqsort(greater_head);
+    qqsort(less_head);
+
+    return skleit(greater_head, equal_head, less_head);
+}
+
+list_node* skleit(list_node* greater, list_node* equal, list_node* less){
+    list_node* curr = less;
+    for (; curr->get_next(); curr = curr->get_next());
+    curr->set_next(equal);
+    for (; curr->get_next(); curr = curr->get_next());
+    curr->set_next(greater);
+    return less;
+}
+
+
+void list::sort5(){
+    qqsort(head);
+}

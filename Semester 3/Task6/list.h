@@ -12,6 +12,7 @@ enum class io_status
     memory,
     wrong_file
 };
+
 class student
 {
     private:
@@ -195,6 +196,13 @@ class list
         int diff();
         int get_length();
 };
+
+int length_(list_node* head);
+list_node* circumcise(list_node** current_head, int len);
+list_node* sr(list_node* head);
+void delenie(list_node* head, list_node** greater_head, list_node** equal_head, list_node** less_head);
+list_node* qqsort(list_node* head);
+list_node* skleit(list_node* greater, list_node* equal, list_node* less);
 
 
 #endif
