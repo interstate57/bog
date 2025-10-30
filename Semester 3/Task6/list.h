@@ -203,6 +203,6 @@ list_node* sr(list_node* head);
 void delenie(list_node* head, list_node** greater_head, list_node** equal_head, list_node** less_head);
 list_node* qqsort(list_node* head);
 list_node* skleit(list_node* greater, list_node* equal, list_node* less);
-
+void printl(list_node* head);
 
 #endif

@@ -334,7 +334,13 @@ list_node* qqsort(list_node* head){
     list_node* otsortlv = nullptr;
     while (n > 1){
         int cntg = 0, cntl = 0;
+        greater_head = nullptr;
+        equal_head = nullptr;
+        less_head = nullptr;
         delenie(head, &greater_head, &equal_head, &less_head, &cntg, &cntl);
+        //printf("%d = cntg, %d = cntl\n", cntg, cntl);
+        //printl(otsortpr);
+        //printl(otsortlv);
         if (cntl > cntg){
             greater_head = qqsort(greater_head);
             if (otsortpr  == nullptr){
@@ -350,13 +356,13 @@ list_node* qqsort(list_node* head){
         else{
             if (cntl == 0){
                 if (otsortlv == nullptr){
-                    otsortlv = head;
+                    otsortlv = equal_head;
                 }
                 else{
-                    otsortlv = skleit(head, nullptr, otsortlv);
+                    otsortlv = skleit(equal_head, nullptr, otsortlv);
                 }
-                head = head->get_next();
-                n -= 1;
+                head = greater_head;
+                n = cntg;
                 continue;
             }
             if (cntl > 0){
@@ -374,6 +380,7 @@ list_node* qqsort(list_node* head){
         }
     }
     head = skleit(otsortpr, nullptr, otsortlv);
+    //printl(head);
     return head;
 }
 
