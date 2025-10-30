@@ -270,6 +270,8 @@ void delenie(list_node* head, list_node** greater_head, list_node** equal_head, 
     list_node* less = nullptr;
     list_node* greater = nullptr;
     list_node* mid = sr(head);
+    /*printf("For sr = ");
+    mid->print();*/
     list_node* equal = mid;
     *equal_head = mid;
     list_node* curr;
@@ -338,10 +340,13 @@ list_node* qqsort(list_node* head){
         equal_head = nullptr;
         less_head = nullptr;
         delenie(head, &greater_head, &equal_head, &less_head, &cntg, &cntl);
-        //printf("%d = cntg, %d = cntl\n", cntg, cntl);
-        //printl(otsortpr);
-        //printl(otsortlv);
-        if (cntl > cntg){
+        /*printf("%d = cntg, %d = cntl\n", cntg, cntl);
+        printf("prav:\n");
+        printl(otsortpr);
+        printf("lev:\n");
+        printl(otsortlv);
+        printf("\n");*/
+        if (cntl > cntg && cntl > 2){
             greater_head = qqsort(greater_head);
             if (otsortpr  == nullptr){
                 otsortpr = skleit(greater_head, equal_head, nullptr);
@@ -379,7 +384,7 @@ list_node* qqsort(list_node* head){
             }
         }
     }
-    head = skleit(otsortpr, nullptr, otsortlv);
+    head = skleit(otsortpr, head, otsortlv);
     //printl(head);
     return head;
 }
