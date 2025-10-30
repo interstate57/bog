@@ -429,3 +429,10 @@ list_node* skleit(list_node* greater, list_node* equal, list_node* less){
 void list::sort5(){
     head = qqsort(head);
 }
+
+void printl(list_node* head){
+    list_node* curr = head;
+    for (;curr;curr = curr->get_next()){
+        curr->print();
+    }
+}
