@@ -266,11 +266,12 @@ list_node* sr(list_node* head){
     return a;
 }
 
-void delenie(list_node* head, list_node** greater_head, list_node** equal_head, list_node** less_head){
+void delenie(list_node* head, list_node** greater_head, list_node** equal_head, list_node** less_head, int* cntg, int* cntl){
     list_node* less = nullptr;
     list_node* greater = nullptr;
     list_node* mid = sr(head);
     list_node* equal = mid;
+    *equal_head = mid;
     list_node* curr;
     for (curr = head; curr; curr = curr->get_next()){
         if (*curr < *mid){
@@ -281,6 +282,7 @@ void delenie(list_node* head, list_node** greater_head, list_node** equal_head, 
                 less->set_next(curr);
             }
             less = curr;
+            *cntl += 1;
         }
         else if (*curr == *mid){
             if (*equal_head == nullptr){
@@ -299,6 +301,7 @@ void delenie(list_node* head, list_node** greater_head, list_node** equal_head, 
                 greater->set_next(curr);
             }
             greater = curr;
+            *cntg += 1;
         }
     }
     if (less) less->set_next(nullptr);
@@ -307,19 +310,100 @@ void delenie(list_node* head, list_node** greater_head, list_node** equal_head, 
     
 }
 
+/*list_node* qqsort(list_node* head){
+    int n = length_(head);
+    if (n < 2) return head;
+    int cntg = 0, cntl = 0;
+    list_node* greater_head = nullptr;
+    list_node* equal_head = nullptr;
+    list_node* less_head = nullptr;
+    
+    delenie(head, &greater_head, &equal_head, &less_head, &cntg, &cntl);
+    greater_head = qqsort(greater_head);
+    less_head = qqsort(less_head);
+    return skleit(greater_head, equal_head, less_head);
+}*/
+
 list_node* qqsort(list_node* head){
     int n = length_(head);
     if (n < 2) return head;
     list_node* greater_head = nullptr;
     list_node* equal_head = nullptr;
     list_node* less_head = nullptr;
-    
-    delenie(head, &greater_head, &equal_head, &less_head);
-    greater_head = qqsort(greater_head);
-    less_head = qqsort(less_head);
-
-    return skleit(greater_head, equal_head, less_head);
+    list_node* otsortpr = nullptr;
+    list_node* otsortlv = nullptr;
+    while (n > 1){
+        int cntg = 0, cntl = 0;
+        delenie(head, &greater_head, &equal_head, &less_head, &cntg, &cntl);
+        if (cntl > cntg){
+            greater_head = qqsort(greater_head);
+            if (otsortpr  == nullptr){
+                otsortpr = skleit(greater_head, equal_head, nullptr);
+            }
+            else{
+                otsortpr = skleit(otsortpr, greater_head, equal_head);
+            }
+            head = less_head;
+            n = cntl;
+            continue;
+        }
+        else{
+            if (cntl == 0){
+                if (otsortlv == nullptr){
+                    otsortlv = head;
+                }
+                else{
+                    otsortlv = skleit(head, nullptr, otsortlv);
+                }
+                head = head->get_next();
+                n -= 1;
+                continue;
+            }
+            if (cntl > 0){
+                less_head = qqsort(less_head);
+                if (otsortlv  == nullptr){
+                    otsortlv = skleit(nullptr, equal_head, less_head);
+                }
+                else{
+                    otsortlv = skleit(equal_head, less_head, otsortlv);
+                }
+                head = greater_head;
+                n = cntg;
+                continue;
+            }
+        }
+    }
+    head = skleit(otsortpr, nullptr, otsortlv);
+    return head;
 }
+
+/*void sort9 (student* a, int n){
+    int i = 0, sr = 0; 
+    student per;
+    while (n > 1){
+        i = 0;
+        sr = n / 2;
+        i = polov_sort(a[sr], a, n);
+        if (i > n - i && n - i - 1 > 1){
+            sort9(a + i + 1, n - i - 1);
+            n = i;
+            continue;
+        }
+        else{
+            if (i == 0){
+                a += 1;
+                n -= 1;
+                continue;
+            }
+            if (i > 0) {
+                sort9(a + 0, i);
+                a = a + i + 1;
+                n = n - i - 1;
+                continue;
+            }
+        }
+    }
+}*/
 
 list_node* skleit(list_node* greater, list_node* equal, list_node* less){
     list_node* head;
@@ -343,5 +427,5 @@ list_node* skleit(list_node* greater, list_node* equal, list_node* less){
 
 
 void list::sort5(){
-    qqsort(head);
+    head = qqsort(head);
 }
