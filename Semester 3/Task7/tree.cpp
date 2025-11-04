@@ -45,8 +45,14 @@ int tree::solve5(tree_node* nach){
 }
 
 int tree::solve6(){
+    int fl = 0;
     int min = poisk_min(root);
-    int res = udalenie(root, min);
+    if (root)
+        fl = (root->get_value() == min);
+    
+    int res = udalenie(root, min, 0);
+    if (fl)
+        root = nullptr;
     return res;
 }
 
@@ -60,18 +66,32 @@ int tree::poisk_min(tree_node* nach){
     }
     return res;
 }
+int tree::cnt_min(tree_node* nach, int min){
+    if (!nach) return 0;
+    int res = nach->get_value() == min ? 1 : 0;
+    res += cnt_min(nach->left, min) + cnt_min(nach->right, min);
+    return res;
+}
 
-int tree::udalenie(tree_node* nach, int min){
-    int cnt = 0;
-    if (nach == nullptr)
+
+int tree::udalenie(tree_node* nach, int min, tree_node* parent){
+    if (!nach)
         return 0;
-    if (nach->get_value() == min){
-        cnt += 1;
+
+    int res = cnt_min(nach, min);
+    if (nach->get_value() == min) {
+        delete_subtree(nach);
+        if (parent && parent->left == nach) {
+            parent->left = nullptr;
+        }
+        else if (parent && parent->right == nach) {
+            parent->right = nullptr;
+        }
+        return res;
     }
-    cnt += udalenie (nach->left, min);
-    cnt += udalenie (nach->right, min);
-    delete nach;
-    return cnt;
+    udalenie(nach->left, min, nach);
+    udalenie(nach->right, min, nach);
+    return res;
 }
 
 int tree::solve1_(){

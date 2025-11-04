@@ -202,7 +202,8 @@ class tree
         int solve4(tree_node* nach, int* inner_max);
         int solve5(tree_node* nach);
         int poisk_min(tree_node* nach);
-        int udalenie(tree_node* nach, int min);
+        int cnt_min(tree_node* nach, int min);
+        int udalenie(tree_node* nach, int min, tree_node* parent);
         int solve6();
         int solve1_();
         int solve2_();
@@ -223,7 +224,7 @@ class tree
             return;
             int spaces = level * 2;
             for (int i = 0; i < spaces; i++)
-            printf (" ");
+                printf (" ");
             curr->print (fp);
             print_subtree (curr->left, level + 1, r, fp);
             print_subtree (curr->right, level + 1, r, fp);

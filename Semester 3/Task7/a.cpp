@@ -58,8 +58,8 @@ int main(int argc, char* argv[]){
     t = clock();
     res = a.solve6();
     t = (clock() - t) / CLOCKS_PER_SEC;
-    printf("\n");
     a.print(r);
+    printf("\n");
     printf ("%s : Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, res, t);
     return 0;
 }
