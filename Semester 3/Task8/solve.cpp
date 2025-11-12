@@ -1,5 +1,7 @@
 #include "solve.h"
 
+void print_arr(tree_node** arr, int size);
+
 void tree::fix_down(tree_node* nach){
     if (!nach->right && !nach->left) return;
     if (!nach->right && *nach < *nach->left){
@@ -139,6 +141,11 @@ void tree::swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tre
     if (leaf == nullptr){
         return;
     }
+    std::cout << "Called swap elements: " << std::endl;
+    a->print();
+    leaf->print();
+    std::cout << std::endl;
+    
     parent_leaf->left = nullptr;
     if (parent_a){
         if (a == parent_a->right){
@@ -169,18 +176,24 @@ tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
 
 tree_node* tree::get_next(tree_node* nach, tree_node** arr, int* size){
     tree_node* curr = nach;
+    int cnt = *size;
+    //printf("cnt = %d\n", cnt);
     if (curr->right){
-        arr[*size] = curr;
-        *size += 1;
+        arr[cnt] = curr;
+        cnt += 1;
+        *size = cnt;
         return leftmost(curr->right, arr, size);
     }
-    while (curr == arr[*size - 1]->right || !arr[*size - 1]->right){
-        curr = arr[*size - 1];
-        *size -= 1;
+    while ((cnt > 0) && ((curr == arr[cnt - 1]->right) || (!arr[cnt - 1]->right))){
+        //printf("1\n");
+        curr = arr[cnt - 1];
+        cnt -= 1;
     }
+    *size = cnt;
     if (curr == root)
         return 0;
-    return leftmost(arr[*size - 1]->right, arr, size);
+    *size -= 1;
+    return arr[*size];
 }
 
 void tree::a3(){
@@ -191,16 +204,36 @@ void tree::a3(){
     tree_node* parent_leaf = 0;
     tree_node* leaf = 0;
     while (curr){
+        printf("\n");
+        curr->print();
+        printf("\n");
+        print_arr(arr, cnt);
         if (!curr->left && curr->right){
             leaf = find_left_leaf(curr, &parent_leaf);
             swap_elements(curr, arr[cnt - 1], leaf, parent_leaf);
+            arr[cnt] = curr;
+            //printf("1\n");
+            curr = curr->right;
+            cnt += 1;
         }
         else{
+            
             curr = get_next(curr, arr, &cnt);
         }
     }
-
+    delete [] arr;
 }
 
+void print_arr(tree_node** arr, int size){
+    tree_node* curr = arr[0];
+    int i = 0;
+    printf("---------------\n");
+    while (i < size){
+        i += 1;
+        curr->print();
+        curr = arr[i];
+    }
+    printf("---------------\n");
+}
 
 
