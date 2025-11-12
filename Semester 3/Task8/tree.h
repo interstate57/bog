@@ -111,6 +111,9 @@ class tree
         tree_node* find_a(tree_node* nach, tree_node** parent);
         tree_node* find_left_leaf(tree_node* nach, tree_node** parent);
         void perebor_a(tree_node* nach);
+        void swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
+        tree_node* leftmost(tree_node* nach, tree_node** arr, int* size);
+        tree_node* get_next(tree_node* nach, tree_node** arr, int* size);
         void a3();
     private:
         static void delete_subtree (tree_node * curr){
