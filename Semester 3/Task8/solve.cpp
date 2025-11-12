@@ -95,7 +95,7 @@ tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
     if (!nach->left && !nach->right){
         return nach;
     }
-    if (nach->left && !nach->right){
+    if (nach->left){
         res = find_left_leaf(nach->left, &p);
     }
     if (res){
@@ -214,16 +214,17 @@ void tree::a3(){
     tree_node* parent_leaf = 0;
     tree_node* leaf = 0;
     while (curr){
-        printf("\n");
+        /*printf("\n");
         curr->print();
-        printf("\n");
-        print_arr(arr, cnt);
+        printf("\n");*/
+        //print_arr(arr, cnt);
         if (!curr->left && curr->right){
-            leaf = find_left_leaf(curr, &parent_leaf);
+            leaf = find_left_leaf(curr->right, &parent_leaf);
             leaf->print();
             swap_elements(curr, arr[cnt - 1], leaf, parent_leaf);
+            print_subtree(root, 0, 4);
             arr[cnt] = curr;
-            curr = curr->right;
+            curr = leaf->right;
             cnt += 1;
         }
         else{
@@ -231,7 +232,7 @@ void tree::a3(){
             //curr->left->print();
             curr = get_next(curr, arr, &cnt);
         }
-        //print_subtree(root, 0, 4);
+
     }
     delete [] arr;
 }
