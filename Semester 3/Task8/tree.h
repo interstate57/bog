@@ -108,6 +108,10 @@ class tree
         void a1();
         void fix_down(tree_node* nach);
         void heapify(tree_node* nach);
+        tree_node* find_a(tree_node* nach, tree_node** parent);
+        tree_node* find_left_leaf(tree_node* nach, tree_node** parent);
+        void perebor_a(tree_node* nach);
+        void a3();
     private:
         static void delete_subtree (tree_node * curr){
             if (curr == nullptr)
