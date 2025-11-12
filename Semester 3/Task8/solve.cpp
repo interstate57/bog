@@ -93,6 +93,7 @@ tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
     tree_node* p = 0;
     tree_node* res = 0;
     if (!nach->left && !nach->right){
+
         return nach;
     }
     if (nach->left){
@@ -141,10 +142,11 @@ void tree::swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tre
     if (leaf == nullptr){
         return;
     }
+    /*
     std::cout << "Called swap elements: " << std::endl;
     a->print();
     leaf->print();
-    std::cout << std::endl;
+    std::cout << std::endl;*/
     
     parent_leaf->left = nullptr;
     if (parent_a){
@@ -155,7 +157,12 @@ void tree::swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tre
             parent_a->left = leaf; 
         }
     }
-    leaf->right = a->right;
+    if (a->right == leaf){
+        leaf->right = 0;
+    }
+    else{
+        leaf->right = a->right;
+    }
     leaf->left = a;
     a->right = nullptr;
     return;
@@ -216,20 +223,32 @@ void tree::a3(){
     while (curr){
         /*printf("\n");
         curr->print();
-        printf("\n");*/
-        //print_arr(arr, cnt);
+        printf("\n");
+        print_arr(arr, cnt);*/
         if (!curr->left && curr->right){
+            parent_leaf = curr;
             leaf = find_left_leaf(curr->right, &parent_leaf);
-            leaf->print();
+            //printf("1\n");
+            //parent_leaf->print();
+            if (!leaf){
+                arr[cnt] = curr;
+                curr = curr->right;
+                cnt += 1;
+                continue;
+            }
             swap_elements(curr, arr[cnt - 1], leaf, parent_leaf);
-            print_subtree(root, 0, 4);
-            arr[cnt] = curr;
-            curr = leaf->right;
-            cnt += 1;
+            //print_subtree(root, 0, 10);
+            if (leaf && leaf->right){
+                arr[cnt] = leaf;
+                curr = leaf->right;
+                cnt += 1;
+            }
+            else{
+                curr = get_next(leaf, arr, &cnt);
+            }
         }
         else{
 
-            //curr->left->print();
             curr = get_next(curr, arr, &cnt);
         }
 
