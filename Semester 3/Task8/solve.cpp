@@ -163,7 +163,7 @@ void tree::swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tre
 
 tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
     if (!nach) return 0;
-    tree_node* down = 0;
+    tree_node* down = nach;
     tree_node* curr = nach;
     while (curr->left){
         arr[*size] = curr;
@@ -175,13 +175,23 @@ tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
 }
 
 tree_node* tree::get_next(tree_node* nach, tree_node** arr, int* size){
+    //std::cout << "Called get_next for " << nach;
+    //nach->print();
     tree_node* curr = nach;
     int cnt = *size;
     //printf("cnt = %d\n", cnt);
     if (curr->right){
+        //printf("1\n");
         arr[cnt] = curr;
         cnt += 1;
         *size = cnt;
+        // ---- нахуй ---
+        //tree_node* res = leftmost(curr->right, arr, size);
+        /*std::cout << "Leftmost: " << res;
+        fflush(stdout);
+        res->print();
+        print_arr(arr, *size);
+        return res;*/
         return leftmost(curr->right, arr, size);
     }
     while ((cnt > 0) && ((curr == arr[cnt - 1]->right) || (!arr[cnt - 1]->right))){
@@ -210,16 +220,18 @@ void tree::a3(){
         print_arr(arr, cnt);
         if (!curr->left && curr->right){
             leaf = find_left_leaf(curr, &parent_leaf);
+            leaf->print();
             swap_elements(curr, arr[cnt - 1], leaf, parent_leaf);
             arr[cnt] = curr;
-            //printf("1\n");
             curr = curr->right;
             cnt += 1;
         }
         else{
-            
+
+            //curr->left->print();
             curr = get_next(curr, arr, &cnt);
         }
+        //print_subtree(root, 0, 4);
     }
     delete [] arr;
 }
