@@ -1,6 +1,7 @@
 #include "tree.h"
 
 int tree::solve1(tree_node* nach) const{
+    if (!nach) return 0;
     int cnt = 0;
     tree_node* curr = nach;
     if (!curr->left && !curr->right) cnt += 1;
@@ -28,6 +29,7 @@ int max3(int a, int b, int c){
 
 
 void tree::solve3(tree_node* nach, int ur, int* b) const{
+    if (!nach) return;
     b[ur] += 1;
     if (nach->left)
         solve3(nach->left, ur + 1, b);

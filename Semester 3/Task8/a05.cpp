@@ -47,12 +47,19 @@ int main(int argc, char* argv[]){
     printf ("Modified tree:\n");
     a.print (r);
     T = a.get_count_total ();
+    printf("1\n");
     L = a.get_count_leaf ();
+    printf("2\n");
     C1 = a.get_count_1 ();
+    printf("3\n");
     C2 = a.get_count_2 ();
+    printf("4\n");
     H = a.get_height ();
+    printf("5\n");
     W = a.get_width ();
+    printf("6\n");
     B = a.get_balance ();
+    printf("7\n");
     printf ("%s : Task = %d T = %d L = %d C1 = %d C2 = %d H = %d W = %d B = %d Elapsed = %.2f\n", argv[0], task, T, L, C1, C2, H, W, B, t);
     return 0;
 }
