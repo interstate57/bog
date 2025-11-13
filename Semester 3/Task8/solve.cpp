@@ -399,8 +399,8 @@ void tree::a4(){
     while (curr){
         if (!curr->right && curr->left){
             parent_leaf = curr;
-            int cnt = 0;
-            leaf = find_right_leaf(curr->left, &parent_leaf, cnt);
+            int cnt1 = 0;
+            leaf = find_right_leaf(curr->left, &parent_leaf, cnt1);
             if (!leaf){
                 arr[cnt] = curr;
                 curr = curr->left;
