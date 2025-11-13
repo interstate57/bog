@@ -108,13 +108,13 @@ class tree
         void a1();
         void fix_down(tree_node* nach);
         void heapify(tree_node* nach);
-        tree_node* find_a(tree_node* nach, tree_node** parent);
         tree_node* find_left_leaf(tree_node* nach, tree_node** parent);
-        void perebor_a(tree_node* nach);
         void swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
         tree_node* leftmost(tree_node* nach, tree_node** arr, int* size);
         tree_node* get_next(tree_node* nach, tree_node** arr, int* size);
         void a3();
+        void find_sk_subtrees(tree_node* curr, char* s, int k, int* hight, bool* is_s_subtree);
+        void a5(char* s, int k);
     private:
         static void delete_subtree (tree_node * curr){
             if (curr == nullptr)

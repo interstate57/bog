@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
-#include <string.h>
+#include <cstring>
 
 enum class io_status
 {

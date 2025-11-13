@@ -54,39 +54,6 @@ void tree::a1(){
     heapify(root);
 }
 
-/*tree_node* tree::find_a(tree_node* nach, tree_node** parent){
-    if (!nach) return 0;
-    if (!nach->left && nach->right)
-        return nach;
-    tree_node* p = 0;
-    tree_node* res_left = 0;
-    tree_node* res_right = 0;
-    if (nach->left){
-        res_left = find_a(nach->left, &p);
-    }
-    if (nach->right){
-        res_right = find_a(nach->right, &p);
-    }
-    if (res_left) {
-        if (res_left == nach->left) {
-            *parent = nach;
-        }
-        else {
-            *parent = p;
-        }
-        return res_left;
-    }
-    if (res_right) {
-        if (res_right == nach->right) {
-            *parent = nach;
-        }
-        else {
-            *parent = p;
-        }
-        return res_right;
-    }
-    return 0;
-}*/
 
 tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
     if (!nach) return 0;
@@ -111,43 +78,11 @@ tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
     return 0;
 }
 
-/*void tree::perebor_a(tree_node* nach){
-    tree_node* parent_a = nullptr;
-    tree_node* parent_leaf = nullptr;
-    tree_node* a = find_a(nach, &parent_a);
-    if (!a) return;
-    tree_node* leaf = find_left_leaf(a->right, &parent_leaf);
-    printf("1\n");
-    if (leaf == nullptr){
-        perebor_a(nach);
-        return;
-    }
-    parent_leaf->left = nullptr;
-    if (parent_a){
-        if (a == parent_a->right){
-            parent_a->right = leaf; 
-        }
-        else{
-            parent_a->left = leaf; 
-        }
-    }
-    leaf->right = a->right;
-    leaf->left = a;
-    a->right = nullptr;
-    perebor_a(nach);
-    return;
-}*/
 
 void tree::swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf){
     if (leaf == nullptr){
         return;
     }
-    /*
-    std::cout << "Called swap elements: " << std::endl;
-    a->print();
-    leaf->print();
-    std::cout << std::endl;*/
-    
     parent_leaf->left = nullptr;
     if (parent_a){
         if (a == parent_a->right){
@@ -182,27 +117,15 @@ tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
 }
 
 tree_node* tree::get_next(tree_node* nach, tree_node** arr, int* size){
-    //std::cout << "Called get_next for " << nach;
-    //nach->print();
     tree_node* curr = nach;
     int cnt = *size;
-    //printf("cnt = %d\n", cnt);
     if (curr->right){
-        //printf("1\n");
         arr[cnt] = curr;
         cnt += 1;
         *size = cnt;
-        // ---- нахуй ---
-        //tree_node* res = leftmost(curr->right, arr, size);
-        /*std::cout << "Leftmost: " << res;
-        fflush(stdout);
-        res->print();
-        print_arr(arr, *size);
-        return res;*/
         return leftmost(curr->right, arr, size);
     }
     while ((cnt > 0) && ((curr == arr[cnt - 1]->right) || (!arr[cnt - 1]->right))){
-        //printf("1\n");
         curr = arr[cnt - 1];
         cnt -= 1;
     }
@@ -221,15 +144,9 @@ void tree::a3(){
     tree_node* parent_leaf = 0;
     tree_node* leaf = 0;
     while (curr){
-        /*printf("\n");
-        curr->print();
-        printf("\n");
-        print_arr(arr, cnt);*/
         if (!curr->left && curr->right){
             parent_leaf = curr;
             leaf = find_left_leaf(curr->right, &parent_leaf);
-            //printf("1\n");
-            //parent_leaf->print();
             if (!leaf){
                 arr[cnt] = curr;
                 curr = curr->right;
@@ -237,7 +154,6 @@ void tree::a3(){
                 continue;
             }
             swap_elements(curr, arr[cnt - 1], leaf, parent_leaf);
-            //print_subtree(root, 0, 10);
             if (leaf && leaf->right){
                 arr[cnt] = leaf;
                 curr = leaf->right;
@@ -269,3 +185,55 @@ void print_arr(tree_node** arr, int size){
 }
 
 
+
+void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* is_s_subtree){
+    if (!curr) {
+        *height = 0;
+        *is_s_subtree = true;
+        return;
+    }
+    
+    bool yes_left = true, yes_right = true;
+    int hleft = 0, hright = 0;
+    if (curr->left)
+        find_sk_subtrees(curr->left, s, k, &hleft, &yes_left);
+    if (curr->right)
+        find_sk_subtrees(curr->right, s, k, &hright, &yes_right);
+    
+    *height = std::max(hleft, hright) + 1;
+    *is_s_subtree = yes_left && yes_right && (strstr(curr->get_name(), s));
+    // а также && является ли s подстрокой curr
+    
+    if (yes_left && hleft >= k && !yes_right){
+        delete_subtree(curr->left);
+        curr->left = 0;
+        *is_s_subtree = false;
+        return;
+    }
+    else if (yes_right && hright >= k && !yes_left){
+        delete_subtree(curr->right);
+        curr->right = 0;
+        *is_s_subtree = false;
+        return;
+    }
+    else if (yes_left && hleft >= k && yes_right && hright >= k){
+        delete_subtree(curr->left);
+        curr->left = 0;
+        delete_subtree(curr->right);
+        curr->right = 0;
+        *is_s_subtree = false;
+        return;
+    }
+    return;
+}
+
+void tree::a5(char* s, int k){
+    int hight = 0;
+    bool is_s_subtree = true;
+    find_sk_subtrees(root, s, k, &hight, &is_s_subtree);
+    if (is_s_subtree){
+        delete_subtree(root);
+        root = 0;
+    }
+    return;
+}
