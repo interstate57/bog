@@ -116,7 +116,7 @@ tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
     return down;
 }
 
-tree_node* tree::get_next(tree_node* nach, tree_node** arr, int* size){
+tree_node* tree::get_next_left(tree_node* nach, tree_node** arr, int* size){
     tree_node* curr = nach;
     int cnt = *size;
     if (curr->right){
@@ -160,12 +160,12 @@ void tree::a3(){
                 cnt += 1;
             }
             else{
-                curr = get_next(leaf, arr, &cnt);
+                curr = get_next_left(leaf, arr, &cnt);
             }
         }
         else{
 
-            curr = get_next(curr, arr, &cnt);
+            curr = get_next_left(curr, arr, &cnt);
         }
 
     }
@@ -296,7 +296,7 @@ void tree::a6(char* s, int k){
     return;
 }
 
-tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent){
+/*tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent){
     if (!nach) return 0;
     tree_node* p = 0;
     tree_node* res = 0;
@@ -399,13 +399,130 @@ void tree::a4(){
                 cnt += 1;
             }
             else{
-                curr = get_next(leaf, arr, &cnt);
+                curr = get_next_left(leaf, arr, &cnt);
             }
         }
         else{
-            curr = get_next(curr, arr, &cnt);
+            curr = get_next_left(curr, arr, &cnt);
         }
     }
     delete [] arr;
 }
+*/
 
+tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent){
+    if (!nach) return 0;
+    tree_node* p = 0;
+    tree_node* res = 0;
+    if (!nach->right && !nach->left){
+
+        return nach;
+    }
+    if (nach->right){
+        res = find_right_leaf(nach->right, &p);
+    }
+    if (res){
+        if (res == nach->right){
+            *parent = nach;
+        }
+        else{
+            *parent = p;
+        }
+        return res;
+    }
+    return 0;
+}
+
+
+void tree::swap_elements_right(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf){
+    if (leaf == nullptr){
+        return;
+    }
+    parent_leaf->right = nullptr;
+    if (parent_a){
+        if (a == parent_a->left){
+            parent_a->left = leaf; 
+        }
+        else{
+            parent_a->right = leaf; 
+        }
+    }
+    if (a->left == leaf){
+        leaf->left = 0;
+    }
+    else{
+        leaf->left = a->left;
+    }
+    leaf->right = a;
+    a->left = nullptr;
+    return;
+}
+
+tree_node* tree::rightmost(tree_node* nach, tree_node** arr, int* size){
+    if (!nach) return 0;
+    tree_node* down = nach;
+    tree_node* curr = nach;
+    while (curr->right){
+        arr[*size] = curr;
+        *size += 1;
+        down = curr->right;
+        curr = curr->right;
+    }
+    return down;
+}
+
+tree_node* tree::get_next_right(tree_node* nach, tree_node** arr, int* size){
+    tree_node* curr = nach;
+    int cnt = *size;
+    if (curr->left){
+        arr[cnt] = curr;
+        cnt += 1;
+        *size = cnt;
+        return rightmost(curr->left, arr, size);
+    }
+    while ((cnt > 0) && ((curr == arr[cnt - 1]->left) || (!arr[cnt - 1]->left))){
+        curr = arr[cnt - 1];
+        cnt -= 1;
+    }
+    *size = cnt;
+    if (curr == root)
+        return 0;
+    *size -= 1;
+    return arr[*size];
+}
+
+void tree::a4(){
+    int len = get_height();
+    tree_node** arr = new tree_node* [len];
+    int cnt = 0;
+    tree_node* curr = rightmost(root, arr, &cnt);
+    tree_node* parent_leaf = 0;
+    tree_node* leaf = 0;
+    while (curr){
+        if (!curr->right && curr->left){
+            parent_leaf = curr;
+            leaf = find_right_leaf(curr->left, &parent_leaf);
+            if (!leaf){
+                arr[cnt] = curr;
+                curr = curr->left;
+                cnt += 1;
+                continue;
+            }
+            swap_elements_right(curr, arr[cnt - 1], leaf, parent_leaf);
+            if (leaf && leaf->left){
+                arr[cnt] = leaf;
+                curr = leaf->left;
+                cnt += 1;
+            }
+            else{
+                curr = get_next_right(leaf, arr, &cnt);
+            }
+        }
+        else{
+
+            curr = get_next_right(curr, arr, &cnt);
+        }
+
+    }
+    delete [] arr;
+}
