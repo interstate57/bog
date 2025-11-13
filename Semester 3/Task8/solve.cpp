@@ -55,15 +55,17 @@ void tree::a1(){
 }
 
 
-tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
+tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent, int cnt){
     if (!nach) return 0;
     tree_node* p = 0;
     tree_node* res = 0;
     if (!nach->left && !nach->right){
-        return 0;
+        if (cnt == 0) 
+            return 0;
+        return nach;
     }
     if (nach->left){
-        res = find_left_leaf(nach->left, &p);
+        res = find_left_leaf(nach->left, &p, 1);
     }
     if (res){
         if (res == nach->left){
@@ -145,7 +147,8 @@ void tree::a3(){
     while (curr){
         if (!curr->left && curr->right){
             parent_leaf = curr;
-            leaf = find_left_leaf(curr->right, &parent_leaf);
+            int cnt1 = 0;
+            leaf = find_left_leaf(curr->right, &parent_leaf, cnt1);
             if (!leaf){
                 arr[cnt] = curr;
                 curr = curr->right;
@@ -245,7 +248,7 @@ void tree::find_sk_branches(tree_node* curr, char* s, int k, int* height, bool* 
         return;
     }
     
-    bool yes_left = false, yes_right = false;
+    bool yes_left = true, yes_right = true;
     int hleft = 0, hright = 0;
 
     if (curr->left)
@@ -254,22 +257,26 @@ void tree::find_sk_branches(tree_node* curr, char* s, int k, int* height, bool* 
         find_sk_branches(curr->right, s, k, &hright, &yes_right);
     
     bool curr_has_s = strstr(curr->get_name(), s);
-    printf("For student = ");
-    curr->print();
-    printf("curr_has_s = %d\n", curr_has_s);
-    printf("\n");
+    //printf("For student = ");
+    //curr->print();
+    //printf("curr_has_s = %d\n", curr_has_s);
     *height = 0;
-    if (yes_left)
+    if (yes_left){
         *height = std::max(hleft, *height);
-    if (yes_right)
+        //printf("height = %d", *height);
+    }
+    if (yes_right){
         *height = std::max(hright, *height);
+        //printf("height = %d", *height);
+    }
     if (!curr_has_s){
         *height = 0;
     } 
     else{
         *height += 1;
     }
-
+    //printf("height = %d, hright = %d, hleft = %d\n", *height, hright, hleft);
+    //printf("\n");
     
     *is_s_subtree = (yes_left || yes_right) && curr_has_s;
     if (yes_left && hleft >= k && !curr_has_s){
@@ -300,15 +307,17 @@ void tree::a6(const student& student){
     return;
 }
 
-tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent){
+tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent, int cnt){
     if (!nach) return 0;
     tree_node* p = 0;
     tree_node* res = 0;
     if (!nach->right && !nach->left){
-        return 0;
+        if (cnt == 0)
+            return 0;
+        return nach;
     }
     if (nach->right){
-        res = find_right_leaf(nach->right, &p);
+        res = find_right_leaf(nach->right, &p, 1);
     }
     if (res){
         if (res == nach->right){
@@ -390,7 +399,8 @@ void tree::a4(){
     while (curr){
         if (!curr->right && curr->left){
             parent_leaf = curr;
-            leaf = find_right_leaf(curr->left, &parent_leaf);
+            int cnt = 0;
+            leaf = find_right_leaf(curr->left, &parent_leaf, cnt);
             if (!leaf){
                 arr[cnt] = curr;
                 curr = curr->left;

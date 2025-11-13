@@ -108,12 +108,12 @@ class tree
         void a1();
         void fix_down(tree_node* nach);
         void heapify(tree_node* nach);
-        tree_node* find_left_leaf(tree_node* nach, tree_node** parent);
+        tree_node* find_left_leaf(tree_node* nach, tree_node** parent, int cnt);
         void swap_elements_left(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
         tree_node* leftmost(tree_node* nach, tree_node** arr, int* size);
         tree_node* get_next_left(tree_node* nach, tree_node** arr, int* size);
         void a3();
-        tree_node* find_right_leaf(tree_node* nach, tree_node** parent);
+        tree_node* find_right_leaf(tree_node* nach, tree_node** parent, int cnt);
         void swap_elements_right(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
         tree_node* rightmost(tree_node* nach, tree_node** arr, int* size);
         tree_node* get_next_right(tree_node* nach, tree_node** arr, int* size);
