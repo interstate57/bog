@@ -20,6 +20,7 @@ int main(int argc, char* argv[]){
     }
     name = argv[2];
     name_st = argv[3];
+    student dop(name_st, value_st);
     if (!(fp = fopen(name, "r"))) return -1;
     ret = a.read(fp);
     do{
@@ -42,7 +43,7 @@ int main(int argc, char* argv[]){
     int B = a.get_balance ();
     printf ("%s : Task = %d T = %d L = %d C1 = %d C2 = %d H = %d W = %d B = %d \n", argv[0], task, T, L, C1, C2, H, W, B);
     t = clock ();
-    a.a6(name_st, value_st);
+    a.a6(dop);
     t = (clock() - t)/CLOCKS_PER_SEC;
     printf ("Modified tree:\n");
     a.print (r);

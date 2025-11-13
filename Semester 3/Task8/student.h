@@ -74,10 +74,10 @@ class student
             strcpy(name, "Student");
             value = res;
         }
-        int get_value(){
+        int get_value() const{
             return value;
         }
-        char* get_name(){
+        char* get_name() const{
             return name;
         }
     private:

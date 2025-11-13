@@ -119,9 +119,9 @@ class tree
         tree_node* get_next_right(tree_node* nach, tree_node** arr, int* size);
         void a4();
         void find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* is_s_subtree);
-        void a5(char* s, int k);
+        void a5(const student& student);
         void find_sk_branches(tree_node* curr, char* s, int k, int* height, bool* is_s_subtree);
-        void a6(char* s, int k);
+        void a6(const student& student);
     private:
         static void delete_subtree (tree_node * curr){
             if (curr == nullptr)
