@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
     int value_st = 0; 
     int r = 0;
     io_status ret;
-    int task = 5;
+    int task = 6;
     double t = 0;
     FILE* fp;
     tree a;
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
     int B = a.get_balance ();
     printf ("%s : Task = %d T = %d L = %d C1 = %d C2 = %d H = %d W = %d B = %d \n", argv[0], task, T, L, C1, C2, H, W, B);
     t = clock ();
-    a.a5(name_st, value_st);
+    a.a6(name_st, value_st);
     t = (clock() - t)/CLOCKS_PER_SEC;
     printf ("Modified tree:\n");
     a.print (r);

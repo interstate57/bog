@@ -123,7 +123,7 @@ int tree::get_width() const{
         b[i] = 0;
     }
     solve3(root, 0, b);
-    int max = b[0];
+    int max = 0;
     for (int i = 1; i < glub; i++){
         if (max < b[i]){
             max = b[i];

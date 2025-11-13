@@ -109,12 +109,19 @@ class tree
         void fix_down(tree_node* nach);
         void heapify(tree_node* nach);
         tree_node* find_left_leaf(tree_node* nach, tree_node** parent);
-        void swap_elements(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
+        void swap_elements_left(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
         tree_node* leftmost(tree_node* nach, tree_node** arr, int* size);
         tree_node* get_next(tree_node* nach, tree_node** arr, int* size);
         void a3();
-        void find_sk_subtrees(tree_node* curr, char* s, int k, int* hight, bool* is_s_subtree);
+        tree_node* find_right_leaf(tree_node* nach, tree_node** parent);
+        void swap_elements_right(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf);
+        tree_node* rightmost(tree_node* nach, tree_node** arr, int* size);
+        tree_node* get_prev(tree_node* nach, tree_node** arr, int* size);
+        void a4();
+        void find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* is_s_subtree);
         void a5(char* s, int k);
+        void find_sk_branches(tree_node* curr, char* s, int k, int* height, bool* is_s_subtree);
+        void a6(char* s, int k);
     private:
         static void delete_subtree (tree_node * curr){
             if (curr == nullptr)
