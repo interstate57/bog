@@ -152,7 +152,7 @@ void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* 
         return;
     }
     
-    bool yes_left = true, yes_right = true;
+    bool yes_left = !curr->left ? false : true, yes_right = !curr->right ? false : true;
     int hleft = 0, hright = 0;
 
     if (curr->left)
@@ -162,8 +162,24 @@ void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* 
     bool s_in_curr = strstr(curr->get_name(), s);
     *height = std::max(hleft, hright) + 1;
     *is_s_subtree = yes_left && yes_right && s_in_curr;
-    if (!*is_s_subtree)
-        *height = 0;
+    if (curr->get_value() == 6197215){
+        curr->print();
+        printf("hleft = %d, hright = %d, yes_left = %d, yes_right = %d\n", hleft, hright, yes_left, yes_right);
+    }
+    /*if (!*is_s_subtree)
+        *height = 0;*/
+    if (!s_in_curr){
+        if (yes_left && hleft >= k){
+            delete_subtree(curr->left);
+            curr->left = 0;
+        }
+        if (yes_right && hright >= k){
+            delete_subtree(curr->right);
+            curr->right = 0;
+        }
+        *is_s_subtree = false;
+        return;
+    }
     if (yes_left && hleft >= k && !yes_right){
         delete_subtree(curr->left);
         curr->left = 0;
@@ -171,14 +187,6 @@ void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* 
         return;
     }
     else if (yes_right && hright >= k && !yes_left){
-        delete_subtree(curr->right);
-        curr->right = 0;
-        *is_s_subtree = false;
-        return;
-    }
-    else if (yes_left && hleft >= k && yes_right && hright >= k && !s_in_curr){
-        delete_subtree(curr->left);
-        curr->left = 0;
         delete_subtree(curr->right);
         curr->right = 0;
         *is_s_subtree = false;
