@@ -26,12 +26,24 @@ void tree::fix_down(tree_node* nach){
 }
 
 void tree::heapify(tree_node* nach){
+    tree_node* max = 0;
     if (nach->left)
         heapify(nach->left);
     if (nach->right){
         heapify(nach->right);
     }
-    tree_node* max = max3(nach, nach->right, nach->left);
+    if (nach->left && nach->right){
+        max = max3(nach, nach->right, nach->left);
+    }
+    else if (!nach->left && nach->right){
+        max = max2(nach, nach->right);
+    }
+    else if (!nach->right && nach->left){
+        max = max2(nach, nach->left);
+    }
+    else{
+        max = nach;
+    }
     if (max == nach->left){
         swap(nach, nach->left);
         fix_down(nach->left);
@@ -55,17 +67,15 @@ void tree::a1(){
 }
 
 
-tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent, int cnt){
+tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent){
     if (!nach) return 0;
     tree_node* p = 0;
     tree_node* res = 0;
     if (!nach->left && !nach->right){
-        if (cnt == 0) 
-            return 0;
         return nach;
     }
     if (nach->left){
-        res = find_left_leaf(nach->left, &p, 1);
+        res = find_left_leaf(nach->left, &p);
     }
     if (res){
         if (res == nach->left){
@@ -80,98 +90,45 @@ tree_node* tree::find_left_leaf(tree_node* nach, tree_node** parent, int cnt){
 }
 
 
-void tree::swap_elements_left(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf){
-    if (leaf == nullptr){
+void tree::swap_elements_left(tree_node** curr, tree_node* a, tree_node* b, tree_node* c, tree_node* parent_c){
+    if (c == 0)
+        return;
+    if (parent_c  == 0){
         return;
     }
-    parent_leaf->left = nullptr;
-    if (parent_a){
-        if (a == parent_a->right){
-            parent_a->right = leaf; 
-        }
-        else{
-            parent_a->left = leaf; 
-        }
-    }
-    if (a->right == leaf){
-        leaf->right = 0;
-    }
     else{
-        leaf->right = a->right;
+        parent_c->left = 0;
     }
-    leaf->left = a;
-    a->right = nullptr;
+    *curr = c;
+    c->left = a;
+    c->right = b;
+    a->left = 0;
+    a->right = 0;
     return;
 }
 
-tree_node* tree::leftmost(tree_node* nach, tree_node** arr, int* size){
-    if (!nach) return 0;
-    tree_node* down = nach;
-    tree_node* curr = nach;
-    while (curr->left){
-        arr[*size] = curr;
-        *size += 1;
-        down = curr->left;
-        curr = curr->left;
+void tree::a3_(tree_node** nach){
+    if (*nach == 0)
+        return;
+    tree_node* dop  = *nach;
+    tree_node* a = 0;
+    tree_node* b = 0;
+    tree_node* c = 0;
+    tree_node* parent_c = 0;
+    if (!dop->left && dop->right){
+        a = dop;
+        b = dop->right;
+        c = find_left_leaf(b, &parent_c);
+        swap_elements_left(nach, a, b, c, parent_c);
     }
-    return down;
-}
-
-tree_node* tree::get_next_left(tree_node* nach, tree_node** arr, int* size){
-    tree_node* curr = nach;
-    int cnt = *size;
-    if (curr->right){
-        arr[cnt] = curr;
-        cnt += 1;
-        *size = cnt;
-        return leftmost(curr->right, arr, size);
+    if (*nach != 0){
+        a3_(&((*nach)->left));
+        a3_(&((*nach)->right));
     }
-    while ((cnt > 0) && ((curr == arr[cnt - 1]->right) || (!arr[cnt - 1]->right))){
-        curr = arr[cnt - 1];
-        cnt -= 1;
-    }
-    *size = cnt;
-    if (curr == root)
-        return 0;
-    *size -= 1;
-    return arr[*size];
 }
 
 void tree::a3(){
-    int len = get_height();
-    tree_node** arr = new tree_node* [len];
-    int cnt = 0;
-    tree_node* curr = leftmost(root, arr, &cnt);
-    tree_node* parent_leaf = 0;
-    tree_node* leaf = 0;
-    while (curr){
-        if (!curr->left && curr->right){
-            parent_leaf = curr;
-            int cnt1 = 0;
-            leaf = find_left_leaf(curr->right, &parent_leaf, cnt1);
-            if (!leaf){
-                arr[cnt] = curr;
-                curr = curr->right;
-                cnt += 1;
-                continue;
-            }
-            swap_elements_left(curr, arr[cnt - 1], leaf, parent_leaf);
-            if (leaf && leaf->right){
-                arr[cnt] = leaf;
-                curr = leaf->right;
-                cnt += 1;
-            }
-            else{
-                curr = get_next_left(leaf, arr, &cnt);
-            }
-        }
-        else{
-
-            curr = get_next_left(curr, arr, &cnt);
-        }
-
-    }
-    delete [] arr;
+    a3_(&root);
 }
 
 void print_arr(tree_node** arr, int size){
@@ -202,8 +159,11 @@ void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* 
         find_sk_subtrees(curr->left, s, k, &hleft, &yes_left);
     if (curr->right)
         find_sk_subtrees(curr->right, s, k, &hright, &yes_right);
+    bool s_in_curr = strstr(curr->get_name(), s);
     *height = std::max(hleft, hright) + 1;
-    *is_s_subtree = yes_left && yes_right && (strstr(curr->get_name(), s));
+    *is_s_subtree = yes_left && yes_right && s_in_curr;
+    if (!*is_s_subtree)
+        *height = 0;
     if (yes_left && hleft >= k && !yes_right){
         delete_subtree(curr->left);
         curr->left = 0;
@@ -216,7 +176,7 @@ void tree::find_sk_subtrees(tree_node* curr, char* s, int k, int* height, bool* 
         *is_s_subtree = false;
         return;
     }
-    else if (yes_left && hleft >= k && yes_right && hright >= k){
+    else if (yes_left && hleft >= k && yes_right && hright >= k && !s_in_curr){
         delete_subtree(curr->left);
         curr->left = 0;
         delete_subtree(curr->right);
@@ -307,121 +267,4 @@ void tree::a6(const student& student){
     return;
 }
 
-tree_node* tree::find_right_leaf(tree_node* nach, tree_node** parent, int cnt){
-    if (!nach) return 0;
-    tree_node* p = 0;
-    tree_node* res = 0;
-    if (!nach->right && !nach->left){
-        if (cnt == 0)
-            return 0;
-        return nach;
-    }
-    if (nach->right){
-        res = find_right_leaf(nach->right, &p, 1);
-    }
-    if (res){
-        if (res == nach->right){
-            *parent = nach;
-        }
-        else{
-            *parent = p;
-        }
-        return res;
-    }
-    return 0;
-}
 
-
-void tree::swap_elements_right(tree_node* a, tree_node* parent_a, tree_node* leaf, tree_node* parent_leaf){
-    if (leaf == nullptr){
-        return;
-    }
-    parent_leaf->right = nullptr;
-    if (parent_a){
-        if (a == parent_a->left){
-            parent_a->left = leaf; 
-        }
-        else{
-            parent_a->right = leaf; 
-        }
-    }
-    if (a->left == leaf){
-        leaf->left = 0;
-    }
-    else{
-        leaf->left = a->left;
-    }
-    leaf->right = a;
-    a->left = nullptr;
-    return;
-}
-
-tree_node* tree::rightmost(tree_node* nach, tree_node** arr, int* size){
-    if (!nach) return 0;
-    tree_node* down = nach;
-    tree_node* curr = nach;
-    while (curr->right){
-        arr[*size] = curr;
-        *size += 1;
-        down = curr->right;
-        curr = curr->right;
-    }
-    return down;
-}
-
-tree_node* tree::get_next_right(tree_node* nach, tree_node** arr, int* size){
-    tree_node* curr = nach;
-    int cnt = *size;
-    if (curr->left){
-        arr[cnt] = curr;
-        cnt += 1;
-        *size = cnt;
-        return rightmost(curr->left, arr, size);
-    }
-    while ((cnt > 0) && ((curr == arr[cnt - 1]->left) || (!arr[cnt - 1]->left))){
-        curr = arr[cnt - 1];
-        cnt -= 1;
-    }
-    *size = cnt;
-    if (curr == root)
-        return 0;
-    *size -= 1;
-    return arr[*size];
-}
-
-void tree::a4(){
-    int len = get_height();
-    tree_node** arr = new tree_node* [len];
-    int cnt = 0;
-    tree_node* curr = rightmost(root, arr, &cnt);
-    tree_node* parent_leaf = 0;
-    tree_node* leaf = 0;
-    while (curr){
-        if (!curr->right && curr->left){
-            parent_leaf = curr;
-            int cnt1 = 0;
-            leaf = find_right_leaf(curr->left, &parent_leaf, cnt1);
-            if (!leaf){
-                arr[cnt] = curr;
-                curr = curr->left;
-                cnt += 1;
-                continue;
-            }
-            swap_elements_right(curr, arr[cnt - 1], leaf, parent_leaf);
-            if (leaf && leaf->left){
-                arr[cnt] = leaf;
-                curr = leaf->left;
-                cnt += 1;
-            }
-            else{
-                curr = get_next_right(leaf, arr, &cnt);
-            }
-        }
-        else{
-
-            curr = get_next_right(curr, arr, &cnt);
-        }
-
-    }
-    delete [] arr;
-}
