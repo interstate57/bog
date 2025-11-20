@@ -85,19 +85,6 @@ int tree::a5(int k){
     return solve5(root, k, 0);
 }
 
-/*int tree::solve6(tree_node* nach, int k, int curr_level){
-    if (!nach) return 0;
-    int cnt = 0;
-    tree_node* curr = nach->down;
-    if (k <= curr_level){
-        cnt += 1;
-    }
-    for (;curr; curr = curr->level){
-        cnt += solve6(curr, k - 1, curr_level + 1);
-    }
-    return cnt;
-}*/
-
 int tree::solve6(tree_node* nach, int k){
     if (!nach)
         return 0;
@@ -107,7 +94,8 @@ int tree::solve6(tree_node* nach, int k){
         return 0;
     }
     int cnt = 0;
-    for (tree_node* curr = nach->down; curr; curr = curr->level) {
+    tree_node* curr = nach->down;
+    for (;curr;curr = curr->level){
         cnt += solve6(curr, k - 1);
     }
     if (cnt > 0)
@@ -121,6 +109,7 @@ int tree::a6(int k){
 
 int tree::solve7(tree_node* nach, int k){
     if (!nach) return 0;
+    nach->print();
     int cnt = 0;
     tree_node* predcurr = nach;
     tree_node* curr = nach->down;
@@ -129,7 +118,12 @@ int tree::solve7(tree_node* nach, int k){
         if (curr->get_value() <= k){
             cnt += 1;
             if (curr == nach->down){
-                nach->down = curr->level;
+                if (!curr->level){
+                    nach->down = 0;
+                }
+                else{
+                    nach->down = curr->level;
+                }
                 next = nach->down;
             }
             else{
@@ -140,6 +134,7 @@ int tree::solve7(tree_node* nach, int k){
         }
         else{
             cnt += solve7(curr, k);
+            predcurr = curr;
             next = curr->level;
         }
     }
@@ -160,5 +155,14 @@ void tree::delete_subtree_dop(tree_node* curr, int k, int* cnt){
 }
 
 int tree::a7(int k){
-    return solve7(root, k);
+    int cnt = 0;
+    if (root->get_value() <= k){
+        cnt += 1;
+        delete_subtree_dop(root, k, &cnt);
+        root = 0;
+    }
+    else{
+        cnt = solve7(root, k);
+    }
+    return cnt;
 }
