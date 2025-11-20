@@ -7,7 +7,7 @@ int tree::solve1(tree_node* nach, int k){
     tree_node* curr = nach->down;
     for (;curr; curr = curr->level){
         cnt += 1;
-        res += solve1(curr->down, k);
+        res += solve1(curr, k);
     }
     if (cnt == k)
         res += 1;
@@ -25,9 +25,10 @@ int tree::solve2(tree_node* nach, int k, int* size){
     tree_node* curr = nach->down;
     for (;curr; curr = curr->level){
         int tsize = 0;
-        cnt += solve2(curr->down, k, &tsize);
+        cnt += solve2(curr, k, &tsize);
         *size += tsize;
     }
+    *size += 1;
     if (*size <= k)
         cnt += 1;
     return cnt;
@@ -45,7 +46,7 @@ int tree::solve3(tree_node* nach, int k, int* height){
     tree_node* curr = nach->down;
     for (;curr; curr = curr->level){
         int theight = 0;
-        cnt += solve3(curr->down, k, &theight);
+        cnt += solve3(curr, k, &theight);
         if (max < theight){
             max = theight;
         }
@@ -75,7 +76,7 @@ int tree::solve5(tree_node* nach, int k, int curr_level){
             cnt += 1;
             continue;
         }
-        cnt += solve5(curr->down, k, curr_level + 1);
+        cnt += solve5(curr, k, curr_level + 1);
     }
     return cnt;
 }
@@ -84,21 +85,28 @@ int tree::a5(int k){
     return solve5(root, k, 0);
 }
 
-int tree::solve6(tree_node* nach, int k, int curr_level){
+int tree::solve6(tree_node* nach, int k, int curr_level, int dop){
     if (!nach) return 0;
     int cnt = 0;
     tree_node* curr = nach->down;
     if (k <= curr_level){
-        cnt += 1;
+        if (dop == 0){
+            cnt += curr_level;
+            dop = 1;
+        }
+        else
+            cnt += 1;
     }
     for (;curr; curr = curr->level){
-        cnt += solve5(curr->down, k, curr_level + 1);
+        curr->print();
+        printf("dop == %d\n", dop);
+        cnt += solve6(curr, k, curr_level + 1, dop);
     }
     return cnt;
 }
 
 int tree::a6(int k){
-    return solve6(root, k, 0);
+    return solve6(root, k, 1, 0);
 }
 
 int tree::solve7(tree_node* nach, int k){
