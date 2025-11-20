@@ -88,7 +88,7 @@ class tree
     int a4(int k);
     int solve5(tree_node* nach, int k, int curr_level);
     int a5(int k);
-    int solve6(tree_node* nach, int k, int curr_level, int dop);
+    int solve6(tree_node* nach, int k);
     int a6(int k);
     void delete_subtree_dop(tree_node* curr, int k, int* cnt);
     int solve7(tree_node* nach, int k);

@@ -85,28 +85,38 @@ int tree::a5(int k){
     return solve5(root, k, 0);
 }
 
-int tree::solve6(tree_node* nach, int k, int curr_level, int dop){
+/*int tree::solve6(tree_node* nach, int k, int curr_level){
     if (!nach) return 0;
     int cnt = 0;
     tree_node* curr = nach->down;
     if (k <= curr_level){
-        if (dop == 0){
-            cnt += curr_level;
-            dop = 1;
-        }
-        else
-            cnt += 1;
+        cnt += 1;
     }
     for (;curr; curr = curr->level){
-        curr->print();
-        printf("dop == %d\n", dop);
-        cnt += solve6(curr, k, curr_level + 1, dop);
+        cnt += solve6(curr, k - 1, curr_level + 1);
     }
+    return cnt;
+}*/
+
+int tree::solve6(tree_node* nach, int k){
+    if (!nach)
+        return 0;
+    if (!nach->down) {
+        if (k <= 0)
+            return 1;
+        return 0;
+    }
+    int cnt = 0;
+    for (tree_node* curr = nach->down; curr; curr = curr->level) {
+        cnt += solve6(curr, k - 1);
+    }
+    if (cnt > 0)
+        cnt += 1;
     return cnt;
 }
 
 int tree::a6(int k){
-    return solve6(root, k, 1, 0);
+    return solve6(root, k);
 }
 
 int tree::solve7(tree_node* nach, int k){
@@ -114,17 +124,23 @@ int tree::solve7(tree_node* nach, int k){
     int cnt = 0;
     tree_node* predcurr = nach;
     tree_node* curr = nach->down;
-    for (;curr;curr = curr->level){
+    tree_node* next = 0;
+    for (;curr;curr = next){
         if (curr->get_value() <= k){
             cnt += 1;
             if (curr == nach->down){
                 nach->down = curr->level;
+                next = nach->down;
             }
             else{
                 predcurr->level = curr->level;
+                next = predcurr->level;
             }
             delete_subtree_dop(curr, k, &cnt);
-            curr = 0;
+        }
+        else{
+            cnt += solve7(curr, k);
+            next = curr->level;
         }
     }
     return cnt;
@@ -133,14 +149,14 @@ int tree::solve7(tree_node* nach, int k){
 void tree::delete_subtree_dop(tree_node* curr, int k, int* cnt){
     if (curr == nullptr)
             return;
-        tree_node * p, * next;
-        for (p = curr->down; p; p = next){
-            next = p->level;
-            if (p->get_value() <= k)
-                *cnt += 1;
-            delete_subtree (p);
-        }
-        delete curr;
+    tree_node * p, * next;
+    for (p = curr->down; p; p = next){
+        next = p->level;
+        if (p->get_value() <= k)
+            *cnt += 1;
+        delete_subtree_dop(p, k, cnt);
+    }
+    delete curr;
 }
 
 int tree::a7(int k){
