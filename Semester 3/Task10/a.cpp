@@ -12,7 +12,8 @@ int main (int argc, char *argv[]){
     double t = 0;
     int res = 0;
     int m = 0;
-    FILE* fp;
+    FILE* fp1;
+    FILE* fp2;
     if (!((argc == 4) && sscanf(argv[1], "%d", &r) == 1 && sscanf(argv[3], "%d", &m) == 1)){
         printf("Usage: %s r filename m\n", argv[0]);
         return 1;
@@ -21,8 +22,8 @@ int main (int argc, char *argv[]){
     list2::set_m (m);
     list2::set_r (r);
     tree<student> *a = new tree<student>;
-    if (!(fp = fopen(name, "r"))) return -1;
-    ret = a->read(fp);
+    if (!(fp1 = fopen(name, "r"))) return -1;
+    ret = a->read(fp1);
     do{
         switch(ret){
             case io_status::success: continue;
@@ -72,7 +73,8 @@ int main (int argc, char *argv[]){
     a->print(r);
     delete a;
     tree<list2> *b = new tree<list2>;
-    ret = b->read(fp);
+    if (!(fp2 = fopen(name, "r"))) return -1;
+    ret = b->read(fp2);
     do{
         switch(ret){
             case io_status::success: continue;
@@ -83,6 +85,7 @@ int main (int argc, char *argv[]){
         return 3;
     }while(0);
     b->print(r);
+    task = 1;
     printf("\n");
     t = clock();
     res = b->solve1_();

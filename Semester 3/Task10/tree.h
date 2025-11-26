@@ -117,6 +117,9 @@ class tree
             print_subtree (curr->right, level + 1, r, fp);
         }
         static void add_node_subtree (tree_node<T> * curr, tree_node<T> *x){
+            /*curr->print();
+            x->print();
+            printf("\n");*/
             if (*x < *curr){
                 if (curr->left == nullptr){
                     curr->left = x;

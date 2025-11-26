@@ -68,7 +68,7 @@ class list2
         int operator< (const list2& b) const{
             int n = this->get_length();
             int m = b.get_length();
-            if ((n == 0 && m > 0) || head < b.head)
+            if ((n == 0 && m > 0) || *head < *b.head)
                 return 1;
             return 0;
         }
@@ -82,8 +82,13 @@ class list2
             if (head == nullptr) return io_status::memory;
             *head = (list2_node&&)buf;
             curr = head;
+            if (m == 1){
+                head->set_next(0);
+                head->set_prev(0);
+                return io_status::success;
+            }
             while(buf.read(fp) == io_status::success){
-                if (cnt == m) break;
+                cnt += 1;
                 tail = new list2_node;
                 if (tail == nullptr){
                     delete_list();
@@ -93,7 +98,10 @@ class list2
                 curr->set_next(tail);
                 tail->set_prev(curr);
                 curr = tail;
-                cnt += 1;
+                if (cnt == m) {
+                    curr->set_next(0);
+                    break;
+                }
             }
             if (!feof(fp)){
                 delete_list();
