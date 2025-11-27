@@ -109,7 +109,6 @@ int tree::a6(int k){
 
 int tree::solve7(tree_node* nach, int k){
     if (!nach) return 0;
-    nach->print();
     int cnt = 0;
     tree_node* predcurr = nach;
     tree_node* curr = nach->down;
