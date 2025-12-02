@@ -8,9 +8,9 @@ int main(int argc, char* argv[]){
     char* name = 0;
     int r = 0;
     io_status ret;
-    int task = 1;
-    double t = 0;
-    int res = 0;
+    //int task = 1;
+    //double t = 0;
+    //int res = 0;
     int k = 0, m = 0;
     FILE* fp;
     if (!((argc == 5) && sscanf(argv[1], "%d", &m) == 1 && sscanf(argv[2], "%d", &r) == 1) && sscanf(argv[3], "%d", &k) == 1){
@@ -32,5 +32,6 @@ int main(int argc, char* argv[]){
         return 3;
     }while(0);
     a->print(r);
+    delete a;
     return 0;
 }

@@ -31,12 +31,12 @@ class b_tree_node
         ~b_tree_node (){
             delete_node ();
         }
-        void print (int p = 0){
+        void print (int p = 0, FILE* fp = stdout){
             for (int i = 0; i < size; ++i){
                 for (int j = 0; j < p; j++)
-                printf(" ");
-                printf ("values[%2d] ", i + 1);
-                values[i].print ();
+                    fprintf(fp, " ");
+                fprintf (fp, "values[%2d] ", i + 1);
+                values[i].print (fp);
             }
         }
         // Look for position for insert
@@ -105,23 +105,18 @@ class b_tree
     public:
         b_tree (int i = 0) { m = i; }
         io_status read (FILE * fp = stdin){ 
-           b_tree_node<T> x;
+           T x;
             while (x.read(fp) == io_status::success){
-                b_tree_node<T>* curr = new b_tree_node<T>((b_tree_node<T>&&) x);
+                T* curr = new T((T&&) x);
                 io_status dop;
                 if (curr == nullptr){
                     delete_subtree(root);
                     return io_status::memory;
                 }
-                if (root == nullptr){
-                    root = curr;
-                }
-                else{
-                    dop = add_value(*curr);
-                    if (dop != io_status::success){
-                        delete_subtree(root);
-                        return io_status::memory;
-                    }
+                dop = add_value(*curr);
+                if (dop != io_status::success){
+                    delete_subtree(root);
+                    return io_status::memory;
                 }
             }
             if (!feof(fp)){
