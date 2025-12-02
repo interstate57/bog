@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
     }
     name = argv[4];
     if (!(fp = fopen(name, "r"))) return -1;
-    b_tree<student> *a = new b_tree<student>;
+    b_tree<student> *a = new b_tree<student>(m);
     ret = a->read(fp);
     do{
         switch(ret){

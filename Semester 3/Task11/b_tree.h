@@ -107,13 +107,8 @@ class b_tree
         io_status read (FILE * fp = stdin){ 
            T x;
             while (x.read(fp) == io_status::success){
-                T* curr = new T((T&&) x);
                 io_status dop;
-                if (curr == nullptr){
-                    delete_subtree(root);
-                    return io_status::memory;
-                }
-                dop = add_value(*curr);
+                dop = add_value(x);
                 if (dop != io_status::success){
                     delete_subtree(root);
                     return io_status::memory;
