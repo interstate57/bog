@@ -149,10 +149,9 @@ class b_tree
             int i = 0;
             int cnt = 0;
             b_tree_node<T>* curr = 0;
-            for (int i = 0; i < 2 * nach->size + 1; i++){
+            for (i = 0; i < nach->size + 1; i++){
                 curr = nach->children[i];
                 cnt += solve1_(curr, k);
-                i += 1;
             }
             if (cnt == k)
                 return i;
