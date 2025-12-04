@@ -127,6 +127,133 @@ class b_tree
             delete_subtree (root);
             erase_links ();
         }
+        /*int solve1_(b_tree_node<T> * nach, int k){
+            if (!nach->children || !nach)
+                return 0;
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* next = 0;
+            for (b_tree_node<T>* curr = nach->children[i]; curr; curr = next){
+                cnt += solve1_(curr, k);
+                i += 1;
+                next = nach->children[i];
+            }
+            if (cnt == k)
+                return i;
+            return 0;
+        }*/
+
+        int solve1_(b_tree_node<T> * nach, int k){
+            if (!nach->children || !nach)
+                return 0;
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* curr = 0;
+            for (int i = 0; i < 2 * nach->size + 1; i++){
+                curr = nach->children[i];
+                cnt += solve1_(curr, k);
+                i += 1;
+            }
+            if (cnt == k)
+                return i;
+            return 0;
+        }
+        
+        int solve1(int k){
+            return solve1_(root, k);
+        }
+        int solve2_(b_tree_node<T> * nach, int k, int* res){
+            if (!nach->children){
+                *res += nach->size;
+                return 1;
+            }
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* next = 0;
+            for (b_tree_node<T>* curr = nach->children[i]; curr; curr = next){
+                cnt += solve2_(curr, k, res);
+                i += 1;
+                next = nach->children[i];
+            }
+            cnt += 1;
+            if (cnt <= k){
+                *res += i;
+            }
+            return cnt;
+        }
+        int solve2(int k){
+            int size = 0;
+            solve2_(root, k, &size);
+            return size;
+        }
+        int solve3_(b_tree_node<T> * nach, int k, int* res){
+            if (!nach->children){
+                *res += nach->size;
+                return 1;
+            }
+            int i = 0;
+            int max = 0;
+            b_tree_node<T>* curr = nach->children[i];
+            for (;curr;curr = curr->children[i + 1]){
+                int level_i = solve3_(curr->children[i], k, res);
+                max = (level_i > max) ? level_i : max;
+                i += 1;
+            }
+            max += 1;
+            if (max <= k){
+                *res += i;
+            }
+            return max;
+        }
+        int solve3(int k){
+            int res = 0;
+            solve3_(root, k, &res);
+            return res;
+        }
+        int solve5_(b_tree_node<T> * nach, int level){
+            if (level == 0)
+                return nach->size;
+            if (!nach->children){
+                return 0;
+            }
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* curr = nach->children[i];
+            for (;curr;curr = curr->children[i + 1]){
+                cnt = solve5_(curr->children[i], level - 1);
+                i += 1;
+            }
+            return cnt;
+        }
+        int solve5(int k){
+            int level = k + 1;
+            return solve5_(root, level);
+        }
+        /*int solve6_(b_tree_node<T> * nach, int length, int* res){
+            if (length == 0){
+                *res += nach->size;
+                return 1;
+            }
+            if (!nach->children){
+                return 0;
+            }
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* curr = nach->children[i];
+            for (;curr;curr = curr->children[i + 1]){
+                cnt += solve6_(curr->children[i], length - 1);
+                i += 1;
+            }
+            if (cnt > 0){
+                *res += i;
+                return 1;
+            }
+            return 0;
+        }
+        int solve6(int k){
+            int length = k;
+            return solve6_(root, length);
+        }*/
     private:
         void erase_links (){
             m = 0;
