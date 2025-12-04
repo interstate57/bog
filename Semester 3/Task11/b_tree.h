@@ -127,24 +127,9 @@ class b_tree
             delete_subtree (root);
             erase_links ();
         }
-        /*int solve1_(b_tree_node<T> * nach, int k){
-            if (!nach->children || !nach)
-                return 0;
-            int i = 0;
-            int cnt = 0;
-            b_tree_node<T>* next = 0;
-            for (b_tree_node<T>* curr = nach->children[i]; curr; curr = next){
-                cnt += solve1_(curr, k);
-                i += 1;
-                next = nach->children[i];
-            }
-            if (cnt == k)
-                return i;
-            return 0;
-        }*/
 
         int solve1_(b_tree_node<T> * nach, int k){
-            if (!nach->children || !nach)
+            if (!nach || !nach->children)
                 return 0;
             int i = 0;
             int cnt = 0;
@@ -161,6 +146,7 @@ class b_tree
         int solve1(int k){
             return solve1_(root, k);
         }
+        /*
         int solve2_(b_tree_node<T> * nach, int k, int* res){
             if (!nach->children){
                 *res += nach->size;
@@ -179,7 +165,25 @@ class b_tree
                 *res += i;
             }
             return cnt;
+        }*/
+
+        int solve2_(b_tree_node<T> * nach, int k, int* res){
+            if (!nach || !nach->children)
+                return 0;
+            int i = 0;
+            int cnt = 0;
+            b_tree_node<T>* curr = 0;
+            for (i = 0; i < nach->size + 1; i++){
+                curr = nach->children[i];
+                cnt += solve2_(curr, k, res);
+            }
+            cnt += 1;
+            if (cnt <= k){
+                *res += i;
+            }
+            return cnt;
         }
+
         int solve2(int k){
             int size = 0;
             solve2_(root, k, &size);
