@@ -93,6 +93,7 @@ class rb_tree
         }
         void add_node (rb_tree_node<T>* x){
             if (root == 0){
+                root = x;
                 root->color = colors::black;
             }
             else{
@@ -124,7 +125,10 @@ class rb_tree
             }
         }
         void fix_tree(rb_tree_node<T>* x){
+            print_subtree(root, 0, 10);
+            printf("\n");
             if (!x->parent) {
+                root = x;
                 x->color = colors::black;
                 return;
             }
@@ -138,7 +142,19 @@ class rb_tree
                 uncle = grandparent->left;
                 if (!uncle || uncle->color == colors::black){ 
                     if (parent->left == x){
+                        printf("5\n");
                         x->parent = grandparent->parent;
+                        if (x->parent == 0) {
+                            root = x;
+                        }
+                        else{
+                            if (x->parent->left == grandparent) {
+                                x->parent->left = x;
+                            } 
+                            else{
+                                x->parent->right = x;
+                            }
+                        }
                         grandparent->left = uncle;
                         grandparent->right = x->left;
                         x->left = grandparent;
@@ -154,14 +170,26 @@ class rb_tree
                         }
                     }
                     else{
+                        printf("6\n");
                         parent->parent = grandparent->parent;
+                        if (parent->parent == 0)
+                            root = parent;
+                        else{
+                            if (parent->parent->left == grandparent) {
+                                parent->parent->left = parent;
+                            } 
+                            else{
+                                parent->parent->right = parent;
+                            }
+                        }
                         grandparent->right = parent->left;
                         parent->left = grandparent;
                         parent->color = colors::black;
                         grandparent->color = colors::red;
                     }
                 }
-                else{ // перекраска без перестановки 
+                else{ // перекраска без перестановки
+                    printf("7, 8\n");
                     grandparent->color = colors::red;
                     uncle->color = colors::black;
                     parent->color = colors::black;
@@ -172,14 +200,36 @@ class rb_tree
                 uncle = grandparent->right;
                 if (!uncle || uncle->color == colors::black){ 
                     if (parent->left == x){
+                        printf("1\n");
                         parent->parent = grandparent->parent;
+                        if (parent->parent == nullptr)
+                            root = parent;
+                        else{
+                            if (parent->parent->left == grandparent) {
+                                parent->parent->left = parent;
+                            } 
+                            else{
+                                parent->parent->right = parent;
+                            }
+                        }
                         grandparent->left = parent->right;
                         parent->right = grandparent;
                         parent->color = colors::black;
                         grandparent->color = colors::red;
                     }
                     else{
+                        printf("2\n");
                         x->parent = grandparent->parent;
+                        if (x->parent == nullptr)
+                            root = x;
+                        else{
+                            if (x->parent->left == grandparent) {
+                                x->parent->left = x;
+                            } 
+                            else{
+                                x->parent->right = x;
+                            }
+                        }
                         grandparent->left = x->right;
                         grandparent->right = uncle;
                         x->right = grandparent;
@@ -196,6 +246,8 @@ class rb_tree
                     }
                 }
                 else{ // перекраска без перестановки 
+                    printf("3, 4\n");
+                    grandparent->print();
                     grandparent->color = colors::red;
                     uncle->color = colors::black;
                     parent->color = colors::black;
