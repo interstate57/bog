@@ -271,9 +271,6 @@ class rb_tree
                 }
                 else{ // перекраска без перестановки 
                     printf("3, 4\n");
-                    grandparent->print();
-                    parent->print();
-                    x->print();
                     grandparent->color = colors::red;
                     uncle->color = colors::black;
                     parent->color = colors::black;
@@ -283,6 +280,73 @@ class rb_tree
         }
         void print (unsigned int r = 10, FILE *fp = stdout) const{
             print_subtree (root, 0, r, fp);
+        }
+        int solve1_(b_tree_node<T> * nach, int k, int* res){
+            if (!nach)
+                return 0;
+            int cnt = 1;
+            cnt += solve1_(nach->left, k, res) + solve1_(nach->right, k, res);
+            if (cnt <= k){
+                *res += 1;
+            }
+            return cnt;
+        }
+
+        int solve1(int k){
+            int size = 0;
+            solve1_(root, k, &size);
+            return size;
+        }
+        int solve2_(b_tree_node<T> * nach, int k, int* res){
+            if (!nach){
+                return 1;
+            }
+            int max = 0;
+            
+            max += 1;
+            if (max <= k){
+                *res += nach->size;
+            }
+            return max;
+        }
+        int solve3(int k){
+            int res = 0;
+            solve3_(root, k, &res);
+            return res;
+        }
+        int solve5_(b_tree_node<T> * nach, int level){
+            if (!nach){
+                return 0;
+            }
+            if (level == 0)
+                return nach->size;
+            
+            int cnt = 0;
+            for (int i = 0; i < nach->size + 1; i++){
+                cnt += solve5_(nach->children[i], level - 1);
+            }
+            return cnt;
+        }
+        int solve5(int k){
+            int level = k;
+            return solve5_(root, level);
+        }
+        int solve6_(b_tree_node<T> * nach, int length){
+            if (!nach)
+                return 0;
+            if (length == 0){
+                return nach->size;
+            }
+            int cnt = 0;
+            for (int i = 0; i < nach->size + 1; i++){
+                cnt += solve6_(nach->children[i], length - 1);
+            }
+            if (cnt > 0)
+                cnt += nach->size;
+            return cnt;
+        }
+        int solve6(int k){
+            return solve6_(root, k - 1);
         }
     private:
         static void print_subtree (rb_tree_node<T> * curr, int level, int r,

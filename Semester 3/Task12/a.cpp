@@ -31,5 +31,9 @@ int main(int argc, char* argv[]){
         return 3;
     }while(0);
     a.print(r);
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    a.print(r);
     return 0;
 }
