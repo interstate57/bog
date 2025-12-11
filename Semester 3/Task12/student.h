@@ -1,0 +1,134 @@
+#ifndef student_H
+#define student_H
+#include <stdio.h>
+#include <iostream>
+#include <sstream>
+#include <cstring>
+
+enum class io_status
+{
+    success,
+    eof,
+    format,
+    memory,
+};
+
+class student
+{
+    private:
+        char * name = nullptr;
+        int value = 0;
+    public:
+        student () = default;
+        student (const student& x) = delete;
+        student (student&& x){
+            name = x.name; x.name = nullptr;
+            value = x.value; x.value = 0;
+        }
+        student (char* name, int value){
+            init (name, value);
+        }
+        ~student (){
+            erase ();
+        }
+        student& operator= (const student& x) = delete;
+        student& operator= (student&& x){
+            if (this == &x)
+                return *this;
+            erase ();
+            name = x.name; x.name = nullptr;
+            value = x.value; x.value = 0;
+            return *this;
+        }
+        void print (FILE* fp = stdout) const{
+            fprintf(fp, "%s %d\n", name, value);
+        }
+        void print_2 (FILE* fp = stdout) const{
+            fprintf(fp, "%s %d ", name, value);
+        }
+        io_status read (FILE * fp){
+            const int LEN = 1234;
+            char n[LEN];
+            int v;
+            if (fscanf (fp, "%s%d", n, &v) != 2){
+                if (! feof (fp))
+                    return io_status::format;
+                return io_status::eof;
+            }
+            erase();
+            return init (n, v);
+        }
+        int operator> (const student& x) const{
+            return (cmp (x) > 0 ? 1 : 0);
+        }
+        int operator< (const student& x) const{
+            return (cmp (x) < 0 ? 1 : 0);
+        }
+        int operator<= (const student& x) const{
+            return ((cmp (x) < 0 || cmp (x) == 0) ? 1 : 0);
+        }
+        int operator>= (const student& x) const{
+            return ((cmp (x) > 0 || cmp (x) == 0) ? 1 : 0);
+        }
+        int operator== (const student& x) const{
+            return (cmp (x) == 0 ? 1 : 0);
+        }
+        void init_f(int res){
+            name = new char[8];
+            strcpy(name, "Student");
+            value = res;
+        }
+        int get_value() const{
+            return value;
+        }
+        char* get_name() const{
+            return name;
+        }
+        int get_length () const{ 
+            return (name != nullptr ? 1 : 0);
+        }
+    private:
+        io_status init (const char * n, int v){
+            value = v;
+            if (n != nullptr){
+                size_t len = strlen (n);
+                name = new char [len + 1];
+                if (name != nullptr){
+                    for (size_t i = 0; i <= len; i++)
+                    name[i] = n[i];
+                }
+                else
+                    return io_status::memory;
+            }
+            return io_status::success;
+        }
+        void erase (){
+            value = 0;
+            if (name != nullptr){
+                delete [] name;
+                name = nullptr;
+            }
+        }
+        int cmp (const student& x) const{
+            if (name == nullptr){
+                if (x.name != nullptr)
+                    return -1;
+                return value - x.value;
+            }
+            if (x.name == nullptr)
+                return 1;
+            int res = strcmp (name, x.name);
+            if (res)
+                return res;
+            return value - x.value;
+        }
+    protected:
+        void set_name(char* name1){
+            name = name1;
+        }
+        void set_value(int value1){
+            value = value1;
+        }
+};
+
+#endif
