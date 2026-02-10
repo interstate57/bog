@@ -10,8 +10,6 @@ enum class io_status
     eof,
     format,
     memory,
-    open,
-    create,
 };
 
 class student

@@ -34,7 +34,7 @@ class avl_tree
                     delete_subtree(root);
                     return io_status::memory;
                 }
-                AddBalance(x, root, grow);
+                AddBalance(y, root, &grow);
             }
             if (!feof(fp)){
                 delete_subtree(root);
@@ -128,7 +128,7 @@ class avl_tree
             *grow = 0;
             /* пустое дерево: */
             if (!root) {
-                *root = *x;
+                *root = (avl_tree_node<T>&&)*x;
                 if (root) {
                     root->left = root->right = 0;
                     root->balance = 0;
@@ -151,10 +151,10 @@ class avl_tree
                         case -1:
                             switch (root->left->balance){
                                 case -1:
-                                    root = Rebuild_L1(root);
+                                    root = L1(root);
                                     break;
                                 case 1:
-                                    root = Rebuild_L2(root);
+                                    root = L2(root);
                             }
                     }
                 }
@@ -173,10 +173,10 @@ class avl_tree
                         case 1:
                             switch (root->right->balance){
                                 case 1:
-                                    root = Rebuild_R1(root);
+                                    root = R1(root);
                                     break;
                                 case -1:
-                                    root = Rebuild_R2(root);
+                                    root = R2(root);
                             }
                     }
                 }
@@ -191,7 +191,7 @@ class avl_tree
             delete_subtree (curr->right);
             delete curr;
         }
-        static void print_subtree (tree_node * curr, int level, int r, FILE *fp = stdout){
+        static void print_subtree (avl_tree_node<T> * curr, int level, int r, FILE *fp = stdout){
             if (curr == nullptr || level > r)
             return;
             int spaces = level * 2;

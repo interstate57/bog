@@ -6,17 +6,17 @@
 
 int main(int argc, char* argv[]){
     char* name = 0;
-    char* s = 0;
+    //char* s = 0;
     int r = 0;
     io_status ret;
-    int task = 1;
-    double t = 0;
+    //int task = 1;
+    //double t = 0;
     FILE* fp;
     if (!((argc == 4) && sscanf(argv[1], "%d", &r) == 1)){
         printf("Usage: %s r s filename\n", argv[0]);
         return 1;
     }
-    s = argv[2];
+    //s = argv[2];
     name = argv[3];
     if (!(fp = fopen(name, "r"))) return -1;
     avl_tree<student> *a = new avl_tree<student>;
@@ -30,6 +30,6 @@ int main(int argc, char* argv[]){
         }
         return 3;
     }while(0);
-    a->print();
+    a->print(r);
     return 0;
 }
