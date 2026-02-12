@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
     }
     //s = argv[2];
     name = argv[3];
+    
     if (!(fp = fopen(name, "r"))) return -1;
     avl_tree<student> *a = new avl_tree<student>;
     ret = a->read(fp);

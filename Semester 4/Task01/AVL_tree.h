@@ -24,6 +24,10 @@ class avl_tree
         avl_tree_node<T> * root = nullptr;
     public:
         avl_tree () = default;
+        ~avl_tree(){
+            delete_subtree(root);
+            root = 0;
+        }
         io_status read (FILE * fp = stdin){
             avl_tree_node<T> x;
             avl_tree_node<T>* y;
@@ -34,7 +38,8 @@ class avl_tree
                     delete_subtree(root);
                     return io_status::memory;
                 }
-                AddBalance(y, root, &grow);
+                AddBalance(y, &root, &grow);
+                printf("%s\n", (root == 0 ? "Xyu" : "Pizda"));
             }
             if (!feof(fp)){
                 delete_subtree(root);
@@ -123,22 +128,33 @@ class avl_tree
             return C;
         }
 
-        avl_tree_node<T> *AddBalance(avl_tree_node<T>* x, avl_tree_node<T> *root,int *grow){
-            int incr;
+
+        avl_tree_node<T> *AddBalance(avl_tree_node<T>* x, avl_tree_node<T> **root,int *grow){
             *grow = 0;
             /* пустое дерево: */
-            if (!root) {
-                *root = (avl_tree_node<T>&&)*x;
-                if (root) {
-                    root->left = root->right = 0;
-                    root->balance = 0;
+            if (*root == 0) {
+                //*root = (avl_tree_node<T>&&)*x;
+                *root = x;
+                if (*root) {
+                    (*root)->left = (*root)->right = 0;
+                    (*root)->balance = 0;
                     *grow = 1;
                 }
-                return root;
+                return (*root);
             }
+            else{
+                AddBalance_(x, *root, grow);
+            }
+            return *root;
+        }
+
+
+        avl_tree_node<T> *AddBalance_(avl_tree_node<T>* x, avl_tree_node<T> *root,int *grow){
+            int incr;
+            *grow = 0;
             /* непустое дерево: */
             if (*x <= *root){ // левая балансировка:
-                root->left = AddBalance(x, root->left, &incr);
+                root->left = AddBalance_(x, root->left, &incr);
                 if (incr){
                     switch (root->balance){
                         case 0:
@@ -160,7 +176,7 @@ class avl_tree
                 }
             }
             else{ // правая балансировка:
-                root->right = AddBalance(x, root->right, &incr);
+                root->right = AddBalance_(x, root->right, &incr);
                 if (incr){
                     switch (root->balance){
                         case 0:
