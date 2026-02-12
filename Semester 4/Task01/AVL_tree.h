@@ -30,7 +30,6 @@ class avl_tree
         }
         io_status read (FILE * fp = stdin){
             avl_tree_node<T> x;
-            avl_tree_node<T>* y;
             int grow;
             while (x.read(fp) == io_status::success){
                 root = AddBalance(x, root, &grow);
@@ -127,16 +126,12 @@ class avl_tree
 
 
 
-        avl_tree_node<T> *AddBalance(avl_tree_node<T> x, avl_tree_node<T> *nach,int *grow){
+        avl_tree_node<T> *AddBalance(avl_tree_node<T>& x, avl_tree_node<T> *nach,int *grow){
             int incr;
             *grow = 0;
             /* пустое дерево: */
             if (nach == 0) {
                 nach = new avl_tree_node<T> ((avl_tree_node<T>&&)x);
-                if (!nach){
-                    delete_subtree(root);
-                    return io_status::memory;
-                }
                 if (nach) {
                     nach->left = nach->right = 0;
                     nach->balance = 0;
@@ -145,8 +140,8 @@ class avl_tree
                 return nach;
             }
             /* непустое дерево: */
-            if (*x <= *nach){ // левая балансировка:
-                nach->left = AddBalance_(x, nach->left, &incr);
+            if (x <= *nach){ // левая балансировка:
+                nach->left = AddBalance(x, nach->left, &incr);
                 if (incr){
                     switch (nach->balance){
                         case 0:
@@ -168,7 +163,7 @@ class avl_tree
                 }
             }
             else{ // правая балансировка:
-                nach->right = AddBalance_(x, nach->right, &incr);
+                nach->right = AddBalance(x, nach->right, &incr);
                 if (incr){
                     switch (nach->balance){
                         case 0:
