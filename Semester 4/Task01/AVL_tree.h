@@ -192,6 +192,111 @@ class avl_tree
             }
             return nach;
         }
+        bool name_from_s(avl_tree_node<T>* curr, const char* s){
+            size_t len = curr->length();
+            if (len == strspn(curr->get_name(), s))
+                return true;
+            return false;
+        }
+        bool is_balanced() const {
+            int height;
+            return is_balanced_(root, &height);
+        }
+        bool is_balanced_(avl_tree_node<T>* nach, int* height) const {
+            if (!nach) {
+                *height = 0;
+                return true;
+            }
+            *height = 0;
+            int height_left = 0;
+            int height_right = 0;
+            if (nach->left) {
+                if (!is_balanced_(nach->left, &height_left))
+                    return false;
+            }
+            if (nach->right) {
+                if (!is_balanced_(nach->right, &height_right))
+                    return false;
+            }
+            if (std::abs(height_left - height_right) > 1)
+                return false;
+            *height = std::max(height_left, height_right) + 1;
+            return true;
+        }
+        int solve1_(avl_tree_node<T>* nach, const char* s){
+            if (!nach)
+                return 0;
+            if (nach->left == 0 && nach->right == 0){
+                if (name_from_s(nach, s))
+                    return 1;
+                return 0;
+            }
+            return solve1_(nach->left, s) + solve1_(nach->right, s);
+        }
+        int solve1(const char* s){
+            return solve1_(root, s);
+        }
+        int solve2_(avl_tree_node<T>* nach, const char* s){
+            if (!nach)
+                return 0;
+            if (!name_from_s(nach, s))
+                return 0;
+            if (!nach->left && !nach->right)
+                return 1;
+            int res = 0;
+            if (nach->left) {
+                res = solve2_(nach->left, s);
+            }
+            if (nach->right) {
+                res = std::max(res, solve2_(nach->right, s));
+            }
+            if (res > 0) {
+                res += 1;
+            }
+            return res;
+        }
+        int solve2(const char* s){
+            return solve2_(root, s);
+        }
+        int solve3_(avl_tree_node<T>* nach, const char* s, int* cnt){
+            if (!nach)
+                return 0;
+            int left = solve3_(nach->left, s, cnt);
+            int right = solve3_(nach->right, s, cnt);
+            bool left_good = (!nach->left) || left > 0;//name_from_s(nach->left, s);
+            bool right_good = (!nach->right) || right > 0;
+            bool parent_good = name_from_s(nach, s);
+            int res = left + right + 1;
+            if (left_good && right_good && parent_good) {
+                *cnt += 1;
+            }
+            else {
+                res = 0;
+            }
+            return res;
+        }
+        int solve3(const char* s){
+            int cnt = 0;
+            solve3_(root, s, &cnt);
+            return cnt;
+        }
+        int solve5_(avl_tree_node<T>* nach, const char* s, int* max){
+            if (!nach)
+                return 0;
+            int parent = name_from_s(nach, s);
+            int res_r = solve5_(nach->right, s, max);
+            int res_l = solve5_(nach->left, s, max);
+            //*max = std::max(std::abs(res_r - res_l), *max);
+            *max = (std::abs(res_l - res_r) > *max) ? res_l - res_r : *max;
+            if (parent)
+                return res_r + res_l + 1;
+            return res_r + res_l;
+        }
+        int solve5(const char* s){
+            int max = 0;
+            solve5_(root, s, &max);
+            return max;
+        }
     private:
         static void delete_subtree (avl_tree_node<T> * curr){
             if (curr == nullptr)
@@ -201,7 +306,7 @@ class avl_tree
             delete curr;
         }
         static void print_subtree (avl_tree_node<T> * curr, int level, int r, FILE *fp = stdout){
-            if (curr == nullptr || level > r)
+            if (curr == nullptr || level >= r)
             return;
             int spaces = level * 2;
             for (int i = 0; i < spaces; i++)

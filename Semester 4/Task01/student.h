@@ -58,6 +58,12 @@ class student
         int operator>= (const student& x) const { return cmp (x) >= 0; }
         int operator== (const student& x) const { return cmp (x) == 0; }
         int operator!= (const student& x) const { return cmp (x) != 0; }
+        size_t length(){
+            return strlen(name.get());
+        }
+        char* get_name(){
+            return name.get();
+        }
     private:
         io_status init (const char * n, int v){
             value = v;
