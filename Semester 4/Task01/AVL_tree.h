@@ -33,13 +33,10 @@ class avl_tree
             avl_tree_node<T>* y;
             int grow;
             while (x.read(fp) == io_status::success){
-                y = new avl_tree_node<T> ((avl_tree_node<T>&&)x);
-                if (!y){
-                    delete_subtree(root);
-                    return io_status::memory;
-                }
-                AddBalance(y, &root, &grow);
-                printf("%s\n", (root == 0 ? "Xyu" : "Pizda"));
+                root = AddBalance(x, root, &grow);
+                if (root == 0)
+                    break;
+                //printf("%s\n", (root == 0 ? "Xyu" : "Pizda"));
             }
             if (!feof(fp)){
                 delete_subtree(root);
@@ -129,75 +126,70 @@ class avl_tree
         }
 
 
-        avl_tree_node<T> *AddBalance(avl_tree_node<T>* x, avl_tree_node<T> **root,int *grow){
-            *grow = 0;
-            /* пустое дерево: */
-            if (*root == 0) {
-                //*root = (avl_tree_node<T>&&)*x;
-                *root = x;
-                if (*root) {
-                    (*root)->left = (*root)->right = 0;
-                    (*root)->balance = 0;
-                    *grow = 1;
-                }
-                return (*root);
-            }
-            else{
-                AddBalance_(x, *root, grow);
-            }
-            return *root;
-        }
 
-
-        avl_tree_node<T> *AddBalance_(avl_tree_node<T>* x, avl_tree_node<T> *root,int *grow){
+        avl_tree_node<T> *AddBalance(avl_tree_node<T> x, avl_tree_node<T> *nach,int *grow){
             int incr;
             *grow = 0;
+            /* пустое дерево: */
+            if (nach == 0) {
+                nach = new avl_tree_node<T> ((avl_tree_node<T>&&)x);
+                if (!nach){
+                    delete_subtree(root);
+                    return io_status::memory;
+                }
+                if (nach) {
+                    nach->left = nach->right = 0;
+                    nach->balance = 0;
+                    *grow = 1;
+                }
+                return nach;
+            }
             /* непустое дерево: */
-            if (*x <= *root){ // левая балансировка:
-                root->left = AddBalance_(x, root->left, &incr);
+            if (*x <= *nach){ // левая балансировка:
+                nach->left = AddBalance_(x, nach->left, &incr);
                 if (incr){
-                    switch (root->balance){
+                    switch (nach->balance){
                         case 0:
-                            root->balance = -1;
+                            nach->balance = -1;
                             *grow = 1;
                             break;
                         case 1:
-                            root->balance = 0;
+                            nach->balance = 0;
                             break;
                         case -1:
-                            switch (root->left->balance){
+                            switch (nach->left->balance){
                                 case -1:
-                                    root = L1(root);
+                                    nach = L1(nach);
                                     break;
                                 case 1:
-                                    root = L2(root);
+                                    nach = L2(nach);
                             }
                     }
                 }
             }
             else{ // правая балансировка:
-                root->right = AddBalance_(x, root->right, &incr);
+                nach->right = AddBalance_(x, nach->right, &incr);
                 if (incr){
-                    switch (root->balance){
+                    switch (nach->balance){
                         case 0:
-                            root->balance = 1;
+                            nach->balance = 1;
                             *grow = 1;
                             break;
                         case -1:
-                            root->balance = 0;
+                            nach->balance = 0;
                             break;
                         case 1:
-                            switch (root->right->balance){
+                            switch (nach->right->balance){
                                 case 1:
-                                    root = R1(root);
+                                    nach = R1(nach);
                                     break;
                                 case -1:
-                                    root = R2(root);
+                                    nach = R2(nach);
                             }
                     }
                 }
             }
-            return root;
+            return nach;
         }
     private:
         static void delete_subtree (avl_tree_node<T> * curr){
