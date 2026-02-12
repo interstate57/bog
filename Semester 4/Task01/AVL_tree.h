@@ -12,9 +12,15 @@ class avl_tree_node : public T
         avl_tree_node () = default;
         avl_tree_node (const avl_tree_node<T>& x) = delete;
         avl_tree_node (avl_tree_node<T>&& x) = default;
-        ~avl_tree_node () = default;
+        ~avl_tree_node (){
+            erase_links();
+        }
         avl_tree_node<T>& operator= (const avl_tree_node<T>& x) = delete;
         avl_tree_node<T>& operator= (avl_tree_node<T>&& x) = default;
+    private:
+        void erase_links(){
+            left = 0; right = 0; balance = 0;
+        }
     friend class avl_tree<T>;
 };
 template <class T>

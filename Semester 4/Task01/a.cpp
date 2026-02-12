@@ -32,5 +32,6 @@ int main(int argc, char* argv[]){
         return 3;
     }while(0);
     a->print(r);
+    delete a;
     return 0;
 }
