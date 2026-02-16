@@ -34,6 +34,7 @@ int main(int argc, char* argv[]){
         return 3;
     }while(0);
     a->print(r);
+    printf("\n");
     const char * s_all = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     task = 1;
     t_all = clock();
@@ -74,8 +75,6 @@ int main(int argc, char* argv[]){
     t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("%s : Task = %d S = %s Result = %d Elapsed = %.2f\n", argv[0], task, s_all, res_all, t_all);
     printf ("%s : Task = %d S = %s Result = %d Elapsed = %.2f\n", argv[0], task, s, res, t);
-    printf("\n");
-    printf("%d\n", a->is_balanced());
     delete a;
     return 0;
 }
