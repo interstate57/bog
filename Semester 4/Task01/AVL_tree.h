@@ -143,7 +143,7 @@ class avl_tree
                 }
                 return nach;
             }
-            if (x <= *nach){
+            if (x < *nach){
                 nach->left = AddBalance(x, nach->left, &incr);
                 if (incr){
                     switch (nach->balance){
