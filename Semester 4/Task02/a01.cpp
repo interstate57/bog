@@ -48,6 +48,6 @@ int main(int argc, char * argv[]) {
 		}
 		return 3;
 	}
-    	printf("%s: Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, cnt, t); 
+    printf("%s: Task = %d Result = %d Elapsed = %.2f\n", argv[0], task, cnt, t); 
 	return 0;
 }

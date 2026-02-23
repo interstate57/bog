@@ -45,10 +45,8 @@ class request_b_tree {
                 for (i = 0; str[j + i] && spaces[(unsigned int)str[j + i]] != 1; ++i);
                 del_char = str[j + i];
                 str[j + i] = '\0';
-                printf("%s\n", str + j);
                 std::unique_ptr<char *> dop = std::make_unique<char *>(str + j);
                 if (tree->find_word(dop) == 1) {
-                    printf("1\n");
                     str[j + i] = del_char;
                     return 1;
                 }

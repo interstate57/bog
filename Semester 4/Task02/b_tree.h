@@ -51,11 +51,14 @@ class b_tree_node
             int l = 0, r = size, m;
             while (l != r){
                 m = (l + r) / 2;
-                if (values[m] < x)
+                printf("%s %s\n", *values[m].get(), *x.get());
+                if (strcmp(*values[m].get(), *x.get())){
                     l = m + 1;
+                }
                 else
                     r = m;
             }
+            //printf("%d\n", l);
             return l;
         }
         friend class b_tree<T>;
@@ -144,8 +147,8 @@ class b_tree
         int find_word(T& word) {
             b_tree_node<T> *curr = root;
             int index = curr->bin_search(word);
-            printf("%s\n", *word.get());
-            printf("%s\n", *curr->values[index].get());
+            //printf("%s\n", *word.get());
+            //printf("%s\n", *curr->values[index].get());
             if (index < curr->size && strcmp(*curr->values[index].get(), *word.get())) {
                 return 1;
             }
