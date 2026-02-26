@@ -106,13 +106,11 @@ class rb_tree
 			if (!curr) {
 				return io_status::memory;
 			}
-            int len = strlen(*str.get()) + 1;
-			curr->word = std::make_unique<char *>();
+			curr->word = std::make_unique<char *>(*str.get());
 			if (!(curr->word)) {
 				delete curr;
 				return io_status::memory;
 			}
-			strcpy (*curr->word.get(), *str.get());
 			add_node(curr);
 			return io_status::success;
 		}

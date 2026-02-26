@@ -140,7 +140,7 @@ class request_4{
             char* dop1;
             char* dop2;
             char* sr = strtok_r(x, t, &dop1);
-            char* s_word = strtok_r(x, t, &dop2);
+            char* s_word = strtok_r(s, t, &dop2);
             int i = 0;
             while (sr){
                 if (!s_word)
@@ -168,8 +168,8 @@ class request_4{
                     return io_status::parsing_error;
                 }
                 i += 1;
-                sr = strtok_r(x, t, &dop1);
-                s_word = strtok_r(x, t, &dop2);
+                sr = strtok_r(nullptr, t, &dop1);
+                s_word = strtok_r(nullptr, t, &dop2);
             }
             if (s_word){
                 return io_status::parsing_error;
@@ -192,31 +192,37 @@ class request_4{
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                         case sravneniya::gr:
                             if (strcmp(str + j, s_words[k]) > 0){
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                         case sravneniya::le:
                             if (strcmp(str + j, s_words[k]) <= 0){
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                         case sravneniya::ge:
                             if (strcmp(str + j, s_words[k]) >= 0){
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                         case sravneniya::e:
                             if (strcmp(str + j, s_words[k]) == 0){
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                         case sravneniya::ne:
                             if (strcmp(str + j, s_words[k]) != 0){
                                 str[j + i] = del_char;
                                 return 1;
                             }
+                            break;
                     }
                 }
                 str[j + i] = del_char;
@@ -246,7 +252,7 @@ class request_5{
             char* dop1;
             char* dop2;
             char* sr = strtok_r(x, t, &dop1);
-            char* s_word = strtok_r(x, t, &dop2);
+            char* s_word = strtok_r(s, t, &dop2);
             int i = 0;
             while (sr){
                 if (!s_word)
@@ -274,8 +280,8 @@ class request_5{
                     return io_status::parsing_error;
                 }
                 i += 1;
-                sr = strtok_r(x, t, &dop1);
-                s_word = strtok_r(x, t, &dop2);
+                sr = strtok_r(nullptr, t, &dop1);
+                s_word = strtok_r(nullptr, t, &dop2);
             }
             if (s_word){
                 return io_status::parsing_error;
@@ -298,37 +304,91 @@ class request_5{
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                         case sravneniya::gr:
                             if (strcmp(str + j, s_words[k]) <= 0){
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                         case sravneniya::le:
                             if (strcmp(str + j, s_words[k]) > 0){
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                         case sravneniya::ge:
                             if (strcmp(str + j, s_words[k]) < 0){
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                         case sravneniya::e:
                             if (strcmp(str + j, s_words[k]) != 0){
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                         case sravneniya::ne:
                             if (strcmp(str + j, s_words[k]) == 0){
                                 str[j + i] = del_char;
                                 return 0;
                             }
+                            break;
                     }
                 }
                 str[j + i] = del_char;
                 j += i;
                 for (; str[j] && spaces[(unsigned int)str[j]] == 1; j++);
-            }
+            }            
             return 1;
+        }
+};
+
+class request_5{
+    private:
+        char spaces[256] = {};
+        char dop[LEN] = {};
+        int special_symbols[LEN] = {};
+        int begining_of_words[LEN] = {};
+        int cnt_words = 0;
+    public:
+        request_5() = default;
+        ~request_5() = default;
+        void parse_t(const char* t){
+            int i;
+            for (i = 0; t[i]; ++i) { 
+                spaces[(unsigned int)t[i]] = 1;
+            }
+        }
+        io_status parse_s(char* s, char* t){
+            int i = 0;
+            int j = 0;
+            int prodolzh_slova = 0;
+            for (j = 0; s[j] && spaces[(unsigned int)s[j]] == 1; j++);
+            for (; s[j];){
+                if (spaces[(unsigned int)s[j]] == 1){
+                    continue;
+                }
+                else if (s[j] == '\\'){
+
+                }
+                else if (s[j] == '_'){
+                    dop[i] = s[j];
+                    special_symbols[i] = 1;
+                    i += 1;
+                }
+                else{
+                    if (prodolzh_slova == 1){
+                        dop[i] = s[j];
+                        i += 1;
+                    }
+                    else{
+                        begining_of_words[cnt_words] = i;
+                        cnt_words += 1;
+                        prodolzh_slova = 1;
+                    }
+                }
+            }
         }
 };

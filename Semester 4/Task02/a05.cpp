@@ -3,24 +3,26 @@
 #include <stdio.h>
 
 int main(int argc, char * argv[]) {
-    int task = 2;
+    int task = 5;
 	char *a;
     char* b;
     char* spaces;
 	char *s;
+    char* x;
 	double t; 
 	io_status res;
     int cnt;
-	if(!(argc == 5)){
-		printf("Usage %s: name_in name_out s t\n", argv[0]);
+	if(!(argc == 6)){
+		printf("Usage %s: name_in name_out s t x\n", argv[0]);
 		return 1;
 	}
 	a = argv[1];
 	b = argv[2];
 	s = argv[3];
 	spaces = argv[4];
+    x = argv[5];
 	t = clock();
-	res = solve2(a, b, s, spaces, &cnt);
+	res = solve5(a, b, s, spaces, x, &cnt);
 	t = (clock() - t) / CLOCKS_PER_SEC;
 	if (res != io_status::success) {
 		switch (res) {
