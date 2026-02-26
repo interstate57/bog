@@ -3,6 +3,8 @@
 #include "b_tree.h"
 #include "rb_tree.h"
 
+#define BACKSLASH '\\'
+
 
 class request_b_tree {
     private:
@@ -345,7 +347,7 @@ class request_5{
         }
 };
 
-class request_5{
+class request_6{
     private:
         char spaces[256] = {};
         char dop[LEN] = {};
@@ -353,8 +355,8 @@ class request_5{
         int begining_of_words[LEN] = {};
         int cnt_words = 0;
     public:
-        request_5() = default;
-        ~request_5() = default;
+        request_6() = default;
+        ~request_6() = default;
         void parse_t(const char* t){
             int i;
             for (i = 0; t[i]; ++i) { 
@@ -365,13 +367,30 @@ class request_5{
             int i = 0;
             int j = 0;
             int prodolzh_slova = 0;
+            int prev_back = 0;
             for (j = 0; s[j] && spaces[(unsigned int)s[j]] == 1; j++);
-            for (; s[j];){
+            prodolzh_slova = 1;
+            begining_of_words[0] = 0;
+            cnt_words += 1;
+            for (; s[j];j++){
                 if (spaces[(unsigned int)s[j]] == 1){
+                    if (prodolzh_slova == 1){
+                        prodolzh_slova = 0;
+                    }
                     continue;
                 }
-                else if (s[j] == '\\'){
-
+                else if (s[j] == BACKSLASH){
+                    if (prev_back){
+                        dop[i] = s[j];
+                        special_symbols[i] = 0;
+                        i += 1;
+                        prev_back = 0;
+                    } 
+                    else{
+                        prev_back = 1;
+                        if (!s[j + 1] || spaces[(unsigned int)s[j + 1]] == 1)
+                            return io_status::parsing_error;
+                    }
                 }
                 else if (s[j] == '_'){
                     dop[i] = s[j];
@@ -388,5 +407,49 @@ class request_5{
                     i += 1;
                 }
             }
+            begining_of_words[cnt_words] = -1;
+            return io_status::success;
+        }
+        int context_fit(char* str){
+            int i, j;
+            int l;
+            int len;
+            printf("begining: ");
+            for (i = 0; begining_of_words[i] >= 0;){
+                printf("%d ", begining_of_words[i]);
+                i++;
+            }
+            printf("\n");
+            printf("dop: " );
+            for (i = 0; dop[i];){
+                printf("%c ", dop[i]);
+                i++;
+            }
+            printf("\n");
+            for (j = 0; str[j] && spaces[(unsigned int)str[j]] == 1; j++);
+            for (; str[j];) {
+                for (i = 0; str[j + i] && spaces[(unsigned int)str[j + i]] != 1; ++i);
+                len = i;
+                for (int k = 0; k < cnt_words; k++){
+                    if (begining_of_words[k + 1] - begining_of_words[k] != len)
+                        continue;
+                    int nach_slova = begining_of_words[k];
+                    for (l = 0; l < len; l++){
+                        if (special_symbols[nach_slova + l] == 1)
+                            continue;
+                        else{
+                            if (dop[nach_slova + l] == str[j + l])
+                                continue;
+                            else
+                                break;
+                        }
+                    }
+                    if (l == len)
+                        return 1;
+                }
+                j += len;
+                for (i = 0; str[j + i] && spaces[(unsigned int)str[j + i]] != 1; ++i);
+            }
+            return 0;
         }
 };
