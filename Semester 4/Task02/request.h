@@ -379,15 +379,13 @@ class request_5{
                     i += 1;
                 }
                 else{
-                    if (prodolzh_slova == 1){
-                        dop[i] = s[j];
-                        i += 1;
-                    }
-                    else{
+                    if (prodolzh_slova == 0){
                         begining_of_words[cnt_words] = i;
                         cnt_words += 1;
                         prodolzh_slova = 1;
                     }
+                    dop[i] = s[j];
+                    i += 1;
                 }
             }
         }
