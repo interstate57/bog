@@ -11,13 +11,12 @@ io_status solve1(char* a, char* b, char* s, char* t, int m, int* r){
         fclose(in);
         return io_status::open_error_b;
     }
-    request_b_tree* tree = new request_b_tree(m);
-    tree->parse_t(t);
-    io_status ret = tree->parse_s(s, t);
+    request_b_tree tree(m);
+    tree.parse_t(t);
+    io_status ret = tree.parse_s(s, t);
     if (ret != io_status::success){
         fclose(in);
         fclose(out);
-        delete tree;
         return ret;
     }
     char buf[LEN];
@@ -29,7 +28,7 @@ io_status solve1(char* a, char* b, char* s, char* t, int m, int* r){
 				break;
 			}
 		}
-		if (tree->context_fit(buf) == 1) {
+		if (tree.context_fit(buf) == 1) {
 			fprintf(out, "%s\n", buf);
 			cnt += 1;
 		}
@@ -38,10 +37,50 @@ io_status solve1(char* a, char* b, char* s, char* t, int m, int* r){
     fclose(out);
     if (!feof(in)){
         fclose(in);
-        delete tree;
         return io_status::eof;
     }
     fclose(in);
-    delete tree;
+    return io_status::success;
+}
+
+io_status solve2(char* a, char* b, char* s, char* t, int* r){
+    FILE* in;
+    FILE* out;
+    if (!(in = fopen(a, "r"))){
+        return io_status::open_error_a;
+    }
+    if (!(out = fopen(b, "w"))){
+        fclose(in);
+        return io_status::open_error_b;
+    }
+    request_rb_tree tree;
+    tree.parse_t(t);
+    io_status ret = tree.parse_s(s, t);
+    if (ret != io_status::success){
+        fclose(in);
+        fclose(out);
+        return ret;
+    }
+    char buf[LEN];
+    int cnt = 0;
+    while(fgets(buf, LEN, in) != 0) {
+		for(int i = 0; buf[i]; ++i) {
+			if(buf[i] == '\n') {
+				buf[i] = 0; 
+				break;
+			}
+		}
+		if (tree.context_fit(buf) == 1) {
+			fprintf(out, "%s\n", buf);
+			cnt += 1;
+		}
+	}
+    *r = cnt;
+    fclose(out);
+    if (!feof(in)){
+        fclose(in);
+        return io_status::eof;
+    }
+    fclose(in);
     return io_status::success;
 }

@@ -51,8 +51,7 @@ class b_tree_node
             int l = 0, r = size, m;
             while (l != r){
                 m = (l + r) / 2;
-                printf("%s %s\n", *values[m].get(), *x.get());
-                if (strcmp(*values[m].get(), *x.get())){
+                if (strcmp(*values[m].get(), *x.get()) < 0){
                     l = m + 1;
                 }
                 else
@@ -149,14 +148,14 @@ class b_tree
             int index = curr->bin_search(word);
             //printf("%s\n", *word.get());
             //printf("%s\n", *curr->values[index].get());
-            if (index < curr->size && strcmp(*curr->values[index].get(), *word.get())) {
+            if (index < curr->size && strcmp(*curr->values[index].get(), *word.get()) == 0) {
                 return 1;
             }
             else {
                 while (curr->children[index] != nullptr) {
                     curr = curr->children[index];
                     index = curr->bin_search(word);
-                    if (index < curr->size && strcmp(*curr->values[index].get(), *word.get())) {
+                    if (index < curr->size && strcmp(*curr->values[index].get(), *word.get()) == 0) {
                         return 1;
                     }
                 }

@@ -19,6 +19,7 @@ class rb_tree_node
         rb_tree_node<T>* left = 0;
         rb_tree_node<T>* right = 0;
         rb_tree_node<T>* parent = 0;
+        T word = 0;
         colors color = colors::invalid;
     public:
         rb_tree_node () = default;
@@ -96,6 +97,42 @@ class rb_tree
             }
             return io_status::success;
         }
+        io_status add_word(T& str) {
+			rb_tree_node<T> *curr;
+			if (*str == nullptr) {
+				return io_status::success;
+			}
+			curr = new rb_tree_node<T>();
+			if (!curr) {
+				return io_status::memory;
+			}
+            int len = strlen(*str.get()) + 1;
+			curr->word = std::make_unique<char *>();
+			if (!(curr->word)) {
+				delete curr;
+				return io_status::memory;
+			}
+			strcpy (*curr->word.get(), *str.get());
+			add_node(curr);
+			return io_status::success;
+		}
+
+		int find_word(T& str) {
+			rb_tree_node<T> *curr = root;
+			while (curr) {
+				int cmp = strcmp(*curr->word.get(), *str);
+				if (cmp == 0) {
+					return 1;
+				}
+				else if (cmp > 0) {
+					curr = curr->left;
+				}
+				else {
+					curr = curr->right;
+				}
+			}
+			return 0;
+		}
         void add_node (rb_tree_node<T>* x){
             if (root == 0){
                 root = x;
@@ -106,7 +143,7 @@ class rb_tree
             }
         }
         void add_rb_subtree (rb_tree_node<T>* curr, rb_tree_node<T>* x){
-            if (*x < *curr){
+            if (strcmp(*x->word, *curr->word) < 0){
                 if (curr->left == 0){
                     curr->left = x;
                     x->parent = curr;
