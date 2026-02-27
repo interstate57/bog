@@ -412,6 +412,7 @@ class request_6{
             int i, j;
             int l;
             int len;
+            /*
             printf("begining: ");
             for (i = 0; i <= cnt_words; ++i){
                 printf("%d ", begining_of_words[i]);
@@ -423,13 +424,13 @@ class request_6{
                 i++;
             }
             printf("\n");
-            
+            */
             for (j = 0; str[j] && is_space(str[j]); j++);
             for (; str[j];) {
                 for (i = 0; str[j + i] && !is_space(str[j + i]); ++i);
                 len = i;
                 for (int k = 0; k < cnt_words; k++){
-                    int error = 0;
+                    bool error = false;
                     if (begining_of_words[k + 1] - begining_of_words[k] != len)
                         continue;
                     int nach_slova = begining_of_words[k];
@@ -440,12 +441,12 @@ class request_6{
                             if (dop[nach_slova + l] == str[j + l])
                                 continue;
                             else{
-                                error = 1;
+                                error = true;
                                 break;
                             }
                         }
                     }
-                    if (l + 1 == len && !error)
+                    if ((l == len) && !error)
                         return 1;
                 }
                 j += len;
