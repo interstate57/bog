@@ -181,7 +181,7 @@ io_status solve6(char* a, char* b, char* s, char* t, int* r){
     }
     request_6 request;
     request.parse_t(t);
-    io_status ret = request.parse_s(s, t);
+    io_status ret = request.parse_s(s);
     if (ret != io_status::success){
         fclose(in);
         fclose(out);

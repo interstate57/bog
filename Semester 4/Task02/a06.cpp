@@ -19,6 +19,7 @@ int main(int argc, char * argv[]) {
 	b = argv[2];
 	s = argv[3];
 	spaces = argv[4];
+	printf("%s\n", s);
 	t = clock();
 	res = solve6(a, b, s, spaces, &cnt);
 	t = (clock() - t) / CLOCKS_PER_SEC;

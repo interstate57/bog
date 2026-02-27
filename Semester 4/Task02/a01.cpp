@@ -41,7 +41,7 @@ int main(int argc, char * argv[]) {
 				printf("Cannot allocate memory in %s\n", a);
 				break;
 			case io_status::parsing_error:
-				printf("Wrong format of query string \"%s\"\n", s);
+				printf("Wrong format of string\n");
 				break;
 			default:
 				printf("Unknown error\n");

@@ -363,7 +363,98 @@ class request_6{
                 spaces[(unsigned int)t[i]] = 1;
             }
         }
-        io_status parse_s(char* s, char* t){
+        int is_space(char symbol) {
+            return spaces[(unsigned int)symbol] == 1;
+        }
+        io_status parse_s(char* s){
+            printf("** xyu\n");
+            int inside_word = 0;
+            int prev_back = 0;
+            int i = 0;
+
+            for (int j = 0; s[j]; j++){
+                //printf("");
+                if (is_space(s[j])) {
+                    if (prev_back) {
+                        return io_status::parsing_error;
+                    }
+                    if (inside_word) {
+                        inside_word = 0;
+                    }
+                    continue;
+                }
+                
+                if (s[j] == BACKSLASH && !prev_back) {
+                    prev_back = 1;
+                    continue;
+                }
+
+                if (!inside_word) {
+                    begining_of_words[cnt_words] = i;
+                    inside_word = 1;
+                    cnt_words += 1;
+                }
+                printf("%d %d %c\n", i, j, s[j]);
+                dop[i] = s[j];
+                special_symbols[i] = (s[j] == '_' && !prev_back);
+                i++;
+                prev_back = 0;
+            }
+            begining_of_words[cnt_words] = i;
+            if (prev_back)
+                return io_status::parsing_error;
+            return io_status::success;
+        }
+
+        
+        int context_fit(char* str){
+            printf("Processing %s\n", str);
+            int i, j;
+            int l;
+            int len;
+            printf("begining: ");
+            for (i = 0; i <= cnt_words; ++i){
+                printf("%d ", begining_of_words[i]);
+            }
+            printf("\n");
+            printf("dop: " );
+            for (i = 0; dop[i];){
+                printf("%c ", dop[i]);
+                i++;
+            }
+            printf("\n");
+            
+            for (j = 0; str[j] && is_space(str[j]); j++);
+            for (; str[j];) {
+                for (i = 0; str[j + i] && !is_space(str[j + i]); ++i);
+                len = i;
+                for (int k = 0; k < cnt_words; k++){
+                    int error = 0;
+                    if (begining_of_words[k + 1] - begining_of_words[k] != len)
+                        continue;
+                    int nach_slova = begining_of_words[k];
+                    for (l = 0; l < len; l++){
+                        if (special_symbols[nach_slova + l])
+                            continue;
+                        else{
+                            if (dop[nach_slova + l] == str[j + l])
+                                continue;
+                            else{
+                                error = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if (l + 1 == len && !error)
+                        return 1;
+                }
+                j += len;
+                for (; str[j] && spaces[(unsigned int)str[j]] == 1; j++);
+            }
+            return 0;
+        }
+
+        io_status parse_s_old(char* s, char* t){
             int i = 0;
             int j = 0;
             int prodolzh_slova = 0;
@@ -377,25 +468,33 @@ class request_6{
                     if (prodolzh_slova == 1){
                         prodolzh_slova = 0;
                     }
+                    prev_back = 0;
                     continue;
                 }
                 else if (s[j] == BACKSLASH){
                     if (prev_back){
                         dop[i] = s[j];
-                        special_symbols[i] = 0;
                         i += 1;
                         prev_back = 0;
                     } 
                     else{
                         prev_back = 1;
+                        if (prodolzh_slova == 0){
+                            begining_of_words[cnt_words] = i;
+                            cnt_words += 1;
+                            prodolzh_slova = 1;
+                        }
                         if (!s[j + 1] || spaces[(unsigned int)s[j + 1]] == 1)
                             return io_status::parsing_error;
                     }
                 }
                 else if (s[j] == '_'){
                     dop[i] = s[j];
-                    special_symbols[i] = 1;
+                    if (!prev_back)
+                        special_symbols[i] = 1;
                     i += 1;
+                    prev_back = 0;
+
                 }
                 else{
                     if (prodolzh_slova == 0){
@@ -405,51 +504,11 @@ class request_6{
                     }
                     dop[i] = s[j];
                     i += 1;
+                    prev_back = 0;
                 }
             }
-            begining_of_words[cnt_words] = -1;
+            begining_of_words[cnt_words] = i;
+            begining_of_words[cnt_words + 1] = -1;
             return io_status::success;
-        }
-        int context_fit(char* str){
-            int i, j;
-            int l;
-            int len;
-            printf("begining: ");
-            for (i = 0; begining_of_words[i] >= 0;){
-                printf("%d ", begining_of_words[i]);
-                i++;
-            }
-            printf("\n");
-            printf("dop: " );
-            for (i = 0; dop[i];){
-                printf("%c ", dop[i]);
-                i++;
-            }
-            printf("\n");
-            for (j = 0; str[j] && spaces[(unsigned int)str[j]] == 1; j++);
-            for (; str[j];) {
-                for (i = 0; str[j + i] && spaces[(unsigned int)str[j + i]] != 1; ++i);
-                len = i;
-                for (int k = 0; k < cnt_words; k++){
-                    if (begining_of_words[k + 1] - begining_of_words[k] != len)
-                        continue;
-                    int nach_slova = begining_of_words[k];
-                    for (l = 0; l < len; l++){
-                        if (special_symbols[nach_slova + l] == 1)
-                            continue;
-                        else{
-                            if (dop[nach_slova + l] == str[j + l])
-                                continue;
-                            else
-                                break;
-                        }
-                    }
-                    if (l == len)
-                        return 1;
-                }
-                j += len;
-                for (i = 0; str[j + i] && spaces[(unsigned int)str[j + i]] != 1; ++i);
-            }
-            return 0;
         }
 };
