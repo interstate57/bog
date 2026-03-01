@@ -575,7 +575,7 @@ class request_8{
             int i, j;
             int l;
             int len;
-            /*
+            
             printf("begining: ");
             for (i = 0; i <= cnt_words; ++i){
                 printf("%d ", begining_of_words[i]);
@@ -587,7 +587,6 @@ class request_8{
                 i++;
             }
             printf("\n");
-            */
             for (j = 0; str[j] && is_space(str[j]); j++);
             for (; str[j];) {
                 for (i = 0; str[j + i] && !is_space(str[j + i]); ++i);
