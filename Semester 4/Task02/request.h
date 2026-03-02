@@ -560,9 +560,11 @@ class request_8{
                     i++;
                     prev_back = 0;
                 }
-                dop[i] = s[j];
-                i++;
-                prev_back = 0;
+                else{
+                    dop[i] = s[j]; // !
+                    i++;
+                    prev_back = 0;
+                }
             }
             begining_of_words[cnt_words] = i;
             if (prev_back)
@@ -575,7 +577,7 @@ class request_8{
             int i, j;
             int l;
             int len;
-            
+            printf("In : %s\n", str);
             printf("begining: ");
             for (i = 0; i <= cnt_words; ++i){
                 printf("%d ", begining_of_words[i]);
@@ -585,6 +587,11 @@ class request_8{
             for (i = 0; dop[i];){
                 printf("%c ", dop[i]);
                 i++;
+            }
+            printf("\n");
+            printf("special symbols: " );
+            for (i = 0; i < cnt_words; ++i){
+                printf("%d ", special_symbols[i]);
             }
             printf("\n");
             for (j = 0; str[j] && is_space(str[j]); j++);
@@ -611,8 +618,11 @@ class request_8{
                             }
                         }
                     }
-                    if ((l == len) && !error)
+                    if ((l == len) && !error){
+                        printf("%d\n", k);
                         return 1;
+                    }
+                    
                 }
                 j += len;
                 for (; str[j] && spaces[(unsigned int)str[j]] == 1; j++);
