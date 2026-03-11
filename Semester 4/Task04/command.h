@@ -77,6 +77,22 @@ class record
                             break;
                     }
                     return false;
+                case condition::nlike:
+                    like_type type = find_type(*this);
+                    //std::cout << "type : " << type << std::endl;
+                    switch (type){
+                        case like_type::percent:
+                            return false;
+                        case like_type::underline:
+                            return !solve_for_underline(y);
+                        case like_type::in_between:
+                            return !solve_for_brackets(y);
+                        case like_type::not_in_between:
+                            return !solve_for_brackets_with_cap(y);
+                        default:
+                            break;
+                    }
+                    return false;
             }
             return false;
         }
@@ -100,6 +116,8 @@ class record
                     return phone <= y.phone;
                 case condition::like: // strings only: match pattern
                     return false; // cannot be used for phone
+                case condition::nlike:
+                    return false;
             }
             return false;
         }
@@ -123,6 +141,8 @@ class record
                     return group <= y.group;
                 case condition::like: // strings only: match pattern
                     return false; // cannot be used for group
+                case condition::nlike:
+                    return false;
             }
             return false;
         }
@@ -213,6 +233,7 @@ class command : public record
         condition c_phone = condition::none;
         condition c_group = condition::none;
         operation op = operation::none;
+        ordering c_order[3] = {ordering::none, ordering::none, ordering::none};
     public:
         command () = default;
         ~command () = default;
@@ -223,7 +244,154 @@ class command : public record
         // Example 2: "name like St%" parsed to
         // (command::name = "St%", command::c_name = condition::like)
         // other fields are unspecified
-        bool mini_parse (const char * string){
+        const ordering* get_ordering() const{
+            return (const ordering*) c_order;
+        }
+        void set_phone(int x){
+            this->phone = x;
+        }
+        void set_group(int x){
+            this->group = x;
+        }
+        bool set_name(const char *n){
+            if (n){
+                name = std::make_unique<char []> (strlen (n) + 1);
+                if (!name) return false;
+                strcpy (name.get(), n);
+            }
+            return true;
+        }
+        bool first_parse (const char* string){
+            int i = 0;
+            int j = 0;
+            i += skip_spaces(string);
+            if (string[i] == '*'){
+                c_order[0] = ordering::name;
+                c_order[1] = ordering::phone;
+                c_order[2] = ordering::group;
+                i += 1;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && string[j] != ' '; j++);
+                int len = j - i;
+                if (strncmp(string + i, "where", len) == 0){
+                    i = j;
+                    i += skip_spaces(string + i);
+                    bool second_res = second_parse(string + i);
+                    if (!second_res)
+                        return 0;
+                }
+                else{
+                    return 0;
+                }
+            }
+            else{
+                for (j = i; string[j] && (string[j] != ',' || string[j] != ' '); j++);
+                int len_first_word = j - i;
+                if (len_first_word == 5){
+                    if (strncmp(string, "phone", len_first_word) == 0)
+                        c_order[0] = ordering::phone;
+                    else if (strncmp(string, "group", len_first_word) == 0)
+                        c_order[0] = ordering::group;
+                    else
+                        return 0;
+                }
+                else if (len_first_word == 4 && strncmp(string, "name", len_first_word) == 0)
+                    c_order[0] = ordering::name;
+                else
+                    return 0;
+                i = j + 1;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && (string[j] != ',' || string[j] != ' '); j++);
+                int len_second_word = j - i;
+                if (len_second_word == 5){
+                    if (strncmp(string, "phone", len_second_word) == 0)
+                        c_order[1] = ordering::phone;
+                    else if (strncmp(string, "group", len_second_word) == 0)
+                        c_order[1] = ordering::group;
+                    else if (strncmp(string, "where", len_second_word) == 0){
+                        i = j;
+                        i += skip_spaces(string + i);
+                        bool second_res = second_parse(string + i);
+                        if (!second_res)
+                            return 0;
+                    }
+                    else
+                        return 0;
+                }
+                else if (len_second_word == 4 && strncmp(string, "name", len_second_word) == 0)
+                    c_order[1] = ordering::name;
+                else
+                    return 0;
+                i = j + 1;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && string[j] != ' '; j++);
+                int len_third_word = j - i;
+                if (len_third_word == 5){
+                    if (strncmp(string, "phone", len_third_word) == 0)
+                        c_order[2] = ordering::phone;
+                    else if (strncmp(string, "group", len_third_word) == 0)
+                        c_order[2] = ordering::group;
+                    else if (strncmp(string, "where", len_third_word) == 0){
+                        i = j;
+                        i += skip_spaces(string + i);
+                        bool second_res = second_parse(string + i);
+                        if (!second_res)
+                            return 0;
+                    }
+                    else
+                        return 0;
+                }
+                else if (len_third_word == 4 && strncmp(string, "name", len_third_word) == 0)
+                    c_order[2] = ordering::name;
+                else
+                    return 0;
+                i = j;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && string[j] != ' '; j++);
+                int len_forth_word = j - i;
+                if (strncmp(string, "where", len_forth_word) == 0){
+                    i = j;
+                    i += skip_spaces(string + i);
+                    bool second_res = second_parse(string + i);
+                    if (!second_res)
+                        return 0;
+                }
+                else
+                    return 0;
+            }
+            return 1;
+        }
+        bool second_parse (const char* string){
+            int i = 0;
+            int j = 0;
+            int res = init("", 0, 0);
+            bool mini_res = mini_parse(string, &i);
+            if (!mini_res)
+                return 0;
+            if (i == 0)
+                return 1;
+            else{
+                for (j = i; string[j] && string[j] != ' '; j++);
+                int len_first_word = j - i;
+                if (len_first_word == 3 && strncmp(string + i, "lor", len_first_word) == 0){
+                    if (op == operation::land)
+                        return 0;
+                    op = operation::lor;
+                }
+                else if (len_first_word == 4 && strncmp(string + i, "land", len_first_word) == 0){
+                    if (op == operation::lor)
+                        return 0;
+                    op = operation::land;
+                }
+                else
+                    return 0;
+                i = j;
+                i += skip_spaces(string + i);
+            }
+            return second_parse(string + i);
+            
+        }
+        bool mini_parse (const char * string, int* kon){
             int i = 0;
             int j = 0;
             condition dop;
@@ -287,8 +455,8 @@ class command : public record
             char str_dop[LEN] = {};
             strncpy(str_dop, string + i, len_third_word);
             if (c_name != condition::none){
-                int res = init(str_dop, 0, 0);
-                if (res == -1)
+                bool res = set_name(str_dop);
+                if (!res)
                     return 0;
                 
             }
@@ -298,18 +466,19 @@ class command : public record
                     return 0;
                 }
                 if (c_phone != condition::none){
-                    int res = init("", number, 0);
-                    if (res == -1)
-                        return 0;
+                    set_phone(number);
                 }
                 else{
-                    int res = init("", 0, number);
-                    if (res == -1)
-                        return 0;
+                    set_group(number);
                 }
             }
             else{
                 return 0;
+            }
+            if (string[j] == ' '){
+                i = j;
+                i += skip_spaces(string + i);
+                *kon = i;
             }
             return 1;
         }
@@ -327,14 +496,41 @@ class command : public record
         }
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{
-            if (c_phone != condition::none){
-                return compare_phone(c_phone, x);
-            }
-            else if (c_group != condition::none){
-                return compare_group(c_group, x);
-            }
-            else if (c_name != condition::none){
-                return compare_name(c_name, x);
+            switch (op){
+                case operation::lor:
+                    int cnt = 0;
+                    if (c_phone != condition::none){
+                        cnt += compare_phone(c_phone, x);
+                    }
+                    if (c_group != condition::none){
+                        cnt += compare_group(c_group, x);
+                    }
+                    if (c_name != condition::none){
+                        cnt += compare_name(c_name, x);
+                    }
+                    if (cnt != 0)
+                        return 1;
+                    return 0;
+                case operation::land:
+                    int cnt1 = 0;
+                    int cnt2 = 0;
+                    if (c_phone != condition::none){
+                        cnt1 += compare_phone(c_phone, x);
+                        cnt2 += 1;
+                    }
+                    if (c_group != condition::none){
+                        cnt1 += compare_group(c_group, x);
+                        cnt2 += 1;
+                    }
+                    if (c_name != condition::none){
+                        cnt1 += compare_name(c_name, x);
+                        cnt2 += 1;
+                    }
+                    if (cnt1 == cnt2)
+                        return 1;
+                    return 0;
+                default:
+                    break;
             }
             return 0;
         }
