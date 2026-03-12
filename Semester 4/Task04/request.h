@@ -134,6 +134,122 @@ class pair{
 
 };
 
+class request_7 {
+    private:
+        char dop[LEN] = {};
+        char special_symbols[LEN] = {};
+        char spaces[256] = {};
+        int words_index[LEN/2 + 1] = {};
+        int cnt_words = 0;
+    public:
+        request_7() = default;
+        ~request_7() = default;
+        void parse_t(const char* t){
+            int i;
+            for (i = 0; t[i]; ++i) { 
+                spaces[(unsigned int)t[i]] = 1;
+            }
+        }
+        int is_space(char symbol) {
+            return spaces[(unsigned int)symbol] == 1;
+        }
+	    io_status parse_s(const char *s) {
+            int i = 0, j = 0, k = 0;
+            for(i = 0; s[i] && is_space(s[i]); ++i);
+            words_index[j++] = k;
+            for (; s[i]; ++i) {
+                if (is_space(s[i])) {
+                    for(; s[i] && is_space(s[i]); ++i);
+                    words_index[j++] = k;
+                    --i;
+                    continue;
+                }
+                if (s[i] == '\\') {
+                    i++;
+                    if (!s[i] ||is_space(s[i])) {
+                        return io_status::parsing_error;
+                    }
+                    else {
+                        dop[k] = s[i];
+                    }
+                    
+                }
+                else if (s[i] == '%') {
+                    special_symbols[k] = 1;
+                    dop[k] = '%';
+                }
+                else {
+                    dop[k] = s[i];
+                }
+                k++;
+            }
+            words_index[j++] = k;
+            cnt_words = j-1;
+            return io_status::success;
+        }
+        int context_fit(char *str) {
+            int a_ind, i, k, len, s_begin, j, s_len;
+            char symb = '\0';
+            for (a_ind = 0; str[a_ind] && is_space(str[a_ind]); ++a_ind);
+            for (; str[a_ind];) {
+                for (i = 0; str[a_ind + i] && !is_space(str[a_ind + i]); ++i);
+                len = i;
+                for (k = 0; k < cnt_words; ++k) {
+                    s_begin = words_index[k];
+                    s_len = words_index[k + 1] - words_index[k];
+                    if (special_symbols[s_begin] == 1 && s_len > 1 && special_symbols[s_begin + s_len - 1] == 1) {
+                        dop[s_begin + s_len - 1] = '\0';
+                        symb = str[a_ind + i];
+                        if (str[a_ind + i]) {
+                            str[a_ind + i] = '\0';
+                        }
+                        if (strstr(str + a_ind, dop + s_begin + 1) != nullptr) {
+                            str[a_ind + i] = symb;
+                            symb = '\0';
+                            dop[s_begin + s_len - 1] = '%';
+                            return 1;
+                        }
+                        str[a_ind + i] = symb;
+                        symb = '\0';
+                        dop[s_begin + s_len - 1] = '%';
+                    }
+                    else { 
+                        int flag = 0;
+                        for (i = 0; i < s_len; ++i) {
+                            if (flag == 1) {
+                                break;
+                            }
+                            if (special_symbols[s_begin + i] == 1) {
+                                for (j = 1; j < s_len - i; ++j) {
+                                    if (i + j > len || dop[s_begin + s_len - j] != str[a_ind + len - j]) {
+                                        break;
+                                    }
+                                }
+                                if (j == s_len - i) {
+                                    return 1;
+                                }
+                                else {
+                                    flag = 1;
+                                }
+                            }
+                            else {
+                                if (!str[a_ind + i] || dop[s_begin + i] != str[a_ind + i]) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (i == s_len && len == s_len) {
+                            return 1;
+                        }
+                    }
+                }
+                a_ind += len;
+                for (; str[a_ind] && is_space(str[a_ind]); ++a_ind);
+            }
+            return 0;
+        }
+};
+
 class request_8{
     private:
         char spaces[256] = {};

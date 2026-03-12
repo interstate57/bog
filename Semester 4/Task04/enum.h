@@ -79,8 +79,10 @@ std::ostream& operator<<(std::ostream& os, const like_type& c) {
             str = "[]"; break;
         case like_type::not_in_between:
             str = "[^]"; break;
+        case like_type::nothing:
+            str = "nothing"; break;
         default:
-            str = "another";
+            str = "another"; break;
     }
     os << str;
     return os;
@@ -95,6 +97,24 @@ enum class ordering
     phone, // print phone
     group, // print group
 };
+
+std::ostream& operator<<(std::ostream& os, const ordering& c) {
+    const char* str;
+    switch (c) {
+        case ordering::name:
+            str = "name "; break;
+        case ordering::phone:
+            str = "phone "; break;
+        case ordering::group:
+            str = "group "; break;
+        case ordering::none:
+            str = "none "; break;
+        default:
+            str = "another"; break;
+    }
+    os << str;
+    return os;
+}
 
 enum class operation
 {
