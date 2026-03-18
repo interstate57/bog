@@ -15,6 +15,7 @@ enum class io_status
     memory,
     wrong_file,
     parsing_error,
+    quit,
 };
 
 enum class condition

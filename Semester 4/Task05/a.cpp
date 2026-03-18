@@ -2,6 +2,8 @@
 #include "list2.h"
 #include "command.h"
 #include "time.h"
+#include "parser.h"
+#include "list.h"
 
 int main(int argc, char* argv[]){
     char* name = 0;
@@ -32,21 +34,44 @@ int main(int argc, char* argv[]){
     }while(0);
     parser com_parse(stdin);
     command c;
+    int fl = 0;
+    int fl1 = 0;
+    list_node* answer;
+    t = clock();
     while (com_parse.read(c) == io_status::success){
-        list2_node* curr;
-        for (curr = a.get_head(); curr; curr = curr->get_next()){
-            if (c.apply(*curr)){
-                curr->print(c.get_ordering(), stdout);
-                res += 1;
-            }
+        if (fl == 1)
+            break;
+        switch (c.get_command_type()){
+            case command_type::quit:
+                printf("\n");
+                fl = 1;
+                break;
+            case command_type::del:
+                a.delete_command(c);
+                break;
+            case command_type::insert:
+                a.insert_command(c);
+                break;
+            case command_type::select:
+                answer = a.select_command(c, &fl1);
+                if (fl1 == 1){
+                    printf("Cannot allocate memory!\n"); 
+                    return 5;
+                }
+                res += answer->len();
+                answer->print(c);
+                break;
+            default:
+                break;
         }
         printf("\n");
     }
-    if (!feof(stdin)) {
+    if (!feof(stdin) && fl == 0) {
         printf("Wrong format in the file!\n");
         a.delete_list();
         return 4;
     }
+    t = (clock() - t) / CLOCKS_PER_SEC;
     printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
     a.delete_list();
     return 0;

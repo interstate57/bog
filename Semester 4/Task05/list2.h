@@ -2,6 +2,7 @@
 #define LIST2_H
 #include "enum.h"
 #include "command.h"
+#include "list.h"
 
 
 class list2_node : public record
@@ -75,6 +76,21 @@ class list2
             }
             return io_status::success;
         }
+        io_status insert(const char* name, int phone, int group){
+            list2_node* new_head = new list2_node;
+            if (!new_head)
+                return io_status::memory;
+            list2_node* old_head = head;
+            int res = new_head->init(name, phone, group);
+            if (res != 0)
+                return io_status::memory;
+            head = new_head;
+            new_head->set_next(old_head);
+            new_head->set_prev(nullptr);
+            old_head->set_prev(new_head);
+            return io_status::success;
+
+        }
         void delete_list(){
             list2_node *curr, *next;
             for(curr = head; curr; curr = next){
@@ -93,6 +109,54 @@ class list2
         list2_node* get_head(){
             return head;
         }
+        void delete_command(command& cmd){
+            list2_node* curr = head;
+            for (;curr;){
+                if (cmd.apply(*curr)){
+                    if (curr == head){
+                        curr = head->get_next();
+                        curr->set_prev(nullptr);
+                        delete head;
+                        head = curr;
+                    }
+                    else{
+                        list2_node* next = curr->get_next();
+                        curr->get_prev()->set_next(next);
+                        next->set_prev(curr->get_prev());
+                        delete curr;
+                        curr = next;
+                    }
+                }
+            }
+        }
+
+        void insert_command(command& cmd){ // может быть надо поправить на io_status
+            list2_node* curr = head;
+            for (;curr;curr = curr->get_next()){
+                if (cmd.compare_name(condition::eq, *curr) && cmd.compare_phone(condition::eq, *curr) &&\
+                cmd.compare_group(condition::eq, *curr))
+                    return;
+            }
+            insert(cmd.get_name(), cmd.get_phone(), cmd.get_group());
+        }
+
+        list_node* select_command(command& cmd, int* fl){
+            comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
+            list answer;
+            list2_node* curr = head;
+            for (;curr;curr->get_next()){
+                if (cmd.apply(*curr)){
+                    io_status ret = answer.insert(curr);
+                    if (ret != io_status::success){
+                        *fl = 1;
+                        return nullptr;
+                    }
+                }
+            }
+            answer.sort(cmp);
+            return answer.get_head();
+        }
+
 };
 
 #endif
