@@ -35,20 +35,21 @@ int main(int argc, char* argv[]){
     parser com_parse(stdin);
     command c;
     int fl1 = 0;
-    list answer;
     t = clock();
-    while (com_parse.read(c) == io_status::success){
+    char* dop = com_parse.read();
+    while (dop){
+        command c;
+        list answer;
+        com_parse.parse(c, dop);
         switch (c.get_command_type()){
             case command_type::quit:
                 printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                 a.delete_list();
-                answer.delete_list();
                 return 0;
             case command_type::del:
                 a.delete_command(c);
-                
                 break;
             case command_type::insert:
                 a.insert_command(c);
@@ -63,14 +64,16 @@ int main(int argc, char* argv[]){
                 }
                 res += answer.get_length();
                 answer.print(c);
+                answer.delete_list();
+                printf("\n");
+                a.print(c);
                 break;
             default:
                 break;
         }
         printf("\n");
-        c.clear();
+        dop = com_parse.read();
     }
     a.delete_list();
-    answer.delete_list();
     return 0;
 }

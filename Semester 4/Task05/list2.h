@@ -99,6 +99,14 @@ class list2
                 delete curr;
             }
         }
+
+        void print(command& cmd){
+            list2_node *curr;
+            for(curr = head; curr; curr = curr->get_next()){
+                curr->print(cmd.get_ordering(), stdout);
+            }
+        }
+
         unsigned int get_length () const{
             list2_node* curr;
             unsigned int cnt = 0;

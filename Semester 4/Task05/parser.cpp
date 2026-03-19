@@ -1,19 +1,19 @@
 #include "parser.h"
 #include "enum.h"
 
-io_status parser::read(command& cmd){
+char* parser::read(FILE* fp){
     int i = 0;
     int fl = 0;
-    char s = fgetc(stdin);
+    char s = fgetc(fp);
     if (!s){
-        return io_status::success;
+        return nullptr;
     }
     while (s != ';'){
         if (s == '\t' || s == '\n'){
             buf[i] = ' ';
         }
         buf[i] = s;
-        s = fgetc(stdin);
+        s = fgetc(fp);
         if (!s){
             fl = 1;
             break;
@@ -23,10 +23,10 @@ io_status parser::read(command& cmd){
     buf[i] = ';';
     i += 1;
     if (fl){
-        return io_status::eof;
+        return nullptr;
     }
     buf[i] = '\0';
-    return parse(cmd, buf + skip_spaces(buf));
+    return buf + skip_spaces(buf);
 }
 bool parser::is_spaces(const char s){
     return (s == ' ' || s == '\t' || s == '\n');
@@ -40,6 +40,7 @@ int parser::skip_spaces(const char* str){
     return i;
 }
 io_status parser::parse(command& cmd, char* string){
+    printf("%s\n", string);
     int i = 0;
     int j = 0;
     for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);

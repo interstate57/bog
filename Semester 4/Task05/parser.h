@@ -19,7 +19,7 @@ class parser {
     public:
         parser(FILE* f): fp(f) {}
 
-        io_status read(command& cmd);
+        char* read(FILE* fp = stdin);
 
         bool is_spaces(const char s);
         
