@@ -4,6 +4,9 @@
 #include "command.h"
 #include "list2.h"
 #include "comparator.h"
+
+//class list2_node;
+
 class list_node
 {
     private:
@@ -94,7 +97,7 @@ class list
             return cnt;
         }
 
-        int list::get_length(){
+        int get_length(){
             return length_(head);
         }
        list_node* merge(list_node* a, list_node* b, list_node** res_tail, comparator cmp){

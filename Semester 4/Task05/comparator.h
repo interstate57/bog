@@ -6,6 +6,8 @@
 #include "enum.h"
 #include "list2.h"
 
+class list2_node;
+
 class comparator{
     private:
         ordering first = ordering::none;

@@ -4,6 +4,8 @@
 #include "command.h"
 #include "list.h"
 
+//class list_node;
+class comparator;
 
 class list2_node : public record
 {

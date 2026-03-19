@@ -7,7 +7,6 @@
 
 int main(int argc, char* argv[]){
     char* name = 0;
-    char str[LEN] = {};
     io_status ret;
     double t = 0;
     int res = 0;
@@ -28,6 +27,7 @@ int main(int argc, char* argv[]){
             case io_status::eof: printf("Cannot read file!\n"); break;
             case io_status::memory: printf("Cannot allocate memory!\n"); break;
             case io_status::parsing_error: printf("Parsing error!\n"); break;
+            default: break;
         }
         a.delete_list();
         return 3;
