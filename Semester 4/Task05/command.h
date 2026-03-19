@@ -263,6 +263,18 @@ class command : public record
         // Example 2: "name like St%" parsed to
         // (command::name = "St%", command::c_name = condition::like)
         // other fields are unspecified
+        void clear(){
+            name = nullptr;
+            phone = 0;
+            group = 0;
+            c_name = condition::none;
+            c_phone = condition::none;
+            c_group = condition::none;
+            op = operation::none;
+            c_order[0] = ordering::none; c_order[1] = ordering::none; c_order[2] = ordering::none; 
+            c_order_end[0] = ordering::none; c_order_end[1] = ordering::none; c_order_end[2] = ordering::none; 
+            com_type = command_type::none;
+        }
         const ordering* get_ordering() const{
             return (const ordering*) c_order;
         }

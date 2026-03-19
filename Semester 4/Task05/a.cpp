@@ -68,6 +68,7 @@ int main(int argc, char* argv[]){
                 break;
         }
         printf("\n");
+        c.clear();
     }
     a.delete_list();
     answer.delete_list();
