@@ -32,7 +32,6 @@ int main(int argc, char* argv[]){
         a.delete_list();
         return 3;
     }while(0);
-    printf("1\n");
     parser com_parse(stdin);
     command c;
     int fl = 0;
