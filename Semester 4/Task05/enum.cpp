@@ -1,37 +1,6 @@
-#ifndef ENUM_H
-#define ENUM_H
+#include "enum.h"
 
-#define LEN 1234
-
-#define BACKSLASH '\\'
-
-#include <iostream>
-
-enum class io_status
-{
-    success,
-    eof,
-    format,
-    memory,
-    wrong_file,
-    parsing_error,
-    quit,
-};
-
-enum class condition
-{
-    none, // not specified
-    eq, // equal
-    ne, // not equal
-    lt, // less than
-    gt, // less than
-    le, // less equal
-    ge, // great equal
-    like, // strings only: match pattern
-    nlike, // strings only: not match pattern
-};
-
-/*std::ostream& operator<<(std::ostream& os, const condition& c) {
+std::ostream& operator<<(std::ostream& os, const condition& c) {
     const char* str;
     switch (c) {
         case condition::none:
@@ -57,27 +26,10 @@ enum class condition
     }
     os << str;
     return os;
-}*/
+}
 
 
-enum class like_type
-{
-    percent,
-    underline,
-    in_between,
-    not_in_between,
-    nothing,
-};
-
-enum percent_location
-{
-    start,
-    end,
-    middle,
-    both,
-};
-
-/*std::ostream& operator<<(std::ostream& os, const percent_location& c) {
+std::ostream& operator<<(std::ostream& os, const percent_location& c) {
     const char* str;
     switch (c) {
         case percent_location::start:
@@ -113,19 +65,11 @@ std::ostream& operator<<(std::ostream& os, const like_type& c) {
     }
     os << str;
     return os;
-}*/
+}
 
 
 
-enum class ordering
-{
-    none, // not specified
-    name, // print name
-    phone, // print phone
-    group, // print group
-};
-
-/*std::ostream& operator<<(std::ostream& os, const ordering& c) {
+std::ostream& operator<<(std::ostream& os, const ordering& c) {
     const char* str;
     switch (c) {
         case ordering::name:
@@ -141,22 +85,5 @@ enum class ordering
     }
     os << str;
     return os;
-}*/
+}
 
-enum class operation
-{
-    none, // not specified
-    land, // logical and
-    lor, // logical or
-};
-
-enum class command_type
-{
-    none, // uninitialized
-    quit, // end of input stream
-    insert, // add record
-    select, // find by conditions specified
-    del, // delete record
-};
-
-#endif
