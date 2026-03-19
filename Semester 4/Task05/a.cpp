@@ -43,9 +43,12 @@ int main(int argc, char* argv[]){
                 printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
+                a.delete_list();
+                answer.delete_list();
                 return 0;
             case command_type::del:
                 a.delete_command(c);
+                
                 break;
             case command_type::insert:
                 a.insert_command(c);
@@ -54,11 +57,11 @@ int main(int argc, char* argv[]){
                 fl1 = select_command(a.get_head(), &answer, c);
                 if (fl1 == 1){
                     printf("Cannot allocate memory!\n"); 
+                    a.delete_list();
+                    answer.delete_list();
                     return 5;
                 }
-
                 res += answer.get_length();
-                printf("%d\n", res);
                 answer.print(c);
                 break;
             default:
@@ -67,5 +70,6 @@ int main(int argc, char* argv[]){
         printf("\n");
     }
     a.delete_list();
+    answer.delete_list();
     return 0;
 }

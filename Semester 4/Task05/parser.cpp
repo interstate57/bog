@@ -145,7 +145,7 @@ io_status parser::parse_select(command& cmd, const char* string){
     return io_status::success;
 }
 bool parser::parse_ordering (command& cmd, const char* string){
-    printf("%s\n", string);
+    //printf("%s\n", string);
     int i = 0;
     int j = 0;
     i += skip_spaces(string);

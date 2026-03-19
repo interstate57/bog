@@ -111,6 +111,7 @@ class list2
             return head;
         }
         void delete_command(command& cmd){
+            printf("1\n");
             list2_node* curr = head;
             for (;curr;){
                 if (cmd.apply(*curr)){

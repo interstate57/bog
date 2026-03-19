@@ -70,7 +70,7 @@ class list
             list_node* curr;
             unsigned int cnt = 0;
             for(curr = head; curr != nullptr; curr = curr->get_next()){
-                curr->data->print(cmd.get_ordering_end(), fp);
+                curr->data->print(cmd.get_ordering(), fp);
                 cnt++;
             }
         }
