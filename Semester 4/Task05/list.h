@@ -3,6 +3,7 @@
 #include "enum.h"
 #include "list2.h"
 #include "comparator.h"
+#include "command.h"
 
 class list2_node;
 
@@ -65,15 +66,14 @@ class list
         list_node* get_head(){
             return head;
         }
-        /*void print (unsigned int r = 10, FILE *fp = stdout) const{
+        void print (command& cmd, FILE *fp = stdout) const{
             list_node* curr;
             unsigned int cnt = 0;
             for(curr = head; curr != nullptr; curr = curr->get_next()){
-                if (cnt == r) break;
-                curr->print(fp);
+                curr->data->print(cmd.get_ordering_end(), fp);
                 cnt++;
             }
-        }*/
+        }
        io_status insert(list2_node* dop){
             list_node* new_head = new list_node;
             if (!new_head)
@@ -208,21 +208,19 @@ class list
         }
 };
 
-list_node* select_command(list2_node* head_2, command& cmd, int* fl){
+int select_command(list2_node* head_2, list* answer, command& cmd){
     comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
-    list answer;
     list2_node* curr = head_2;
-    for (;curr;curr->get_next()){
+    for (;curr;curr = curr->get_next()){
         if (cmd.apply(*curr)){
-            io_status ret = answer.insert(curr);
+            io_status ret = answer->insert(curr);
             if (ret != io_status::success){
-                *fl = 1;
-                return nullptr;
+                return 1;
             }
         }
     }
-    answer.sort(cmp);
-    return answer.get_head();
+    answer->sort(cmp);
+    return 0;
 }
 
 #endif 

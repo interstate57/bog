@@ -40,16 +40,16 @@ int parser::skip_spaces(const char* str){
     return i;
 }
 io_status parser::parse(command& cmd, char* string){
-    //printf("%s\n", string);
     int i = 0;
     int j = 0;
     for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
     int len_first_word = j - i;
+    //printf("%d\n", len_first_word);
     if (strncmp(string, "quit", len_first_word) == 0){
         cmd.com_type = command_type::quit;
         i = j;
     }
-    if (len_first_word == 6){
+    else if (len_first_word == 6){
         if (strncmp(string, "insert", len_first_word) == 0)
             cmd.com_type = command_type::insert;
         else if (strncmp(string, "delete", len_first_word) == 0)
@@ -76,8 +76,9 @@ io_status parser::parse(command& cmd, char* string){
     }
 }
 io_status parser::parse_quit(const char* string){
+    //printf("%s\n", string);
     if (string[0] == ';')
-        return io_status::quit;
+        return io_status::success;
     return io_status::parsing_error;
 }
 io_status parser::parse_insert(command& cmd, char* string){

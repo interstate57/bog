@@ -34,18 +34,16 @@ int main(int argc, char* argv[]){
     }while(0);
     parser com_parse(stdin);
     command c;
-    int fl = 0;
     int fl1 = 0;
-    list_node* answer;
+    list answer;
     t = clock();
     while (com_parse.read(c) == io_status::success){
-        if (fl == 1)
-            break;
         switch (c.get_command_type()){
             case command_type::quit:
                 printf("\n");
-                fl = 1;
-                break;
+                t = (clock() - t) / CLOCKS_PER_SEC;
+                printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
+                return 0;
             case command_type::del:
                 a.delete_command(c);
                 break;
@@ -53,26 +51,21 @@ int main(int argc, char* argv[]){
                 a.insert_command(c);
                 break;
             case command_type::select:
-                answer = select_command(a.get_head(), c, &fl1);
+                fl1 = select_command(a.get_head(), &answer, c);
                 if (fl1 == 1){
                     printf("Cannot allocate memory!\n"); 
                     return 5;
                 }
-                res += answer->len();
-                answer->get_data()->print(c.get_ordering(), stdout);
+
+                res += answer.get_length();
+                printf("%d\n", res);
+                answer.print(c);
                 break;
             default:
                 break;
         }
         printf("\n");
     }
-    if (!feof(stdin) && fl == 0) {
-        printf("Wrong format in the file!\n");
-        a.delete_list();
-        return 4;
-    }
-    t = (clock() - t) / CLOCKS_PER_SEC;
-    printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
     a.delete_list();
     return 0;
 }
