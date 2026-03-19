@@ -27,7 +27,7 @@ class parser {
         
         io_status parse(command& cmd, char* string);
         
-        io_status parse_quit(command& cmd, const char* string);
+        io_status parse_quit(const char* string);
         
         io_status parse_insert(command& cmd, char* string);
         

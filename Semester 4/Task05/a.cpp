@@ -53,13 +53,13 @@ int main(int argc, char* argv[]){
                 a.insert_command(c);
                 break;
             case command_type::select:
-                answer = a.select_command(c, &fl1);
+                answer = select_command(a.get_head(), c, &fl1);
                 if (fl1 == 1){
                     printf("Cannot allocate memory!\n"); 
                     return 5;
                 }
                 res += answer->len();
-                answer->print(c);
+                answer->get_data()->print(c.get_ordering(), stdout);
                 break;
             default:
                 break;

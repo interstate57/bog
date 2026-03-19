@@ -67,12 +67,12 @@ io_status parser::parse(command& cmd, char* string){
         case command_type::select:
             return parse_select(cmd, string + i);
         case command_type::quit:
-            return parse_quit(cmd, string + i);
+            return parse_quit(string + i);
         default:
             return io_status::parsing_error;
     }
 }
-io_status parser::parse_quit(command& cmd, const char* string){
+io_status parser::parse_quit(const char* string){
     if (string[0] == ';')
         return io_status::quit;
     return io_status::parsing_error;
@@ -281,7 +281,7 @@ bool parser::parse_after_where (command& cmd, const char* string){
             i += skip_spaces(string + i);
             for (j = i; string[j] && string[j] != ' '; j++);
             int len_second_word = j - i;
-            if (strncmp(string + i, "by", len_first_word) == 0){
+            if (strncmp(string + i, "by", len_second_word) == 0){
                 i = j;
                 i += skip_spaces(string + i);
                 return parse_after_order_by(cmd, string + i);

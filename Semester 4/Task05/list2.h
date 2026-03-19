@@ -1,11 +1,10 @@
 #ifndef LIST2_H
 #define LIST2_H
 #include "enum.h"
+//#include "list.h"
 #include "command.h"
-#include "list.h"
 
 //class list_node;
-class comparator;
 
 class list2_node : public record
 {
@@ -142,7 +141,7 @@ class list2
             insert(cmd.get_name(), cmd.get_phone(), cmd.get_group());
         }
 
-        list_node* select_command(command& cmd, int* fl){
+        /*list_node* select_command(command& cmd, int* fl){
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
             list answer;
             list2_node* curr = head;
@@ -157,7 +156,7 @@ class list2
             }
             answer.sort(cmp);
             return answer.get_head();
-        }
+        }*/
 
 };
 

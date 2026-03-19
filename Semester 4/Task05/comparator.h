@@ -4,9 +4,7 @@
 #include <string.h>
 
 #include "enum.h"
-#include "list2.h"
 
-class list2_node;
 
 class comparator{
     private:
@@ -21,56 +19,56 @@ class comparator{
             third = third_;
         }
         ~comparator() = default;
-        bool operator()(const list2_node* a, const list2_node* b){
+        bool operator()(const char* namea, const char* nameb, int phonea, int phoneb, int groupa, int groupb){
             int cmp;
             switch(first){
                 case ordering::name:
-                    cmp = strcmp(a->get_name(), b->get_name());
+                    cmp = strcmp(namea, nameb);
                     if (cmp == 0)
                         break;
                     return cmp < 0 ? true : false;
                 case ordering::phone:
-                    if (a->get_phone() == b->get_phone())
+                    if (phonea == phoneb)
                         break;
-                    return a->get_phone() < b->get_phone();
+                    return phonea < phoneb;
                 case ordering::group:
-                    if (a->get_group() == b->get_group())
+                    if (groupa == groupb)
                         break;
-                    return a->get_group() < b->get_group();
+                    return groupa < groupb;
                 case ordering::none:
                     return true;
             }
             switch(second){
                 case ordering::name:
-                    cmp = strcmp(a->get_name(), b->get_name());
+                    cmp = strcmp(namea, nameb);
                     if (cmp == 0)
                         break;
                     return cmp < 0 ? true : false;
                 case ordering::phone:
-                    if (a->get_phone() == b->get_phone())
+                    if (phonea == phoneb)
                         break;
-                    return a->get_phone() < b->get_phone();
+                    return phonea < phoneb;
                 case ordering::group:
-                    if (a->get_group() == b->get_group())
+                    if (groupa == groupb)
                         break;
-                    return a->get_group() < b->get_group();
+                    return groupa < groupb;
                 case ordering::none:
                     return true;
             }
             switch(third){
                 case ordering::name:
-                    cmp = strcmp(a->get_name(), b->get_name());
+                    cmp = strcmp(namea, nameb);
                     if (cmp == 0)
                         break;
                     return cmp < 0 ? true : false;
                 case ordering::phone:
-                    if (a->get_phone() == b->get_phone())
+                    if (phonea == phoneb)
                         break;
-                    return a->get_phone() < b->get_phone();
+                    return phonea < phoneb;
                 case ordering::group:
-                    if (a->get_group() == b->get_group())
+                    if (groupa == groupb)
                         break;
-                    return a->get_group() < b->get_group();
+                    return groupa < groupb;
                 case ordering::none:
                     return true;
             }

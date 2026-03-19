@@ -1,3 +1,6 @@
+#ifndef REQUEST_H
+#define REQUEST_H
+
 #include <stdio.h>
 #include "enum.h"
 
@@ -541,3 +544,5 @@ class request_9{
 
 
 };
+
+#endif

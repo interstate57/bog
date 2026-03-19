@@ -1,4 +1,4 @@
- #ifndef RECORD_H
+#ifndef RECORD_H
 #define RECORD_H
 # include <memory>
 # include <stdio.h>
@@ -298,6 +298,9 @@ class command : public record
                 std::cout << "name : condition - " << c_name << ", str - " << name.get() << std::endl;
             }
         }
+
+        
+
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{
             int cnt, cnt1, cnt2;
@@ -366,6 +369,8 @@ class command : public record
             }
             return i;
         }
+
+
 
         friend class parser;
 };

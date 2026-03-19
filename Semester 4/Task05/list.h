@@ -1,11 +1,10 @@
 #ifndef LIST_H
 #define LIST_H
 #include "enum.h"
-#include "command.h"
 #include "list2.h"
 #include "comparator.h"
 
-//class list2_node;
+class list2_node;
 
 class list_node
 {
@@ -32,16 +31,14 @@ class list_node
         list_node* get_next() const{
             return next;
         }
+        list2_node* get_data() const{
+            return data;
+        }
         void set_next(list_node* r){
             next = r;
         }
         void set_data(list2_node* r){
             data = r;
-        }
-        void print(command& cmd){
-            data->print(cmd.get_ordering(), stdout);
-            if (next != nullptr)
-                next->print(cmd);
         }
         int len(){
             return (next != nullptr) ? (1 + next->len()) : 1;
@@ -106,7 +103,8 @@ class list
             list_node* curra = a;
             list_node* currb = b;
             while (curra && currb){
-                if (cmp(curra->data, currb->data)){
+                if (cmp(curra->data->get_name(), currb->data->get_name(), curra->data->get_phone(), currb->data->get_phone(),
+                curra->data->get_group(), currb->data->get_group())){
                     if (new_head == nullptr){
                         new_head = curra;
                     }
@@ -209,5 +207,22 @@ class list
             }
         }
 };
+
+list_node* select_command(list2_node* head_2, command& cmd, int* fl){
+    comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
+    list answer;
+    list2_node* curr = head_2;
+    for (;curr;curr->get_next()){
+        if (cmd.apply(*curr)){
+            io_status ret = answer.insert(curr);
+            if (ret != io_status::success){
+                *fl = 1;
+                return nullptr;
+            }
+        }
+    }
+    answer.sort(cmp);
+    return answer.get_head();
+}
 
 #endif 
