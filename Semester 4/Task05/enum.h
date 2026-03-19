@@ -159,4 +159,9 @@ enum class command_type
     del, // delete record
 };
 
+std::ostream& operator<<(std::ostream& os, const condition& c);
+std::ostream& operator<<(std::ostream& os, const percent_location& c);
+std::ostream& operator<<(std::ostream& os, const like_type& c);
+std::ostream& operator<<(std::ostream& os, const ordering& c);
+
 #endif

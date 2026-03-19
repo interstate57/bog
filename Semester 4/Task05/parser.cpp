@@ -27,7 +27,7 @@ io_status parser::read(command& cmd){
     return parse(cmd, buf + skip_spaces(buf));
 }
 bool parser::is_spaces(const char s){
-    return s == ' ' && s == '\t' && s == '\n';
+    return s == ' ' || s == '\t' || s == '\n';
 }
 int parser::skip_spaces(const char* str){
     int i;
@@ -38,10 +38,12 @@ int parser::skip_spaces(const char* str){
     return i;
 }
 io_status parser::parse(command& cmd, char* string){
+    printf("%s\n", string);
     int i = 0;
     int j = 0;
     for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
     int len_first_word = j - i;
+    printf("%d\n", len_first_word);
     if (strncmp(string, "quit", len_first_word) == 0){
         cmd.com_type = command_type::quit;
         i = j;
@@ -141,6 +143,7 @@ io_status parser::parse_select(command& cmd, const char* string){
     return io_status::success;
 }
 bool parser::parse_ordering (command& cmd, const char* string){
+    printf("3\n");
     int i = 0;
     int j = 0;
     i += skip_spaces(string);
