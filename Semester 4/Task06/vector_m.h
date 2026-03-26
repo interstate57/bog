@@ -29,6 +29,11 @@ class vector_m{
         int get_curr_number(){
             return curr_number;
         }
+        list2_node* get_data_i(int i){
+            if (i < curr_number)
+                return data[i];
+            return nullptr;
+        }
         int bin_search(list2_node* x) {
             int lhs = 0, rhs = curr_number, mid;
             while (lhs != rhs) {
@@ -42,7 +47,7 @@ class vector_m{
             }
             return rhs;
         }
-        list2_node* move(int nach, list2_node* vstavka){
+        list2_node* move(int nach, list2_node* vstavka){ ///
             int end;
             list2_node* dop1 = nullptr;
             list2_node* dop2 = nullptr;

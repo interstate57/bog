@@ -1,6 +1,8 @@
 #include "list2.h"
 #include "vector_m.h"
 #include "enum.h"
+#include "comparator.h"
+#include "list.h"
 
 class list2_node_search : public vector_m{
     private:
@@ -43,6 +45,9 @@ class list2_search{
             head = nullptr;
             tail = nullptr;
         }
+        list2_node_search* get_head(){
+            return head;
+        }
         int add_record(list2_node* x){
             list2_node_search* curr = head;
             list2_node_search* new_node;
@@ -78,5 +83,20 @@ class list2_search{
                 }
             }
             return -2;
+        }
+
+        int select_command(list* answer, command& cmd){
+            comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
+            list2_node_search* curr = head;
+            for (;curr;curr = curr->get_next()){
+                if (cmd.apply(*curr)){
+                    io_status ret = answer->insert(curr);
+                    if (ret != io_status::success){
+                        return 1;
+                    }
+                }
+            }
+            answer->sort(cmp);
+            return 0;
         }
 };
