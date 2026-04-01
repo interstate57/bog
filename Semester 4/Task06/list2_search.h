@@ -125,14 +125,16 @@ class list2_search{
                 }
             }
         }
-        void delete_list2_search(const char* name, int phone, int group){
+        void delete_list2_search(const char* name, int phone, int group, list2* a){
             list2_node_search* curr = head;
             list2_node_search* next;
+            list2_node* dop;
             int j;
             for (;curr;curr = next){
                 int fl = 1;
                 int end = curr->get_curr_number();
                 for (j = 0; j < end; j++){
+                    dop = curr->get_data_i(j);
                     if ((strcmp(name, curr->get_data_i(j)->get_name())) && (phone == curr->get_data_i(j)->get_phone()) &&
                         (group == curr->get_data_i(j)->get_group())){
                         curr->delete_vector_element(j);
@@ -145,6 +147,7 @@ class list2_search{
                             delete curr;
                             curr = 0;
                         }
+                        a->delete_element(dop);
                     }
                 }
                 if (fl == 0){
@@ -175,7 +178,7 @@ class list2_search{
                                 fl = 1;
                             io_status ret = answer->insert(data_j);
                             if (ret != io_status::success){
-                                return -1;
+                                return 1;
                             }
                         }
                     }

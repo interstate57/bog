@@ -50,6 +50,9 @@ class list2
     private:
         list2_node * head = nullptr;
     public:
+        ~list2(){
+            delete_list();
+        }
         io_status read (FILE *fp = stdin, unsigned int max_read = -1){
             list2_node buf;
             io_status ret;

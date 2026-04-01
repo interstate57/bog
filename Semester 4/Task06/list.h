@@ -209,7 +209,7 @@ class list
         }
 };
 
-int select_command(list2_node* head_2, list* answer, command& cmd){
+int command_select(list2_node* head_2, list* answer, command& cmd){
     comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
     list2_node* curr = head_2;
     for (;curr;curr = curr->get_next()){
