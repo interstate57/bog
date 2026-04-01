@@ -315,7 +315,6 @@ class command : public record
 
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{
-            int cnt, cnt1, cnt2;
             switch (op){
                 case operation::none:
                     if (c_phone != condition::none){
@@ -329,50 +328,44 @@ class command : public record
                     }
                     return 1;
                 case operation::lor:
-                    cnt = 0;
                     if (c_phone != condition::none){
-                        cnt += to_int(compare_phone(c_phone, x));
+                        if (compare_phone(c_phone, x))
+                            return 1;
                     }
                     if (c_group != condition::none){
-                        cnt += to_int(compare_group(c_group, x));
+                        if (compare_group(c_group, x)){
+                            return 1;
+                        }
                     }
                     if (c_name != condition::none){
-                        cnt += to_int(compare_name(c_name, x));
+                        if (compare_name(c_name, x)){
+                            return 1;
+                        }
                     }
-                    if (cnt != 0)
-                        return 1;
                     return 0;
                 case operation::land:
-                    cnt1 = 0;
-                    cnt2 = 0;
                     if (c_phone != condition::none){
-                        cnt1 += to_int(compare_phone(c_phone, x));
-                        //printf("phone : %d\n", compare_phone(c_phone, x));
-                        cnt2 += 1;
+                        if(!compare_phone(c_phone, x)){
+                            return 0;
+                        }
                     }
                     if (c_group != condition::none){
-                        cnt1 += to_int(compare_group(c_group, x));
-                        //printf("group : %d, this : %d, x.group = %d\n", compare_group(c_group, x), group, x.get_group());
-                        cnt2 += 1;
+                        if (!compare_group(c_group, x)){
+                            return 0;
+                        }
                     }
                     if (c_name != condition::none){
-                        cnt1 += to_int(compare_name(c_name, x));
-                        //printf("name : %d\n", compare_name(c_name, x));
-                        cnt2 += 1;
+                        if (!compare_name(c_name, x)){
+                            return 0;
+                        }
                     }
-                    //printf("cnt1 = %d, cnt2 = %d\n", cnt1, cnt2);
-                    if (cnt1 == cnt2)
-                        return 1;
-                    return 0;
+                    return 1;
                 default:
                     break;
             }
             return 0;
         }
 
-        int to_int(bool boo) const{
-            return (boo ? 1 : 0);
-        }
         int skip_spaces(const char* str){
             int i;
             for (i = 0; str[i]; i++){

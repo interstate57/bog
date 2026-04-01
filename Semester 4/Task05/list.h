@@ -62,6 +62,7 @@ class list
                 next = curr->get_next();
                 delete curr;
             }
+            head = 0;
         }
         list_node* get_head(){
             return head;
@@ -219,7 +220,11 @@ int select_command(list2_node* head_2, list* answer, command& cmd){
             }
         }
     }
-    answer->sort(cmp);
+    const ordering* ob = cmd.get_ordering_end();
+    bool need_sort = (ob[0] != ordering::none || ob[1] != ordering::none
+        || ob[2] != ordering::none);
+    if (need_sort)
+        answer->sort(cmp);
     return 0;
 }
 

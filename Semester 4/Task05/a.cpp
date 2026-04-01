@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     FILE* fp;
     list2 a;
     if (!(argc == 2)){
-        printf("Usage: %s filename k\n", argv[0]);
+        printf("Usage: %s filename\n", argv[0]);
         return 1;
     }
     name = argv[1];
@@ -40,12 +40,18 @@ int main(int argc, char* argv[]){
     while (dop){
         command c;
         list answer;
-        com_parse.parse(c, dop);
+        ret = com_parse.parse(c, dop);
+        if (ret != io_status::success){
+            printf("Parsing error!\n");
+            a.delete_list();
+            return 3;
+        }
         switch (c.get_command_type()){
             case command_type::quit:
                 printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
+                answer.delete_list();
                 a.delete_list();
                 return 0;
             case command_type::del:
@@ -65,8 +71,6 @@ int main(int argc, char* argv[]){
                 res += answer.get_length();
                 answer.print(c);
                 answer.delete_list();
-                printf("\n");
-                a.print(c);
                 break;
             default:
                 break;

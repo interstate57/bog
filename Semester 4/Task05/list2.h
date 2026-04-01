@@ -98,6 +98,7 @@ class list2
                 next = curr->get_next();
                 delete curr;
             }
+            head = 0;
         }
 
         void print(command& cmd){
@@ -119,23 +120,27 @@ class list2
             return head;
         }
         void delete_command(command& cmd){
-            printf("1\n");
+            
             list2_node* curr = head;
             for (;curr;){
                 if (cmd.apply(*curr)){
                     if (curr == head){
                         curr = head->get_next();
-                        curr->set_prev(nullptr);
+                        if (curr)
+                            curr->set_prev(nullptr);
                         delete head;
                         head = curr;
                     }
                     else{
                         list2_node* next = curr->get_next();
                         curr->get_prev()->set_next(next);
-                        next->set_prev(curr->get_prev());
+                        if (next)
+                            next->set_prev(curr->get_prev());
                         delete curr;
                         curr = next;
                     }
+                } else {
+                    curr = curr->get_next();
                 }
             }
         }
