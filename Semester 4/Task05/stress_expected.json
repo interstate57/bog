@@ -1,0 +1,26 @@
+{
+  "n_rows": 100000,
+  "expected_result_sum": 100022,
+  "anchor": {
+    "r0": {
+      "name": "w00000yz",
+      "phone": 1000007,
+      "group": 18
+    },
+    "r1": {
+      "name": "w00100yz",
+      "phone": 1001700,
+      "group": 200321
+    },
+    "r2": {
+      "name": "w10000yz",
+      "phone": 1170000,
+      "group": 230032
+    },
+    "r_mid": {
+      "name": "w50000yz",
+      "phone": 1850000,
+      "group": 250025
+    }
+  }
+}
