@@ -109,6 +109,23 @@ class list2
             }
         }
 
+        void delete_element(list2_node* x){
+            list2_node* dop;
+            if (x == head){
+                dop = head->get_next();
+                head->get_next()->set_prev(nullptr);
+                head->set_next(nullptr);
+                delete head;
+                head = dop;
+            }
+            else{
+                x->get_next()->set_prev(x->get_prev());
+                x->get_prev()->set_next(x->get_next());
+                delete x;
+                x = 0;
+            }
+        }
+
         unsigned int get_length () const{
             list2_node* curr;
             unsigned int cnt = 0;
@@ -126,6 +143,7 @@ class list2
             for (;curr;){
                 if (cmd.apply(*curr)){
                     if (curr == head){
+
                         curr = head->get_next();
                         if (curr)
                             curr->set_prev(nullptr);
@@ -146,14 +164,15 @@ class list2
             }
         }
 
-        void insert_command(command& cmd){ // может быть надо поправить на io_status
+        int insert_command(command& cmd){ // может быть надо поправить на io_status
             list2_node* curr = head;
             for (;curr;curr = curr->get_next()){
                 if (cmd.compare_name(condition::eq, *curr) && cmd.compare_phone(condition::eq, *curr) &&\
                 cmd.compare_group(condition::eq, *curr))
-                    return;
+                    return 1;
             }
             insert(cmd.get_name(), cmd.get_phone(), cmd.get_group());
+            return 0;
         }
 
 

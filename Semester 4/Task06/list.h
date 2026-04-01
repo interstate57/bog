@@ -209,5 +209,19 @@ class list
         }
 };
 
+int select_command(list2_node* head_2, list* answer, command& cmd){
+    comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
+    list2_node* curr = head_2;
+    for (;curr;curr = curr->get_next()){
+        if (cmd.apply(*curr)){
+            io_status ret = answer->insert(curr);
+            if (ret != io_status::success){
+                return 1;
+            }
+        }
+    }
+    answer->sort(cmp);
+    return 0;
+}
 
 #endif 

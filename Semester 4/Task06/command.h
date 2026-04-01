@@ -311,7 +311,9 @@ class command : public record
             }
         }
 
-        
+        condition get_c_name(){
+            return c_name;
+        }
 
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{

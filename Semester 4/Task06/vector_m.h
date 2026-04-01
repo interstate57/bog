@@ -47,7 +47,7 @@ class vector_m{
             }
             return rhs;
         }
-        list2_node* move(int nach, list2_node* vstavka){ ///
+        list2_node* move_right(int nach, list2_node* vstavka){ ///
             int end;
             list2_node* dop1 = nullptr;
             list2_node* dop2 = nullptr;
@@ -87,10 +87,26 @@ class vector_m{
             curr_number += 1;
             return nullptr;
         }
+
+        void move_left(int i){
+            int j;
+            for (j = i + 1; j < curr_number; j++){
+                data[j - 1] = data[j];
+                data[j] = 0;
+            }
+            curr_number -= 1;
+        }
+
+        void delete_vector_element(int i){
+            delete data[i];
+            data[i] = nullptr;
+            move_left(i);
+        }
+
         list2_node* insert(list2_node* x){
             int vst = bin_search(x);
             int i = 0;
-            list2_node* res = move(vst, x);
+            list2_node* res = move_right(vst, x);
             if (res != nullptr)
                 return res;
             return nullptr;
