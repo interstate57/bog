@@ -1,0 +1,4 @@
+select name where name like St% order by name;
+select name where name not like St% order by name;
+quit;
+

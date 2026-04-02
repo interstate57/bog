@@ -1,0 +1,5 @@
+Student 10 1
+St1 11 1
+Stone 12 2
+Alpha 13 2
+

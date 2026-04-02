@@ -1,0 +1,8 @@
+ Carl
+ Ilya
+ Petr
+ 111 1
+ 112 2
+ Bob 20 1
+ Ivan 111 1
+./a.out : Result = 7 Elapsed = 0.00

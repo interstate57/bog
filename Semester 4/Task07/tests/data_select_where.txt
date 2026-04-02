@@ -1,0 +1,7 @@
+Ann 10 1
+Bob 20 1
+Carl 30 2
+Ivan 111 1
+Ilya 112 2
+Petr 222 2
+

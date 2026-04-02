@@ -1,0 +1,8 @@
+ Ivan 111 1
+ Petr 222 2
+ Ivan 111 1
+ Petr 222 2
+ Sasha 333 5
+ Petr 222 2
+ Sasha 333 5
+./a.out : Result = 7 Elapsed = 0.00

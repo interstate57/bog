@@ -1,0 +1,10 @@
+select * order by name;
+insert (Sasha, 333, 5);
+insert (Ivan, 111, 1);
+select * order by name;
+delete where phone = 111;
+select * order by phone;
+delete;
+select *;
+quit;
+

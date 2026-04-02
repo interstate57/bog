@@ -1,0 +1,6 @@
+ Ann
+ Bob
+ Dora
+ Carl
+ Dora
+./a.out : Result = 5 Elapsed = 0.00

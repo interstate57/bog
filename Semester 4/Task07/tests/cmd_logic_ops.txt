@@ -1,0 +1,4 @@
+select name where group = 1 or phone = 4 order by name;
+select name where group = 2 and phone >= 3 order by phone;
+quit;
+

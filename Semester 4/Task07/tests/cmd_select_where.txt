@@ -1,0 +1,5 @@
+select name where group = 2 order by name;
+select phone,group where name like I% order by phone;
+select * where phone >= 20 and group = 1 order by phone;
+quit;
+

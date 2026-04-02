@@ -1,0 +1,5 @@
+ St1
+ Stone
+ Student
+ Alpha
+./a.out : Result = 4 Elapsed = 0.00

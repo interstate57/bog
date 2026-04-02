@@ -1,3 +1,6 @@
+#ifndef LIST2_SEARCH_H
+#define LIST2_SEARCH_H
+
 #include "list2.h"
 #include "vector_m.h"
 #include "enum.h"
@@ -53,47 +56,42 @@ class list2_search{
         }
         int insert(list2_node* x) {
             list2_node_search* curr = head;
-            list2_node* dop = x; 
-            list2_node* res;
-            list2_node_search* new_node;
-            if (curr == nullptr){
-                new_node = new list2_node_search(); /// 
-                if (!new_node){
-                    return -1;
-                }
-                new_node->init(m);
-                tail->set_next(new_node);
-                new_node->set_prev(tail);
-                tail = new_node;
-                curr = new_node;
-                res = curr-> insert(dop);
-                if (res == nullptr)
-                    return -1;
-                return 0;
-            }
-            while (curr->get_next() && dop <= curr->get_next()->get_data_i(0))
-                curr = curr->get_next();
-            do{
-                res = curr-> insert(dop);
-                curr = curr->get_next();
-                dop = res;            
-            } while (res && curr);
+            list2_node* dop = x;
+            list2_node* res = nullptr;
 
-            if (res) {
-                new_node = new list2_node_search(); /// 
-                if (!new_node){
+            if (curr == nullptr){
+                list2_node_search* new_node = new list2_node_search();
+                if (!new_node) return -1;
+                if (new_node->init(m) != 0){
+                    delete new_node;
                     return -1;
                 }
-                new_node->init(m);
-                tail->set_next(new_node);
-                new_node->set_prev(tail);
-                tail = new_node;
-                curr = new_node;
-                res = curr-> insert(dop);
-                if (res == nullptr)
-                    return -1;
+                head = tail = new_node;
+                res = head->insert(dop);
+                // vector_m::insert returns nullptr on success (no overflow)
+                return (res == nullptr) ? 0 : -1;
             }
-            return 0;
+
+            // Distribute/append elements across nodes; keep stable order inside each node.
+            // (The higher-level ordering is handled by vector_m's binary insert.)
+            while (curr){
+                res = curr->insert(dop);
+                if (!res) return 0; // inserted without overflow
+                dop = res; // overflow element, insert into next node
+                if (!curr->get_next()){
+                    list2_node_search* new_node = new list2_node_search();
+                    if (!new_node) return -1;
+                    if (new_node->init(m) != 0){
+                        delete new_node;
+                        return -1;
+                    }
+                    curr->set_next(new_node);
+                    new_node->set_prev(curr);
+                    tail = new_node;
+                }
+                curr = curr->get_next();
+            }
+            return -1;
         }
 
         void delete_list2_search(command& cmd, list2* a){
@@ -111,9 +109,15 @@ class list2_search{
                         end -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            curr->get_next()->set_prev(curr->get_prev());
-                            curr->get_prev()->set_next(curr->get_next());
                             next = curr->get_next();
+                            if (curr->get_prev())
+                                curr->get_prev()->set_next(curr->get_next());
+                            else
+                                head = curr->get_next();
+                            if (curr->get_next())
+                                curr->get_next()->set_prev(curr->get_prev());
+                            else
+                                tail = curr->get_prev();
                             delete curr;
                             curr = 0;
                         }
@@ -127,23 +131,29 @@ class list2_search{
         }
         void delete_list2_search(const char* name, int phone, int group, list2* a){
             list2_node_search* curr = head;
-            list2_node_search* next;
+            list2_node_search* next = nullptr;
             list2_node* dop;
             int j;
             for (;curr;curr = next){
-                int fl = 1;
+                int fl = 0;
                 int end = curr->get_curr_number();
                 for (j = 0; j < end; j++){
                     dop = curr->get_data_i(j);
-                    if ((strcmp(name, curr->get_data_i(j)->get_name())) && (phone == curr->get_data_i(j)->get_phone()) &&
+                    if ((strcmp(name, curr->get_data_i(j)->get_name()) == 0) && (phone == curr->get_data_i(j)->get_phone()) &&
                         (group == curr->get_data_i(j)->get_group())){
                         curr->delete_vector_element(j);
                         end -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            curr->get_next()->set_prev(curr->get_prev());
-                            curr->get_prev()->set_next(curr->get_next());
                             next = curr->get_next();
+                            if (curr->get_prev())
+                                curr->get_prev()->set_next(curr->get_next());
+                            else
+                                head = curr->get_next();
+                            if (curr->get_next())
+                                curr->get_next()->set_prev(curr->get_prev());
+                            else
+                                tail = curr->get_prev();
                             delete curr;
                             curr = 0;
                         }
@@ -195,3 +205,6 @@ class list2_search{
             return 0;
         }
 };
+
+
+#endif

@@ -1,0 +1,3 @@
+ Ivan 111 1
+ Petr 222 2
+./a.out : Result = 2 Elapsed = 0.00

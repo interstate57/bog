@@ -1,3 +1,6 @@
+#ifndef HASHTABLE_H
+#define HASHTABLE_H
+
 #include "list2_search.h"
 #include "list2.h"
 #include "list.h"
@@ -12,8 +15,8 @@ class hash_table{
     public:
         hash_table() = default;
         hash_table(int x, int y){
-            k = x;
-            m = y;
+            m = x;
+            k = y;
         }
         ~hash_table(){
             delete[] collection_of_data;
@@ -23,6 +26,7 @@ class hash_table{
             k = x;
         }
         int init(){
+            delete[] collection_of_data;
             collection_of_data = new list2_search[k];
             if (!collection_of_data)
                 return -1;
@@ -44,15 +48,13 @@ class hash_table{
         int insert(list2_node* curr){
             int index = hash_function(curr->get_name());
             int res = collection_of_data[index].insert(curr);
-            if (!res)
-                return -1;
-            return 0;
+            return (res == 0) ? 0 : -1;
         }
         int select(list* answer, command& cmd){
             int index = hash_function(cmd.get_name());
             int res = collection_of_data[index].select_command(answer, cmd);
-            if (!res)
-                return -1;
-            return 0;
+            return (res == 0) ? 0 : -1;
         }
 };
+
+#endif
