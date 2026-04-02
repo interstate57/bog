@@ -405,116 +405,110 @@ bool parser::parse_after_order_by(command& cmd, const char* string){
 }
 
 bool parser::parse_condition (command& cmd, const char * string, int* kon){
-            int i = 0;
-            int j = 0;
-            condition dop;
-            enum class tgt_field { none, name, phone, group };
-            tgt_field tgt = tgt_field::none;
-            i += skip_spaces(string);
-            const int field_start = i;
-            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
-            int len_first_word = j - i;
-            i = j;
-            i += skip_spaces(string + i);
-            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
-            int len_second_word = j - i;
-            if (len_second_word == 2){
-                if (strncmp(string + i, "<>", len_second_word) == 0){
-                    dop = condition::ne;
-                }
-                else if (strncmp(string + i, "<=", len_second_word) == 0){
-                    dop = condition::le;
-                }
-                else if (strncmp(string + i, ">=", len_second_word) == 0){
-                    dop = condition::ge;
-                }
-                else{
-                    return 0;
-                }
-            }
-            else if (len_second_word == 1){
-                if (strncmp(string + i, "=", len_second_word) == 0){
-                    dop = condition::eq;
-                }
-                else if (strncmp(string + i, "<", len_second_word) == 0){
-                    dop = condition::lt;
-                }
-                else if (strncmp(string + i, ">", len_second_word) == 0){
-                    dop = condition::gt;
-                }
-                else{
-                    return 0;
-                }
-            }
-            else if (len_second_word == 4 && strncmp(string + i, "like", len_second_word) == 0){
-                dop = condition::like;
-            }
-            else if (len_second_word == 3 && strncmp(string + i, "not", len_second_word) == 0){
-                i = j;
-                i += skip_spaces(string + i);
-                for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
-                int len_dop_word = j - i;
-                if (len_dop_word == 4 && strncmp(string + i, "like", len_dop_word) == 0)
-                    dop = condition::nlike;
-                else
-                    return 0;
-            }
-            else{
-                return 0;
-            }
-            if (len_first_word == 5){
-                if (strncmp(string + field_start, "phone", len_first_word) == 0){
-                    cmd.c_phone = dop;
-                    tgt = tgt_field::phone;
-                }
-                else if (strncmp(string + field_start, "group", len_first_word) == 0){
-                    cmd.c_group = dop;
-                    tgt = tgt_field::group;
-                }
-                else
-                    return 0;
-            }
-            else if (len_first_word == 4 && strncmp(string + field_start, "name", len_first_word) == 0){
-                cmd.c_name = dop;
-                tgt = tgt_field::name;
-            }
-            else
-                return 0;
-            i = j;
-            i += skip_spaces(string + i);
-            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
-            int len_third_word = j - i;
-            if (len_third_word >= LEN){
-                return 0;
-            }
-            char str_dop[LEN] = {};
-            if (len_third_word > 0){
-                memcpy(str_dop, string + i, (size_t)len_third_word);
-            }
-            str_dop[len_third_word] = '\0';
-            if (tgt == tgt_field::name){
-                bool res = cmd.set_name(str_dop);
-                if (!res)
-                    return 0;
-            }
-            else if (tgt == tgt_field::phone || tgt == tgt_field::group){
-                int number = std::atoi(str_dop);
-                if (number == 0 && str_dop[0] != '0'){
-                    return 0;
-                }
-                if (tgt == tgt_field::phone)
-                    cmd.set_phone(number);
-                else
-                    cmd.set_group(number);
-            }
-            else{
-                return 0;
-            }
-            if (string[j] != '\0' && is_spaces(string[j])){
-                i = j;
-                i += skip_spaces(string + i);
-                *kon = i;
-            }
-            //print();
-            return 1;
+    int i = 0;
+    int j = 0;
+    condition dop;
+    enum class field { none, name, phone, group };
+    field used = field::none;
+    i += skip_spaces(string);
+    const int field_start = i;
+    for (j = i; string[j] && string[j] != ' '; j++);
+    int len_first_word = j - i;
+    i = j;
+    i += skip_spaces(string + i);
+    for (j = i; string[j] && string[j] != ' '; j++);
+    int len_second_word = j - i;
+    if (len_second_word == 2){
+        if (strncmp(string + i, "<>", len_second_word) == 0){
+            dop = condition::ne;
         }
+        else if (strncmp(string + i, "<=", len_second_word) == 0){
+            dop = condition::le;
+        }
+        else if (strncmp(string + i, ">=", len_second_word) == 0){
+            dop = condition::ge;
+        }
+        else{
+            return 0;
+        }
+    }
+    else if (len_second_word == 1){
+        if (strncmp(string + i, "=", len_second_word) == 0){
+            dop = condition::eq;
+        }
+        else if (strncmp(string + i, "<", len_second_word) == 0){
+            dop = condition::lt;
+        }
+        else if (strncmp(string + i, ">", len_second_word) == 0){
+            dop = condition::gt;
+        }
+        else{
+            return 0;
+        }
+    }
+    else if (len_second_word == 4 && strncmp(string + i, "like", len_second_word) == 0){
+        dop = condition::like;
+    }
+    else if (len_second_word == 3 && strncmp(string + i, "not", len_second_word) == 0){
+        i = j;
+        i += skip_spaces(string + i);
+        for (j = i; string[j] && string[j] != ' ' && string[j] != '\n'; j++);
+        int len_dop_word = j - i;
+        if (len_dop_word == 4 && strncmp(string + i, "like", len_dop_word) == 0)
+            dop = condition::nlike;
+        else
+            return 0;
+    }
+    else{
+        return 0;
+    }
+    if (len_first_word == 5){
+        if (strncmp(string + field_start, "phone", len_first_word) == 0){
+            cmd.c_phone = dop;
+            used = field::phone;
+        }
+        else if (strncmp(string + field_start, "group", len_first_word) == 0){
+            cmd.c_group = dop;
+            used = field::group;
+        }
+        else
+            return 0;
+    }
+    else if (len_first_word == 4 && strncmp(string + field_start, "name", len_first_word) == 0){
+        cmd.c_name = dop;
+        used = field::name;
+    }
+    else
+        return 0;
+    i = j;
+    i += skip_spaces(string + i);
+    for (j = i; string[j] && string[j] != ' ' && string[j] != '\n'; j++);
+    int len_third_word = j - i;
+    char str_dop[LEN] = {};
+    strncpy(str_dop, string + i, len_third_word);
+    if (used == field::name){
+        bool res = cmd.set_name(str_dop);
+        if (!res)
+            return 0;
+    }
+    else if (used == field::phone || used == field::group){
+        int number = std::atoi(str_dop);
+        if (number == 0 && str_dop[0] != '0'){
+            return 0;
+        }
+        if (used == field::phone)
+            cmd.set_phone(number);
+        else
+            cmd.set_group(number);
+    }
+    else{
+        return 0;
+    }
+    if (string[j] == ' '){
+        i = j;
+        i += skip_spaces(string + i);
+        *kon = i;
+    }
+    //print();
+    return 1;
+}
