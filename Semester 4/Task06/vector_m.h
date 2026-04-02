@@ -38,10 +38,10 @@ class vector_m{
             while (lhs != rhs) {
                 mid = (lhs + rhs) / 2;
                 if (strcmp(x->get_name(), data[mid]->get_name()) < 0) {
-                    lhs = mid + 1;
+                    rhs = mid;
                 }
                 else {
-                    rhs = mid;
+                    lhs = mid + 1;
                 }
             }
             return rhs;

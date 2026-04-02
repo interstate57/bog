@@ -112,7 +112,9 @@ class list2_search{
                         if (curr->get_curr_number() == 0){
                             fl = 1;
                             if (curr == head && curr == tail){
+                                head = nullptr;
                                 next = nullptr;
+                                tail = nullptr;
                             }
                             else if (curr == head){
                                 curr->get_next()->set_prev(nullptr);
@@ -157,7 +159,9 @@ class list2_search{
                         if (curr->get_curr_number() == 0){
                             fl = 1;
                             if (curr == head && curr == tail){
+                                head = nullptr;
                                 next = nullptr;
+                                tail = nullptr;
                             }
                             else if (curr == head){
                                 curr->get_next()->set_prev(nullptr);
