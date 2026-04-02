@@ -17,6 +17,7 @@ class hash_table{
         hash_table(int x, int y){
             m = x;
             k = y;
+            init();
         }
         ~hash_table(){
             delete[] collection_of_data;
@@ -26,7 +27,6 @@ class hash_table{
             k = x;
         }
         int init(){
-            delete[] collection_of_data;
             collection_of_data = new list2_search[k];
             if (!collection_of_data)
                 return -1;
@@ -48,14 +48,14 @@ class hash_table{
         int insert(list2_node* curr){
             int index = hash_function(curr->get_name());
             int res = collection_of_data[index].insert(curr);
-            if (!res)
+            if (res != 0)
                 return -1;
             return 0;
         }
         int select(list* answer, command& cmd){
             int index = hash_function(cmd.get_name());
             int res = collection_of_data[index].select_command(answer, cmd);
-            if (!res)
+            if (res != 0)
                 return -1;
             return 0;
         }

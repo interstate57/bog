@@ -100,6 +100,7 @@ int main(int argc, char* argv[]){
         }
         switch (c.get_command_type()){
             case command_type::quit:
+                printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                 answer.delete_list();
@@ -117,6 +118,7 @@ int main(int argc, char* argv[]){
                 break;
         }
         dop = com_parse.read();
+        printf("\n");
     }
     return 0;
 }

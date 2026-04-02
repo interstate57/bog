@@ -54,28 +54,26 @@ class list2_search{
         void init(int x){
             m = x;
         }
+
+
         int insert(list2_node* x) {
-            list2_node_search* curr = head;
-            list2_node* dop = x; 
+            list2_node* dop = x;
             list2_node* res;
-            list2_node_search* new_node;
-            if (curr == nullptr){
-                new_node = new list2_node_search(); /// 
-                if (!new_node){
-                    return -1;
-                }
-                new_node->init(m);
-                tail->set_next(new_node);
-                new_node->set_prev(tail);
-                tail = new_node;
-                curr = new_node;
-                res = curr-> insert(dop);
-                if (res == nullptr)
-                    return -1;
+            if (head == nullptr){
+                list2_node_search* new_curr = new list2_node_search();
+                if (!new_curr) return -1;
+                new_curr->init(m);
+                new_curr->insert(x);
+                head = new_curr;
+                tail = new_curr;
                 return 0;
             }
-            while (curr->get_next() && dop <= curr->get_next()->get_data_i(0))
+
+            list2_node_search* curr = head;
+            while (curr->get_next() && strcmp(curr->get_next()->get_data_i(0)->get_name(), x->get_name()) < 0){
                 curr = curr->get_next();
+            }
+
             do{
                 res = curr-> insert(dop);
                 curr = curr->get_next();
@@ -83,18 +81,18 @@ class list2_search{
             } while (res && curr);
 
             if (res) {
-                new_node = new list2_node_search(); /// 
-                if (!new_node){
+                list2_node_search* new_curr = new list2_node_search(); /// 
+                if (!new_curr){
                     return -1;
                 }
-                new_node->init(m);
-                tail->set_next(new_node);
-                new_node->set_prev(tail);
-                tail = new_node;
-                curr = new_node;
+                new_curr->init(m);
                 res = curr-> insert(dop);
                 if (res == nullptr)
                     return -1;
+                tail->set_next(new_curr);
+                new_curr->set_prev(tail);
+                tail = new_curr;
+                curr = new_curr;    
             }
             return 0;
         }

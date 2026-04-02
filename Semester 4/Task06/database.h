@@ -14,14 +14,19 @@ class database{
         list2 starting_list;
     public:
         database() = default;
+
         database(int x, int y): m(x), k(y), fast_search(m, k){
-            fast_search.init();
         }
+
         ~database() = default;
-        list2& get_list(){ return starting_list; }
-        const list2& get_list() const { return starting_list; }
-        hash_table& get_hash_table(){ return fast_search; }
-        const hash_table& get_hash_table() const { return fast_search; }
+
+        list2& get_list(){ 
+            return starting_list;
+        }
+
+        hash_table& get_hash_table(){ 
+            return fast_search;
+        }
 
         void delete_command(command& c){
             if (c.get_c_name() == condition::eq){
@@ -37,6 +42,7 @@ class database{
                 }
             }
         }
+        
         void insert_command(command& c){
             int res_ = starting_list.insert_command(c);
             if (res_ == 0)
@@ -49,7 +55,7 @@ class database{
             if (c.get_c_name() == condition::eq){
                 fl1 = fast_search.select(&answer, c);
             }
-            else{
+            if (c.get_c_group() != condition::none || c.get_c_phone() != condition::none){
                 fl1 = command_select(starting_list.get_head(), &answer, c);
             }
             if (fl1 == 1){ 

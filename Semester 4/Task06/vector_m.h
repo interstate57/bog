@@ -46,58 +46,47 @@ class vector_m{
             }
             return rhs;
         }
-        list2_node* move_right(int nach, list2_node* vstavka){ ///
-            int end;
-            list2_node* dop1 = nullptr;
-            list2_node* dop2 = nullptr;
+
+        list2_node* move_right(int nach, list2_node* vstavka){
             if (curr_number == 0){
                 data[0] = vstavka;
-                curr_number += 1;
+                curr_number = 1;
                 return nullptr;
             }
+            if (nach < 0) nach = 0;
+            if (nach > curr_number) nach = curr_number;
             if (nach == m)
                 return vstavka;
-            if (curr_number + 1 <= m){
-                end = curr_number + 1;
-            }
-            else{
-                end = m;
-            }
-            for (int i = nach; i < end - 1; i++){
-                if (i == nach){
-                    dop1 = data[i];
-                    data[i] = vstavka;
+
+            if (curr_number < m){
+                for (int i = curr_number; i > nach; --i){
+                    data[i] = data[i - 1];
                 }
-                else{
-                    dop2 = data[i];
-                    data[i] = dop1;
-                    dop1 = dop2;
-                }
+                data[nach] = vstavka;
+                ++curr_number;
+                return nullptr;
             }
-            if (curr_number + 1 <= m){
-                data[end - 1] = dop1;
+
+            list2_node* out = data[m - 1];
+            for (int i = m - 1; i > nach; --i){
+                data[i] = data[i - 1];
             }
-            else{
-                dop2 = data[end - 1];
-                data[end - 1] = dop1;
-                curr_number += 1;
-                return dop2;
-            }
-            curr_number += 1;
-            return nullptr;
+            data[nach] = vstavka;
+            return out;
         }
+
+        
 
         void move_left(int i){
             int j;
             for (j = i + 1; j < curr_number; j++){
                 data[j - 1] = data[j];
-                data[j] = 0;
+                data[j] = nullptr;
             }
             curr_number -= 1;
         }
 
         void delete_vector_element(int i){
-            // Вектор хранит только указатели на элементы основного списка, не владеет ими.
             move_left(i);
         }
 
