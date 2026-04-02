@@ -1,0 +1,15 @@
+select * order by name;
+select group, name where phone = 915507387;
+select * where name like Kr%;
+select name, phone where phone >= 980000000 order by group;
+insert (Novichenko, 888777666, 111);
+select * where name < Novichenko;
+select * where name = Ivanov or phone = 973409077;
+select name where group = 467 and phone <> 908806474;
+delete where name >= Novichenko;
+select * where name not like Z%;
+select phone, group where group = 452 and phone = 900579121;
+insert (TmpRecord, 777000001, 500);
+select * where name = TmpRecord and group = 500;
+delete where name = TmpRecord and phone = 777000001 and group = 500;
+quit;
