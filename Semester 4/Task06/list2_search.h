@@ -193,17 +193,12 @@ class list2_search{
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
             list2_node_search* curr = head;
             int fl = 0;
-            int fl_end = 0;
             for (;curr;curr = curr->get_next()){
-                if (fl_end == 1){
-                    break;
-                }
                 int j;
                 for (j = 0; j < m; j++){
                     list2_node* data_j = curr->get_data_i(j);
                     if (data_j == nullptr){
                         fl = 0;
-                        fl_end = 1;
                         break;
                     }
                     else if (cmd.compare_name(condition::eq, *data_j)){
@@ -219,7 +214,6 @@ class list2_search{
                     else{
                         if (fl == 1){
                             fl = 0;
-                            fl_end = 1;
                             break;
                         }
                     }    
