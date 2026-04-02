@@ -29,15 +29,32 @@ class database{
         }
 
         void delete_command(command& c){
-            if (c.get_c_name() == condition::eq){
-                fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c, &starting_list);
-            }
-            if (c.get_c_group() != condition::none || c.get_c_phone() != condition::none){
+            operation op_ = c.get_op();
+            list2_node* next;
+            if (op_ == operation::lor){
                 list2_node* curr = starting_list.get_head();
-                for (;curr; curr = curr->get_next()){
+                for (;curr;){
+                    next = curr->get_next();
                     if (c.apply(*curr)){
-                        fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c.get_name(), \
-                        c.get_phone(), c.get_group(), &starting_list);
+                        fast_search.get_i(fast_search.hash_function(curr->get_name()))->delete_list2_search(curr->get_name(), \
+                        curr->get_phone(), curr->get_group(), &starting_list);
+                    }
+                    curr = next;
+                }
+            }
+            else{
+                if (c.get_c_name() == condition::eq){
+                    fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c, &starting_list);
+                }
+                else{
+                    list2_node* curr = starting_list.get_head();
+                    for (;curr;){
+                        next = curr->get_next();
+                        if (c.apply(*curr)){
+                            fast_search.get_i(fast_search.hash_function(curr->get_name()))->delete_list2_search(curr->get_name(), \
+                            curr->get_phone(), curr->get_group(), &starting_list);
+                        }
+                        curr = next;
                     }
                 }
             }
@@ -52,11 +69,17 @@ class database{
         int select_command(command& c, int* res){
             list answer;
             int fl1;
-            if (c.get_c_name() == condition::eq){
-                fl1 = fast_search.select(&answer, c);
-            }
-            if (c.get_c_group() != condition::none || c.get_c_phone() != condition::none){
+            operation op_ = c.get_op();
+            if (op_ == operation::lor){
                 fl1 = command_select(starting_list.get_head(), &answer, c);
+            }
+            else{
+                if (c.get_c_name() == condition::eq){
+                    fl1 = fast_search.select(&answer, c);
+                }
+                else{
+                    fl1 = command_select(starting_list.get_head(), &answer, c);
+                }
             }
             if (fl1 == 1){ 
                 return 5;

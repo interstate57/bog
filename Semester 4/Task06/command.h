@@ -323,6 +323,10 @@ class command : public record
             return c_group;
         }
 
+        operation get_op(){
+            return op;
+        }
+
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{
             switch (op){

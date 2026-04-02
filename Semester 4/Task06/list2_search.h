@@ -111,9 +111,24 @@ class list2_search{
                         end -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            curr->get_next()->set_prev(curr->get_prev());
-                            curr->get_prev()->set_next(curr->get_next());
-                            next = curr->get_next();
+                            if (curr == head && curr == tail){
+                                next = nullptr;
+                            }
+                            else if (curr == head){
+                                curr->get_next()->set_prev(nullptr);
+                                head = curr->get_next();
+                                next = head;
+                            }
+                            else if (curr == tail){
+                                curr->get_prev()->set_next(nullptr);
+                                tail = curr->get_prev();
+                                next = nullptr;
+                            }
+                            else{
+                                curr->get_next()->set_prev(curr->get_prev());
+                                curr->get_prev()->set_next(curr->get_next());
+                                next = curr->get_next();
+                            }
                             delete curr;
                             curr = 0;
                         }
@@ -141,9 +156,24 @@ class list2_search{
                         end -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            curr->get_next()->set_prev(curr->get_prev());
-                            curr->get_prev()->set_next(curr->get_next());
-                            next = curr->get_next();
+                            if (curr == head && curr == tail){
+                                next = nullptr;
+                            }
+                            else if (curr == head){
+                                curr->get_next()->set_prev(nullptr);
+                                head = curr->get_next();
+                                next = head;
+                            }
+                            else if (curr == tail){
+                                curr->get_prev()->set_next(nullptr);
+                                tail = curr->get_prev();
+                                next = nullptr;
+                            }
+                            else{
+                                curr->get_next()->set_prev(curr->get_prev());
+                                curr->get_prev()->set_next(curr->get_next());
+                                next = curr->get_next();
+                            }
                             delete curr;
                             curr = 0;
                         }
