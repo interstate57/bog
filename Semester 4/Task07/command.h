@@ -315,6 +315,18 @@ class command : public record
             return c_name;
         }
 
+        condition get_c_phone(){
+            return c_phone;
+        }
+
+        condition get_c_group(){
+            return c_group;
+        }
+
+        operation get_operation() const{
+            return op;
+        }
+
         // Apply command, return comparision result for record ’x’
         bool apply (const record& x) const{
             switch (op){

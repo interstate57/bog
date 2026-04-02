@@ -7,6 +7,49 @@
 #include "list2_search.h"
 #include "hashtable.h"
 #include "database.h"
+#include <libgen.h>
+#include <memory>
+#include <string.h>
+
+static bool read_config(const char* argv0, int& k, int& m) {
+    const char* config_name = "config.txt";
+    std::unique_ptr<char []> exe_path = std::make_unique<char []>(strlen(argv0) + 1);
+    if (!exe_path) return false;
+    strcpy(exe_path.get(), argv0);
+    char* dir = dirname(exe_path.get());
+    if (!dir) return false;
+
+    size_t path_len = strlen(dir) + 1 + strlen(config_name) + 1;
+    std::unique_ptr<char []> config_path = std::make_unique<char []>(path_len);
+    if (!config_path) return false;
+    snprintf(config_path.get(), path_len, "%s/%s", dir, config_name);
+
+    FILE* fp = fopen(config_path.get(), "r");
+    if (!fp) return false;
+
+    int found = 0;
+    char line[LEN];
+    while (fgets(line, sizeof(line), fp)) {
+        const char* p = line;
+        while (*p == ' ' || *p == '\t') p++;
+        if (*p == '\0' || *p == '\n' || *p == '#') continue;
+        while (*p) {
+            while (*p == ' ' || *p == '\t') p++;
+            if (*p == '\0' || *p == '\n' || *p == '#') break;
+            char* end = nullptr;
+            long v = strtol(p, &end, 10);
+            if (end == p) { fclose(fp); return false; }
+            if (found == 0) k = (int)v;
+            else if (found == 1) m = (int)v;
+            found++;
+            p = end;
+            if (found >= 2) break;
+        }
+        if (found >= 2) break;
+    }
+    fclose(fp);
+    return found >= 2 && k > 0 && m > 0;
+}
 
 int main(int argc, char* argv[]){
     char* name = 0;
@@ -16,8 +59,8 @@ int main(int argc, char* argv[]){
     int k = 0;
     int m = 0;
     FILE* fp;
-    if (!(argc == 4 && sscanf(argv[2], "%d", &k) == 0 && sscanf(argv[3], "%d", &m))){
-        printf("Usage: %s filename k m\n", argv[0]);
+    if (argc != 2 || !read_config(argv[0], k, m)){
+        printf("Usage: %s filename\n", argv[0]);
         return 1;
     }
     name = argv[1];
@@ -38,9 +81,13 @@ int main(int argc, char* argv[]){
     }while(0);
     parser com_parse(stdin);
     command c;
-    int fl1 = 0;
     for (list2_node* curr = data.get_list().get_head(); curr; curr = curr->get_next()){
-        int res_ = data.get_hash_table().insert(curr);
+        int res_ = data.get_hash_table_name().insert(curr);
+        if (res_ == -1){
+            printf("ERROR\n");
+            return 4;
+        }
+        res_ = data.get_hash_table_phone().insert(curr);
         if (res_ == -1){
             printf("ERROR\n");
             return 4;
@@ -51,10 +98,13 @@ int main(int argc, char* argv[]){
     while (dop){
         command c;
         list answer;
-        com_parse.parse(c, dop);
+        ret = com_parse.parse(c, dop);
+        if (ret != io_status::success){
+            printf("Parsing error!\n");
+            return 3;
+        }
         switch (c.get_command_type()){
             case command_type::quit:
-                printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                 answer.delete_list();
@@ -71,7 +121,6 @@ int main(int argc, char* argv[]){
             default:
                 break;
         }
-        printf("\n");
         dop = com_parse.read();
     }
     return 0;

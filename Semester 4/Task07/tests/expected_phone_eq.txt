@@ -1,0 +1,7 @@
+ Bob
+ Carl 123 2
+ Ann 10 1
+ Egor 19 4
+ Bob 28 1
+ Carl 123 2
+./a.out : Result = 6 Elapsed = 0.00

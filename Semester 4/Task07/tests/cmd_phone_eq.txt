@@ -1,0 +1,6 @@
+select name where phone = 28;
+select * where phone = 123 and group = 2;
+delete where phone = 1111;
+select * order by phone;
+quit;
+

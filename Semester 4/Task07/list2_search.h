@@ -6,32 +6,35 @@
 #include "enum.h"
 #include "comparator.h"
 #include "list.h"
+#include "key_traits.h"
 
-class list2_node_search : public vector_m{
+template <class Traits>
+class list2_node_search : public vector_m<Traits>{
     private:
-        list2_node_search* next = nullptr;
-        list2_node_search* prev = nullptr;
+        list2_node_search<Traits>* next = nullptr;
+        list2_node_search<Traits>* prev = nullptr;
     public:
         list2_node_search() = default;
         ~list2_node_search() = default;
-        void set_next(list2_node_search* x){
+        void set_next(list2_node_search<Traits>* x){
             next = x;
         }
-        void set_prev(list2_node_search* x){
+        void set_prev(list2_node_search<Traits>* x){
             prev = x;
         }
-        list2_node_search* get_next(){
+        list2_node_search<Traits>* get_next(){
             return next;
         }
-        list2_node_search* get_prev(){
+        list2_node_search<Traits>* get_prev(){
             return prev;
         }
 };
 
+template <class Traits>
 class list2_search{
     private:
-        list2_node_search* head = nullptr;
-        list2_node_search* tail = nullptr;
+        list2_node_search<Traits>* head = nullptr;
+        list2_node_search<Traits>* tail = nullptr;
         int m = 0;
     public:
         list2_search() = default;
@@ -39,8 +42,8 @@ class list2_search{
             m = x;
         }
         ~list2_search(){
-            list2_node_search* curr = head;
-            list2_node_search* next;
+            list2_node_search<Traits>* curr = head;
+            list2_node_search<Traits>* next;
             for (;curr;curr = next){
                 next = curr->get_next();
                 delete curr;
@@ -48,19 +51,19 @@ class list2_search{
             head = nullptr;
             tail = nullptr;
         }
-        list2_node_search* get_head(){
+        list2_node_search<Traits>* get_head(){
             return head;
         }
         void init(int x){
             m = x;
         }
         int insert(list2_node* x) {
-            list2_node_search* curr = head;
+            list2_node_search<Traits>* curr = head;
             list2_node* dop = x;
             list2_node* res = nullptr;
 
             if (curr == nullptr){
-                list2_node_search* new_node = new list2_node_search();
+                list2_node_search<Traits>* new_node = new list2_node_search<Traits>();
                 if (!new_node) return -1;
                 if (new_node->init(m) != 0){
                     delete new_node;
@@ -79,7 +82,7 @@ class list2_search{
                 if (!res) return 0; // inserted without overflow
                 dop = res; // overflow element, insert into next node
                 if (!curr->get_next()){
-                    list2_node_search* new_node = new list2_node_search();
+                    list2_node_search<Traits>* new_node = new list2_node_search<Traits>();
                     if (!new_node) return -1;
                     if (new_node->init(m) != 0){
                         delete new_node;
@@ -95,8 +98,8 @@ class list2_search{
         }
 
         void delete_list2_search(command& cmd, list2* a){
-            list2_node_search* curr = head;
-            list2_node_search* next;
+            list2_node_search<Traits>* curr = head;
+            list2_node_search<Traits>* next;
             list2_node* dop;
             int j;
             for (;curr;curr = next){
@@ -130,8 +133,8 @@ class list2_search{
             }
         }
         void delete_list2_search(const char* name, int phone, int group, list2* a){
-            list2_node_search* curr = head;
-            list2_node_search* next = nullptr;
+            list2_node_search<Traits>* curr = head;
+            list2_node_search<Traits>* next = nullptr;
             list2_node* dop;
             int j;
             for (;curr;curr = next){
@@ -167,7 +170,7 @@ class list2_search{
         }
         int select_command(list* answer, command& cmd){
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
-            list2_node_search* curr = head;
+            list2_node_search<Traits>* curr = head;
             int fl = 0;
             int fl_end = 0;
             for (;curr;curr = curr->get_next()){
@@ -182,7 +185,7 @@ class list2_search{
                         fl_end = 1;
                         break;
                     }
-                    else if (cmd.compare_name(condition::eq, *data_j)){
+                    else if (Traits::cmd_key_equals_node(cmd, *data_j)){
                         if (cmd.apply(*data_j)){
                             if (fl == 0)
                                 fl = 1;

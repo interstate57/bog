@@ -10,48 +10,73 @@ class database{
     private:
         int m = 0;
         int k = 0;
-        hash_table fast_search;
+        hash_table<name_key_traits> fast_search_name;
+        hash_table<phone_key_traits> fast_search_phone;
         list2 starting_list;
+
+        void rebuild_indexes(){
+            fast_search_name.reinit(m, k);
+            fast_search_phone.reinit(m, k);
+            for (list2_node* curr = starting_list.get_head(); curr; curr = curr->get_next()){
+                fast_search_name.insert(curr);
+                fast_search_phone.insert(curr);
+            }
+        }
     public:
         database() = default;
-        database(int x, int y): m(x), k(y), fast_search(m, k){
-            fast_search.init();
+        database(int x, int y)
+            : m(x)
+            , k(y)
+            , fast_search_name(m, k)
+            , fast_search_phone(m, k)
+        {
+            fast_search_name.init();
+            fast_search_phone.init();
         }
         ~database() = default;
         list2& get_list(){ return starting_list; }
         const list2& get_list() const { return starting_list; }
-        hash_table& get_hash_table(){ return fast_search; }
-        const hash_table& get_hash_table() const { return fast_search; }
+        hash_table<name_key_traits>& get_hash_table_name(){ return fast_search_name; }
+        const hash_table<name_key_traits>& get_hash_table_name() const { return fast_search_name; }
+        hash_table<phone_key_traits>& get_hash_table_phone(){ return fast_search_phone; }
+        const hash_table<phone_key_traits>& get_hash_table_phone() const { return fast_search_phone; }
 
         void delete_command(command& c){
-            if (c.get_c_name() == condition::eq){
-                fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c, &starting_list);
+            const bool can_use_index = (c.get_operation() != operation::lor);
+
+            if (can_use_index && c.get_c_name() == condition::eq){
+                fast_search_name.get_i(fast_search_name.hash_command(c))->delete_list2_search(c, &starting_list);
+                rebuild_indexes();
+                return;
+            }
+            if (can_use_index && c.get_c_phone() == condition::eq){
+                fast_search_phone.get_i(fast_search_phone.hash_command(c))->delete_list2_search(c, &starting_list);
+                rebuild_indexes();
+                return;
             }
             else{
-                // General case: we may not have an exact-name condition, so hash bucket is unknown.
-                // Walk the main list and delete matching records from both structures by their full key.
-                for (list2_node* curr = starting_list.get_head(); curr; ){
-                    list2_node* next = curr->get_next(); // save, curr can be deleted
-                    if (c.apply(*curr)){
-                        int idx = fast_search.hash_function(curr->get_name());
-                        fast_search.get_i(idx)->delete_list2_search(
-                            curr->get_name(), curr->get_phone(), curr->get_group(), &starting_list);
-                    }
-                    curr = next;
-                }
+                starting_list.delete_command(c);
+                rebuild_indexes();
             }
         }
         void insert_command(command& c){
             int res_ = starting_list.insert_command(c);
-            if (res_ == 0)
-                fast_search.insert(starting_list.get_head());
+            if (res_ == 0){
+                fast_search_name.insert(starting_list.get_head());
+                fast_search_phone.insert(starting_list.get_head());
+            }
         }
 
         int select_command(command& c, int* res){
             list answer;
             int fl1;
-            if (c.get_c_name() == condition::eq){
-                fl1 = fast_search.select(&answer, c);
+            const bool can_use_index = (c.get_operation() != operation::lor);
+
+            if (can_use_index && c.get_c_name() == condition::eq){
+                fl1 = fast_search_name.select(&answer, c);
+            }
+            else if (can_use_index && c.get_c_phone() == condition::eq){
+                fl1 = fast_search_phone.select(&answer, c);
             }
             else{
                 fl1 = command_select(starting_list.get_head(), &answer, c);

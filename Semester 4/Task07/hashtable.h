@@ -5,11 +5,12 @@
 #include "list2.h"
 #include "list.h"
 #include "comparator.h"
+#include "key_traits.h"
 
-
+template <class Traits>
 class hash_table{
     private:
-        list2_search* collection_of_data = nullptr;
+        list2_search<Traits>* collection_of_data = nullptr;
         int k = 0;
         int m = 0;
     public:
@@ -17,6 +18,23 @@ class hash_table{
         hash_table(int x, int y){
             m = x;
             k = y;
+        }
+        hash_table(const hash_table&) = delete;
+        hash_table& operator=(const hash_table&) = delete;
+        hash_table(hash_table&& other) noexcept {
+            collection_of_data = other.collection_of_data;
+            other.collection_of_data = nullptr;
+            k = other.k; other.k = 0;
+            m = other.m; other.m = 0;
+        }
+        hash_table& operator=(hash_table&& other) noexcept {
+            if (this == &other) return *this;
+            delete[] collection_of_data;
+            collection_of_data = other.collection_of_data;
+            other.collection_of_data = nullptr;
+            k = other.k; other.k = 0;
+            m = other.m; other.m = 0;
+            return *this;
         }
         ~hash_table(){
             delete[] collection_of_data;
@@ -27,7 +45,7 @@ class hash_table{
         }
         int init(){
             delete[] collection_of_data;
-            collection_of_data = new list2_search[k];
+            collection_of_data = new list2_search<Traits>[k];
             if (!collection_of_data)
                 return -1;
             for (int i = 0; i < k; i++){
@@ -35,23 +53,24 @@ class hash_table{
             }
             return 0;
         }
-        list2_search* get_i(int i){
+        int reinit(int new_m, int new_k){
+            m = new_m;
+            k = new_k;
+            return init();
+        }
+        list2_search<Traits>* get_i(int i){
             return collection_of_data + i;
         }
-        int hash_function(const char* name){
-            int cnt = 0;
-            for (int i = 0; name[i]; i++){
-                cnt += name[i];
-            }
-            return cnt % k;
-        }
+        int hash_node(const list2_node* n) const { return Traits::hash_key(Traits::get_key(n), k); }
+        int hash_command(const command& c) const { return Traits::hash_key(Traits::get_cmd_key(c), k); }
+
         int insert(list2_node* curr){
-            int index = hash_function(curr->get_name());
+            int index = hash_node(curr);
             int res = collection_of_data[index].insert(curr);
             return (res == 0) ? 0 : -1;
         }
         int select(list* answer, command& cmd){
-            int index = hash_function(cmd.get_name());
+            int index = hash_command(cmd);
             int res = collection_of_data[index].select_command(answer, cmd);
             return (res == 0) ? 0 : -1;
         }

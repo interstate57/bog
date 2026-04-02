@@ -1,7 +1,11 @@
-#include <stdio.h>
-#include "list2.h"
-#include "command.h"
+#ifndef VECTOR_M_H
+#define VECTOR_M_H
 
+#include <cstring>
+
+#include "list2.h"
+
+template <class Traits>
 class vector_m{
     private:
         int m = 0;
@@ -10,35 +14,34 @@ class vector_m{
     public:
         vector_m() = default;
         ~vector_m(){
-            int i = 0;
-            list2_node* curr = data[0];
-            for (;curr;){
-                curr = nullptr;
-                i += 1;
-                curr = data[i];
-            }
             delete[] data;
+            data = nullptr;
+            m = 0;
+            curr_number = 0;
         }
         int init(int x){
             m = x;
             data = new list2_node*[m];
             if (!data)
                 return -1;
+            for (int i = 0; i < m; i++) data[i] = nullptr;
             return 0;
         }
-        int get_curr_number(){
+        int get_curr_number() const{
             return curr_number;
         }
-        list2_node* get_data_i(int i){
+        list2_node* get_data_i(int i) const{
             if (i < curr_number)
                 return data[i];
             return nullptr;
         }
-        int bin_search(list2_node* x) {
+        int bin_search(list2_node* x) const {
             int lhs = 0, rhs = curr_number, mid;
+            const auto key_x = Traits::get_key(x);
             while (lhs != rhs) {
                 mid = (lhs + rhs) / 2;
-                if (strcmp(x->get_name(), data[mid]->get_name()) < 0) {
+                const auto key_mid = Traits::get_key(data[mid]);
+                if (Traits::compare_keys(key_x, key_mid) < 0) {
                     lhs = mid + 1;
                 }
                 else {
@@ -98,17 +101,17 @@ class vector_m{
         }
 
         void delete_vector_element(int i){
-            delete data[i];
-            data[i] = nullptr;
+            // Вектор хранит только указатели на элементы основного списка, не владеет ими.
             move_left(i);
         }
 
         list2_node* insert(list2_node* x){
             int vst = bin_search(x);
-            int i = 0;
             list2_node* res = move_right(vst, x);
             if (res != nullptr)
                 return res;
             return nullptr;
         }
 };
+
+#endif

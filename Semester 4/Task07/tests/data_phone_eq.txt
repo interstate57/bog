@@ -1,0 +1,6 @@
+Ann 10 1
+Bob 28 1
+Carl 123 2
+Dora 1111 3
+Egor 19 4
+
