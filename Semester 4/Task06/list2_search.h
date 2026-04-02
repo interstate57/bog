@@ -86,13 +86,12 @@ class list2_search{
                     return -1;
                 }
                 new_curr->init(m);
-                res = curr-> insert(dop);
-                if (res == nullptr)
+                res = new_curr-> insert(dop);
+                if (res != nullptr)
                     return -1;
                 tail->set_next(new_curr);
                 new_curr->set_prev(tail);
                 tail = new_curr;
-                curr = new_curr;    
             }
             return 0;
         }

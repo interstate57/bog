@@ -32,7 +32,7 @@ class database{
             if (c.get_c_name() == condition::eq){
                 fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c, &starting_list);
             }
-            else{
+            if (c.get_c_group() != condition::none || c.get_c_phone() != condition::none){
                 list2_node* curr = starting_list.get_head();
                 for (;curr; curr = curr->get_next()){
                     if (c.apply(*curr)){
