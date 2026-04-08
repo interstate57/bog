@@ -1,11 +1,9 @@
 #ifndef LIST2_H
 #define LIST2_H
 #include "enum.h"
-//#include "list.h"
 #include "command.h"
 #include <memory>
 
-//class list_node;
 
 class list2_node : public record
 {
@@ -116,14 +114,17 @@ class list2
             list2_node* dop;
             if (x == head){
                 dop = head->get_next();
-                head->get_next()->set_prev(nullptr);
-                head->set_next(nullptr);
+                if (dop){
+                    head->get_next()->set_prev(nullptr);
+                    head->set_next(nullptr);
+                }
                 delete head;
                 head = dop;
             }
             else{
-                x->get_next()->set_prev(x->get_prev());
-                x->get_prev()->set_next(x->get_next());
+                if (x->get_next())
+                    x->get_next()->set_prev(x->get_prev());
+                x->get_prev()->set_next(nullptr);
                 delete x;
                 x = 0;
             }
@@ -167,7 +168,7 @@ class list2
             }
         }
 
-        int insert_command(command& cmd){ // может быть надо поправить на io_status
+        int insert_command(command& cmd){
             list2_node* curr = head;
             for (;curr;curr = curr->get_next()){
                 if (cmd.compare_name(condition::eq, *curr) && cmd.compare_phone(condition::eq, *curr) &&\
