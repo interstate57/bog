@@ -109,6 +109,7 @@ class list2_search{
                     if (cmd.apply(*curr->get_data_i(j))){
                         curr->delete_vector_element(j);
                         end -= 1;
+                        j -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
                             if (curr == head && curr == tail){
@@ -156,6 +157,7 @@ class list2_search{
                         (group == curr->get_data_i(j)->get_group())){
                         curr->delete_vector_element(j);
                         end -= 1;
+                        j -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
                             if (curr == head && curr == tail){

@@ -122,9 +122,12 @@ class list2
                 head = dop;
             }
             else{
-                if (x->get_next())
+                if (x->get_next() == nullptr)
+                    x->get_prev()->set_next(nullptr);
+                else{
                     x->get_next()->set_prev(x->get_prev());
-                x->get_prev()->set_next(nullptr);
+                    x->get_prev()->set_next(x->get_next());
+                }
                 delete x;
                 x = 0;
             }
