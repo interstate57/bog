@@ -411,8 +411,7 @@ template<> int get_field<int>(command& cmd){
 
 template<> const char* get_field<const char*>(command& cmd){
     return cmd.get_name();
-}
-       
+}       
 
 template<class T>
 int compare_field(T a, T b) {
