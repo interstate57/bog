@@ -256,6 +256,12 @@ class command : public record
     public:
         command () = default;
         ~command () = default;
+        command (condition c_name_, condition c_phone, condition c_group, operation op_){
+            c_name = c_name_;
+            c_phone = c_phone;
+            c_group = c_group;
+            op = op_;
+        }
         // Convert string command to data structure
         // Example 1: "phone = 1234567" parsed to
         // (command::phone = 1234567, command::c_phone = condition::eq)
@@ -323,7 +329,7 @@ class command : public record
             return c_group;
         }
 
-        operation get_operation() const{
+        operation get_op(){
             return op;
         }
 
@@ -393,5 +399,36 @@ class command : public record
 
         friend class parser;
 };
+
+template<class T>
+T get_field(command& cmd) {
+    throw 3;
+}
+
+template<> int get_field<int>(command& cmd){
+    return cmd.get_phone();
+}
+
+template<> const char* get_field<const char*>(command& cmd){
+    return cmd.get_name();
+}
+       
+
+template<class T>
+int compare_field(T a, T b) {
+    throw 3;
+}
+
+template<> int compare_field<int>(int a, int b){
+    if (a < b)
+        return -1;
+    if (a > b)
+        return 1;
+    return 0;
+}
+
+template<> int compare_field<const char*>(const char* a, const char* b){
+    return strcmp(a, b);
+}
 
 #endif

@@ -4,29 +4,36 @@
 char* parser::read(FILE* fp){
     int i = 0;
     int fl = 0;
-    char s = fgetc(fp);
-    if (!s){
+    int ch = fgetc(fp);
+    if (ch == EOF){
         return nullptr;
     }
+    unsigned char s = (unsigned char)ch;
     while (s != ';'){
+        if (i >= LEN - 2){
+            return nullptr;
+        }
         if (s == '\t' || s == '\n'){
             buf[i] = ' ';
         } else {
-            buf[i] = s;
+            buf[i] = (char)s;
         }
-        s = fgetc(fp);
-        if (!s){
+        ch = fgetc(fp);
+        if (ch == EOF){
             fl = 1;
             break;
         }
+        s = (unsigned char)ch;
         i += 1;
     }
-    buf[i] = ';';
-    i += 1;
     if (fl){
         return nullptr;
     }
-    buf[i] = '\0';
+    if (i >= LEN - 2){
+        return nullptr;
+    }
+    buf[i] = ';';
+    buf[i + 1] = '\0';
     return buf + skip_spaces(buf);
 }
 bool parser::is_spaces(const char s){
@@ -35,7 +42,7 @@ bool parser::is_spaces(const char s){
 int parser::skip_spaces(const char* str){
     int i;
     for (i = 0; str[i]; i++){
-        if (str[i] != ' ')
+        if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
             return i;
     }
     return i;
@@ -157,40 +164,35 @@ bool parser::parse_ordering (command& cmd, const char* string){
         cmd.c_order[2] = ordering::group;
         i += 1;
         i += skip_spaces(string + i);
-        for (j = i; string[j] && string[j] != ' '; j++);
-        int len = j - i;
-        if (strncmp(string + i, "where", len) == 0){
-            i = j;
-            i += skip_spaces(string + i);
-            bool second_res = parse_after_where(cmd, string + i);
-            if (!second_res)
-                return 0;
-        }
-        else{
-            return 0;
-        }
+        return parse_select_suffix(cmd, string + i);
     }
     else{
-        for (j = i; string[j] && (string[j] != ',' && string[j] != ' '); j++);
+        for (j = i; string[j] && (string[j] != ',' && string[j] != ' ' && string[j] != ';'); j++);
         int len_first_word = j - i;
         //printf("%d\n", len_first_word);
         if (len_first_word == 5){
-            if (strncmp(string, "phone", len_first_word) == 0)
+            if (strncmp(string + i, "phone", len_first_word) == 0)
                 cmd.c_order[0] = ordering::phone;
-            else if (strncmp(string, "group", len_first_word) == 0)
+            else if (strncmp(string + i, "group", len_first_word) == 0)
                 cmd.c_order[0] = ordering::group;
             else
                 return 0;
         }
-        else if (len_first_word == 4 && strncmp(string, "name", len_first_word) == 0){
+        else if (len_first_word == 4 && strncmp(string + i, "name", len_first_word) == 0){
             cmd.c_order[0] = ordering::name;
         }
         else
             return 0;
         
-        i = j + 1;
+        i = j;
         i += skip_spaces(string + i);
-        for (j = i; string[j] && (string[j] != ',' && string[j] != ' '); j++);
+        if (string[i] == ';')
+            return parse_select_suffix(cmd, string + i);
+        if (string[i] == ','){
+            i += 1;
+            i += skip_spaces(string + i);
+        }
+        for (j = i; string[j] && (string[j] != ',' && string[j] != ' ' && string[j] != ';'); j++);
         int len_second_word = j - i;
         //printf("%d\n", len_second_word);
         if (len_second_word == 5){
@@ -207,6 +209,16 @@ bool parser::parse_ordering (command& cmd, const char* string){
                     return 0;
                 return 1;
             }
+            else if (strncmp(string + i, "order", len_second_word) == 0){
+                i = j;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && string[j] != ' '; j++);
+                if (!(j - i == 2 && strncmp(string + i, "by", 2) == 0))
+                    return 0;
+                i = j;
+                i += skip_spaces(string + i);
+                return parse_after_order_by(cmd, string + i);
+            }
             else
                 return 0;
         }
@@ -214,9 +226,15 @@ bool parser::parse_ordering (command& cmd, const char* string){
             cmd.c_order[1] = ordering::name;
         else
             return 0;
-        i = j + 1;
+        i = j;
         i += skip_spaces(string + i);
-        for (j = i; string[j] && string[j] != ' '; j++);
+        if (string[i] == ';')
+            return parse_select_suffix (cmd, string + i);
+        if (string[i] == ','){
+            i += 1;
+            i += skip_spaces(string + i);
+        }
+        for (j = i; string[j] && string[j] != ' ' && string[j] != ';'; j++);
         int len_third_word = j - i;
         if (len_third_word == 5){
             if (strncmp(string + i, "phone", len_third_word) == 0)
@@ -231,6 +249,16 @@ bool parser::parse_ordering (command& cmd, const char* string){
                     return 0;
                 return 1;
             }
+            else if (strncmp(string + i, "order", len_third_word) == 0){
+                i = j;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && string[j] != ' '; j++);
+                if (!(j - i == 2 && strncmp(string + i, "by", 2) == 0))
+                    return 0;
+                i = j;
+                i += skip_spaces(string + i);
+                return parse_after_order_by(cmd, string + i);
+            }
             else
                 return 0;
         }
@@ -240,20 +268,33 @@ bool parser::parse_ordering (command& cmd, const char* string){
             return 0;
         i = j;
         i += skip_spaces(string + i);
-        for (j = i; string[j] && string[j] != ' '; j++);
-        int len_forth_word = j - i;
-        if (strncmp(string + i, "where", len_forth_word) == 0){
-            i = j;
-            i += skip_spaces(string + i);
-            bool second_res = parse_after_where(cmd, string + i);
-            if (!second_res)
-                return 0;
-            return 1;
-        }
-        else
-            return 0;
+        return parse_select_suffix (cmd, string + i);
     }
-    return 1;
+}
+
+bool parser::parse_select_suffix (command& cmd, const char* string){
+    int i = skip_spaces(string);
+    if (string[i] == ';')
+        return true;
+    int j;
+    for (j = i; string[j] && string[j] != ' ' && string[j] != ';'; j++);
+    int len = j - i;
+    if (len == 5 && strncmp(string + i, "where", len) == 0){
+        i = j;
+        i += skip_spaces(string + i);
+        return parse_after_where(cmd, string + i);
+    }
+    if (len == 5 && strncmp(string + i, "order", len) == 0){
+        i = j;
+        i += skip_spaces(string + i);
+        for (j = i; string[j] && string[j] != ' '; j++);
+        if (!(j - i == 2 && strncmp(string + i, "by", 2) == 0))
+            return false;
+        i = j;
+        i += skip_spaces(string + i);
+        return parse_after_order_by(cmd, string + i);
+    }
+    return false;
 }
 bool parser::parse_after_where (command& cmd, const char* string){
     //printf("%s\n", string);
@@ -271,7 +312,7 @@ bool parser::parse_after_where (command& cmd, const char* string){
         return 1;
     }
     else{
-        for (j = i; string[j] && string[j] != ' '; j++);
+        for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
         int len_first_word = j - i;
         if (len_first_word == 2 && strncmp(string + i, "or", len_first_word) == 0){
             if (cmd.op == operation::land)
@@ -286,9 +327,9 @@ bool parser::parse_after_where (command& cmd, const char* string){
         else if (len_first_word == 5 && strncmp(string + i, "order", len_first_word) == 0){
             i = j;
             i += skip_spaces(string + i);
-            for (j = i; string[j] && string[j] != ' '; j++);
+            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
             int len_second_word = j - i;
-            if (strncmp(string + i, "by", len_second_word) == 0){
+            if (len_second_word == 2 && strncmp(string + i, "by", len_second_word) == 0){
                 i = j;
                 i += skip_spaces(string + i);
                 return parse_after_order_by(cmd, string + i);
@@ -362,108 +403,118 @@ bool parser::parse_after_order_by(command& cmd, const char* string){
         return 1;
     return 0;
 }
+
 bool parser::parse_condition (command& cmd, const char * string, int* kon){
-    int i = 0;
-    int j = 0;
-    condition dop;
-    i += skip_spaces(string);
-    for (j = i; string[j] && string[j] != ' '; j++);
-    int len_first_word = j - i;
-    i = j;
-    i += skip_spaces(string + i);
-    for (j = i; string[j] && string[j] != ' '; j++);
-    int len_second_word = j - i;
-    if (len_second_word == 2){
-        if (strncmp(string + i, "<>", len_second_word) == 0){
-            dop = condition::ne;
+            int i = 0;
+            int j = 0;
+            condition dop;
+            enum class tgt_field { none, name, phone, group };
+            tgt_field tgt = tgt_field::none;
+            i += skip_spaces(string);
+            const int field_start = i;
+            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
+            int len_first_word = j - i;
+            i = j;
+            i += skip_spaces(string + i);
+            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
+            int len_second_word = j - i;
+            if (len_second_word == 2){
+                if (strncmp(string + i, "<>", len_second_word) == 0){
+                    dop = condition::ne;
+                }
+                else if (strncmp(string + i, "<=", len_second_word) == 0){
+                    dop = condition::le;
+                }
+                else if (strncmp(string + i, ">=", len_second_word) == 0){
+                    dop = condition::ge;
+                }
+                else{
+                    return 0;
+                }
+            }
+            else if (len_second_word == 1){
+                if (strncmp(string + i, "=", len_second_word) == 0){
+                    dop = condition::eq;
+                }
+                else if (strncmp(string + i, "<", len_second_word) == 0){
+                    dop = condition::lt;
+                }
+                else if (strncmp(string + i, ">", len_second_word) == 0){
+                    dop = condition::gt;
+                }
+                else{
+                    return 0;
+                }
+            }
+            else if (len_second_word == 4 && strncmp(string + i, "like", len_second_word) == 0){
+                dop = condition::like;
+            }
+            else if (len_second_word == 3 && strncmp(string + i, "not", len_second_word) == 0){
+                i = j;
+                i += skip_spaces(string + i);
+                for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
+                int len_dop_word = j - i;
+                if (len_dop_word == 4 && strncmp(string + i, "like", len_dop_word) == 0)
+                    dop = condition::nlike;
+                else
+                    return 0;
+            }
+            else{
+                return 0;
+            }
+            if (len_first_word == 5){
+                if (strncmp(string + field_start, "phone", len_first_word) == 0){
+                    cmd.c_phone = dop;
+                    tgt = tgt_field::phone;
+                }
+                else if (strncmp(string + field_start, "group", len_first_word) == 0){
+                    cmd.c_group = dop;
+                    tgt = tgt_field::group;
+                }
+                else
+                    return 0;
+            }
+            else if (len_first_word == 4 && strncmp(string + field_start, "name", len_first_word) == 0){
+                cmd.c_name = dop;
+                tgt = tgt_field::name;
+            }
+            else
+                return 0;
+            i = j;
+            i += skip_spaces(string + i);
+            for (j = i; string[j] && !is_spaces(string[j]) && string[j] != ';'; j++);
+            int len_third_word = j - i;
+            if (len_third_word >= LEN){
+                return 0;
+            }
+            char str_dop[LEN] = {};
+            if (len_third_word > 0){
+                memcpy(str_dop, string + i, (size_t)len_third_word);
+            }
+            str_dop[len_third_word] = '\0';
+            if (tgt == tgt_field::name){
+                bool res = cmd.set_name(str_dop);
+                if (!res)
+                    return 0;
+            }
+            else if (tgt == tgt_field::phone || tgt == tgt_field::group){
+                int number = std::atoi(str_dop);
+                if (number == 0 && str_dop[0] != '0'){
+                    return 0;
+                }
+                if (tgt == tgt_field::phone)
+                    cmd.set_phone(number);
+                else
+                    cmd.set_group(number);
+            }
+            else{
+                return 0;
+            }
+            if (string[j] != '\0' && is_spaces(string[j])){
+                i = j;
+                i += skip_spaces(string + i);
+                *kon = i;
+            }
+            //print();
+            return 1;
         }
-        else if (strncmp(string + i, "<=", len_second_word) == 0){
-            dop = condition::le;
-        }
-        else if (strncmp(string + i, ">=", len_second_word) == 0){
-            dop = condition::ge;
-        }
-        else{
-            return 0;
-        }
-    }
-    else if (len_second_word == 1){
-        if (strncmp(string + i, "=", len_second_word) == 0){
-            dop = condition::eq;
-        }
-        else if (strncmp(string + i, "<", len_second_word) == 0){
-            dop = condition::lt;
-        }
-        else if (strncmp(string + i, ">", len_second_word) == 0){
-            dop = condition::gt;
-        }
-        else{
-            return 0;
-        }
-    }
-    else if (len_second_word == 4 && strncmp(string + i, "like", len_second_word) == 0){
-        dop = condition::like;
-    }
-    else if (len_second_word == 3 && strncmp(string + i, "not", len_second_word) == 0){
-        i = j;
-        i += skip_spaces(string + i);
-        for (j = i; string[j] && string[j] != ' ' && string[j] != '\n'; j++);
-        int len_dop_word = j - i;
-        if (len_dop_word == 4 && strncmp(string + i, "like", len_dop_word) == 0)
-            dop = condition::nlike;
-        else
-            return 0;
-    }
-    else{
-        return 0;
-    }
-    if (len_first_word == 5){
-        if (strncmp(string, "phone", len_first_word) == 0){
-            cmd.c_phone = dop;
-        }
-        else if (strncmp(string, "group", len_first_word) == 0)
-            cmd.c_group = dop;
-        else
-            return 0;
-    }
-    else if (len_first_word == 4 && strncmp(string, "name", len_first_word) == 0)
-        cmd.c_name = dop;
-    else
-        return 0;
-    i = j;
-    i += skip_spaces(string + i);
-    for (j = i; string[j] && string[j] != ' ' && string[j] != '\n'; j++);
-    int len_third_word = j - i;
-    char str_dop[LEN] = {};
-    strncpy(str_dop, string + i, len_third_word);
-    if (cmd.c_name != condition::none && dop == cmd.c_name){
-        bool res = cmd.set_name(str_dop);
-        if (!res)
-            return 0;
-        
-    }
-    else if ((cmd.c_phone != condition::none && dop == cmd.c_phone) || (cmd.c_group != condition::none && dop == cmd.c_group)){
-        //std::cout << "number: " << "\"" << str_dop << "\"" << std::endl;
-        int number = std::atoi(str_dop);
-        //std::cout << "After atoi: " << str_dop << "->" << number << std::endl;
-        if (number == 0 && str_dop[0] != '0'){
-            return 0;
-        }
-        if (cmd.c_phone != condition::none && dop == cmd.c_phone){
-            cmd.set_phone(number);
-        }
-        else{
-            cmd.set_group(number);
-        }
-    }
-    else{
-        return 0;
-    }
-    if (string[j] == ' '){
-        i = j;
-        i += skip_spaces(string + i);
-        *kon = i;
-    }
-    //print();
-    return 1;
-}

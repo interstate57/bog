@@ -10,55 +10,61 @@ class database{
     private:
         int m = 0;
         int k = 0;
-        hash_table<name_key_traits> fast_search_name;
-        hash_table<phone_key_traits> fast_search_phone;
+        hash_table<std::unique_ptr<char []>> fast_search_name;
+        hash_table<int> fast_search_phone;
         list2 starting_list;
-
-        void rebuild_indexes(){
-            fast_search_name.reinit(m, k);
-            fast_search_phone.reinit(m, k);
-            for (list2_node* curr = starting_list.get_head(); curr; curr = curr->get_next()){
-                fast_search_name.insert(curr);
-                fast_search_phone.insert(curr);
-            }
-        }
     public:
         database() = default;
-        database(int x, int y)
-            : m(x)
-            , k(y)
-            , fast_search_name(m, k)
-            , fast_search_phone(m, k)
-        {
-            fast_search_name.init();
-            fast_search_phone.init();
+
+        database(int x, int y): m(x), k(y), fast_search_name(m, k), fast_search_phone(m, k){
         }
+
         ~database() = default;
-        list2& get_list(){ return starting_list; }
-        const list2& get_list() const { return starting_list; }
-        hash_table<name_key_traits>& get_hash_table_name(){ return fast_search_name; }
-        const hash_table<name_key_traits>& get_hash_table_name() const { return fast_search_name; }
-        hash_table<phone_key_traits>& get_hash_table_phone(){ return fast_search_phone; }
-        const hash_table<phone_key_traits>& get_hash_table_phone() const { return fast_search_phone; }
+
+        list2& get_list(){ 
+            return starting_list;
+        }
+
+        hash_table<std::unique_ptr<char []>>& get_hash_table_name(){ 
+            return fast_search_name;
+        }
+
+        hash_table<int>& get_hash_table_phone(){ 
+            return fast_search_phone;
+        }
 
         void delete_command(command& c){
-            const bool can_use_index = (c.get_operation() != operation::lor);
-
-            if (can_use_index && c.get_c_name() == condition::eq){
-                fast_search_name.get_i(fast_search_name.hash_command(c))->delete_list2_search(c, &starting_list);
-                rebuild_indexes();
-                return;
-            }
-            if (can_use_index && c.get_c_phone() == condition::eq){
-                fast_search_phone.get_i(fast_search_phone.hash_command(c))->delete_list2_search(c, &starting_list);
-                rebuild_indexes();
-                return;
+            operation op_ = c.get_op();
+            list2_node* next;
+            if (op_ == operation::lor){
+                list2_node* curr = starting_list.get_head();
+                for (;curr;){
+                    next = curr->get_next();
+                    if (c.apply(*curr)){
+                        fast_search.get_i(fast_search.hash_function(curr->get_name()))->delete_list2_search(curr->get_name(), \
+                        curr->get_phone(), curr->get_group(), &starting_list);
+                    }
+                    curr = next;
+                }
             }
             else{
-                starting_list.delete_command(c);
-                rebuild_indexes();
+                if (c.get_c_name() == condition::eq){
+                    fast_search.get_i(fast_search.hash_function(c.get_name()))->delete_list2_search(c, &starting_list);
+                }
+                else{
+                    list2_node* curr = starting_list.get_head();
+                    for (;curr;){
+                        next = curr->get_next();
+                        if (c.apply(*curr)){
+                            fast_search.get_i(fast_search.hash_function(curr->get_name()))->delete_list2_search(curr->get_name(), \
+                            curr->get_phone(), curr->get_group(), &starting_list);
+                        }
+                        curr = next;
+                    }
+                }
             }
         }
+        
         void insert_command(command& c){
             int res_ = starting_list.insert_command(c);
             if (res_ == 0){
@@ -70,25 +76,84 @@ class database{
         int select_command(command& c, int* res){
             list answer;
             int fl1;
-            const bool can_use_index = (c.get_operation() != operation::lor);
-
-            if (can_use_index && c.get_c_name() == condition::eq){
-                fl1 = fast_search_name.select(&answer, c);
-            }
-            else if (can_use_index && c.get_c_phone() == condition::eq){
-                fl1 = fast_search_phone.select(&answer, c);
+            int fl2;
+            operation op_ = c.get_op();
+            condition c_phone_ = c.get_c_phone();
+            condition c_name_ = c.get_c_name();
+            if (op_ == operation::lor && c.get_c_group() != condition::none){
+                fl1 = command_select(starting_list.get_head(), &answer, c);
             }
             else{
-                fl1 = command_select(starting_list.get_head(), &answer, c);
+                if (c_name_ != condition::none && c_phone_ != condition::none){
+                    if (op_ == operation::land){
+                        if (c_name_ == condition::eq){
+                            fl1 = fast_search_name.select(&answer, c);
+                        }
+                        else if (c_phone_ == condition::eq){
+                            fl1 = fast_search_phone.select(&answer, c);
+                        }
+                        else{
+                            fl1 = command_select(starting_list.get_head(), &answer, c);
+                        }
+                    }
+                    else{
+                        list answer_;
+                        command c_(c.get_c_name(), c.get_c_phone(), c.get_c_group(), operation::land);
+                        c_.set_name(c.get_name());
+                        c_.set_phone(c.get_phone());
+                        c_.set_group(c.get_group());
+                        if (c_name_ == condition::eq){
+                            fl1 = fast_search_name.select(&answer, c);
+                        }
+                        else{
+                            fl1 = command_select(starting_list.get_head(), &answer, c);
+                        }
+                        if (fl1 == 1)
+                            return 6;
+                        if (c_phone_ == condition::eq){
+                            fl2 = fast_search_phone.select(&answer, c);
+                        }
+                        else{
+                            fl2 = command_select(starting_list.get_head(), &answer, c);
+                        }
+                        if (fl2 == 1)
+                            return 6;
+                        list_node* curr = answer_.get_head();
+                        for (;curr;){
+                            if (!c_.apply(*curr->get_data())){
+                                answer.insert(curr->get_data());
+                            }
+                        }
+                    }
+                }
+                else if (c_phone_ != condition::none){
+                    if (c_phone_ == condition::eq){
+                        fl1 = fast_search_phone.select(&answer, c);
+                    }
+                    else{
+                        fl1 = command_select(starting_list.get_head(), &answer, c);
+                    }
+                }
+                else{
+                    if (c_name_ == condition::eq){
+                        fl1 = fast_search_name.select(&answer, c);
+                    }
+                    else{
+                        fl1 = command_select(starting_list.get_head(), &answer, c);
+                    }
+                }
             }
             if (fl1 == 1){ 
                 return 5;
             }
-            if (res) *res += static_cast<int>(answer.get_length());
+            if (res) 
+                *res += answer.get_length();
             answer.print(c);
             answer.delete_list();
             return 0;
         }
+
+        
 
 };
 

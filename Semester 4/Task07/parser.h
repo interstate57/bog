@@ -36,6 +36,8 @@ class parser {
         io_status parse_select(command& cmd, const char* string);
         
         bool parse_ordering (command& cmd, const char* string);
+
+        bool parse_select_suffix (command& cmd, const char* string);
         
         bool parse_after_where (command& cmd, const char* string);
         

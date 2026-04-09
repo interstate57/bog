@@ -6,35 +6,33 @@
 #include "enum.h"
 #include "comparator.h"
 #include "list.h"
-#include "key_traits.h"
 
-template <class Traits>
-class list2_node_search : public vector_m<Traits>{
+template<typename T>
+class list2_node_search : public vector_m{
     private:
-        list2_node_search<Traits>* next = nullptr;
-        list2_node_search<Traits>* prev = nullptr;
+        list2_node_search<T>* next = nullptr;
+        list2_node_search<T>* prev = nullptr;
     public:
         list2_node_search() = default;
         ~list2_node_search() = default;
-        void set_next(list2_node_search<Traits>* x){
+        void set_next(list2_node_search<T>* x){
             next = x;
         }
-        void set_prev(list2_node_search<Traits>* x){
+        void set_prev(list2_node_search<T>* x){
             prev = x;
         }
-        list2_node_search<Traits>* get_next(){
+        list2_node_search<T>* get_next(){
             return next;
         }
-        list2_node_search<Traits>* get_prev(){
+        list2_node_search<T>* get_prev(){
             return prev;
         }
 };
-
-template <class Traits>
+template<typename T>
 class list2_search{
     private:
-        list2_node_search<Traits>* head = nullptr;
-        list2_node_search<Traits>* tail = nullptr;
+        list2_node_search<T>* head = nullptr;
+        list2_node_search<T>* tail = nullptr;
         int m = 0;
     public:
         list2_search() = default;
@@ -42,8 +40,8 @@ class list2_search{
             m = x;
         }
         ~list2_search(){
-            list2_node_search<Traits>* curr = head;
-            list2_node_search<Traits>* next;
+            list2_node_search<T>* curr = head;
+            list2_node_search<T>* next;
             for (;curr;curr = next){
                 next = curr->get_next();
                 delete curr;
@@ -51,55 +49,69 @@ class list2_search{
             head = nullptr;
             tail = nullptr;
         }
-        list2_node_search<Traits>* get_head(){
+        list2_node_search<T>* get_head(){
             return head;
         }
         void init(int x){
             m = x;
         }
-        int insert(list2_node* x) {
-            list2_node_search<Traits>* curr = head;
-            list2_node* dop = x;
-            list2_node* res = nullptr;
 
-            if (curr == nullptr){
-                list2_node_search<Traits>* new_node = new list2_node_search<Traits>();
-                if (!new_node) return -1;
-                if (new_node->init(m) != 0){
-                    delete new_node;
-                    return -1;
+        void delete_element(list2_node* a){
+            list2_node_search* curr = head;
+            for (;curr;){
+                int len = curr->get_curr_number();
+                for (int i = 0; i < len; i++){
+                    if (curr->get_data_i(i) == a)
+                        curr->move_left(i);
+                        return;
                 }
-                head = tail = new_node;
-                res = head->insert(dop);
-                // vector_m::insert returns nullptr on success (no overflow)
-                return (res == nullptr) ? 0 : -1;
+            }
+        }
+
+        int insert(list2_node* x) {
+            list2_node* dop = x;
+            list2_node* res;
+            if (head == nullptr){
+                list2_node_search<T>* new_curr = new list2_node_search();
+                if (!new_curr) return -1;
+                new_curr->init(m);
+                new_curr->insert(x);
+                head = new_curr;
+                tail = new_curr;
+                return 0;
             }
 
-            // Distribute/append elements across nodes; keep stable order inside each node.
-            // (The higher-level ordering is handled by vector_m's binary insert.)
-            while (curr){
-                res = curr->insert(dop);
-                if (!res) return 0; // inserted without overflow
-                dop = res; // overflow element, insert into next node
-                if (!curr->get_next()){
-                    list2_node_search<Traits>* new_node = new list2_node_search<Traits>();
-                    if (!new_node) return -1;
-                    if (new_node->init(m) != 0){
-                        delete new_node;
-                        return -1;
-                    }
-                    curr->set_next(new_node);
-                    new_node->set_prev(curr);
-                    tail = new_node;
-                }
+            list2_node_search<T>* curr = head;
+            
+            while (curr->get_next() && compare_field<T>(get_field<T>(curr->get_next()->get_data_i(0)), get_field<T>(x)) < 0){
                 curr = curr->get_next();
             }
-            return -1;
+
+            do{
+                res = curr-> insert(dop);
+                curr = curr->get_next();
+                dop = res;            
+            } while (res && curr);
+
+            if (res) {
+                list2_node_search<T>* new_curr = new list2_node_search(); /// 
+                if (!new_curr){
+                    return -1;
+                }
+                new_curr->init(m);
+                res = new_curr-> insert(dop);
+                if (res != nullptr)
+                    return -1;
+                tail->set_next(new_curr);
+                new_curr->set_prev(tail);
+                tail = new_curr;
+            }
+            return 0;
         }
 
         void delete_list2_search(command& cmd, list2* a){
-            list2_node_search<Traits>* curr = head;
-            list2_node_search<Traits>* next;
+            list2_node_search<T>* curr = head;
+            list2_node_search<T>* next;
             list2_node* dop;
             int j;
             for (;curr;curr = next){
@@ -110,17 +122,29 @@ class list2_search{
                     if (cmd.apply(*curr->get_data_i(j))){
                         curr->delete_vector_element(j);
                         end -= 1;
+                        j -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            next = curr->get_next();
-                            if (curr->get_prev())
-                                curr->get_prev()->set_next(curr->get_next());
-                            else
+                            if (curr == head && curr == tail){
+                                head = nullptr;
+                                next = nullptr;
+                                tail = nullptr;
+                            }
+                            else if (curr == head){
+                                curr->get_next()->set_prev(nullptr);
                                 head = curr->get_next();
-                            if (curr->get_next())
-                                curr->get_next()->set_prev(curr->get_prev());
-                            else
+                                next = head;
+                            }
+                            else if (curr == tail){
+                                curr->get_prev()->set_next(nullptr);
                                 tail = curr->get_prev();
+                                next = nullptr;
+                            }
+                            else{
+                                curr->get_next()->set_prev(curr->get_prev());
+                                curr->get_prev()->set_next(curr->get_next());
+                                next = curr->get_next();
+                            }
                             delete curr;
                             curr = 0;
                         }
@@ -133,8 +157,8 @@ class list2_search{
             }
         }
         void delete_list2_search(const char* name, int phone, int group, list2* a){
-            list2_node_search<Traits>* curr = head;
-            list2_node_search<Traits>* next = nullptr;
+            list2_node_search<T>* curr = head;
+            list2_node_search<T>* next = nullptr;
             list2_node* dop;
             int j;
             for (;curr;curr = next){
@@ -146,17 +170,29 @@ class list2_search{
                         (group == curr->get_data_i(j)->get_group())){
                         curr->delete_vector_element(j);
                         end -= 1;
+                        j -= 1;
                         if (curr->get_curr_number() == 0){
                             fl = 1;
-                            next = curr->get_next();
-                            if (curr->get_prev())
-                                curr->get_prev()->set_next(curr->get_next());
-                            else
+                            if (curr == head && curr == tail){
+                                head = nullptr;
+                                next = nullptr;
+                                tail = nullptr;
+                            }
+                            else if (curr == head){
+                                curr->get_next()->set_prev(nullptr);
                                 head = curr->get_next();
-                            if (curr->get_next())
-                                curr->get_next()->set_prev(curr->get_prev());
-                            else
+                                next = head;
+                            }
+                            else if (curr == tail){
+                                curr->get_prev()->set_next(nullptr);
                                 tail = curr->get_prev();
+                                next = nullptr;
+                            }
+                            else{
+                                curr->get_next()->set_prev(curr->get_prev());
+                                curr->get_prev()->set_next(curr->get_next());
+                                next = curr->get_next();
+                            }
                             delete curr;
                             curr = 0;
                         }
@@ -170,22 +206,17 @@ class list2_search{
         }
         int select_command(list* answer, command& cmd){
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
-            list2_node_search<Traits>* curr = head;
+            list2_node_search<T>* curr = head;
             int fl = 0;
-            int fl_end = 0;
             for (;curr;curr = curr->get_next()){
-                if (fl_end == 1){
-                    break;
-                }
                 int j;
                 for (j = 0; j < m; j++){
                     list2_node* data_j = curr->get_data_i(j);
                     if (data_j == nullptr){
                         fl = 0;
-                        fl_end = 1;
                         break;
                     }
-                    else if (Traits::cmd_key_equals_node(cmd, *data_j)){
+                    else if (compare_by_field(cmd, condition::eq, *data_j)){
                         if (cmd.apply(*data_j)){
                             if (fl == 0)
                                 fl = 1;
@@ -198,7 +229,6 @@ class list2_search{
                     else{
                         if (fl == 1){
                             fl = 0;
-                            fl_end = 1;
                             break;
                         }
                     }    
@@ -208,6 +238,19 @@ class list2_search{
             return 0;
         }
 };
+
+template<class T>
+bool compare_by_field(command& cmd, condition a, const record& b) {
+    throw 5;
+}
+
+template<> bool compare_by_field<int>(command& cmd, condition a, const record& b){
+    return cmd.compare_phone(a, b);
+}
+
+template<> bool compare_by_field<const char*>(command& cmd, condition a, const record& b){
+    return cmd.compare_name(a, b);
+}
 
 
 #endif

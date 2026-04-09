@@ -11,41 +11,56 @@
 #include <memory>
 #include <string.h>
 
-static bool read_config(const char* argv0, int& k, int& m) {
+static bool read_config(const char* filename, int& k, int& m) {
     const char* config_name = "config.txt";
-    std::unique_ptr<char []> exe_path = std::make_unique<char []>(strlen(argv0) + 1);
-    if (!exe_path) return false;
-    strcpy(exe_path.get(), argv0);
+    std::unique_ptr<char []> exe_path = std::make_unique<char []>(strlen(filename) + 1);
+    if (!exe_path)
+        return false;
+    strcpy(exe_path.get(), filename);
     char* dir = dirname(exe_path.get());
-    if (!dir) return false;
-
+    if (!dir)
+        return false;
+    printf ("Executable dir = %s\n", dir);
     size_t path_len = strlen(dir) + 1 + strlen(config_name) + 1;
     std::unique_ptr<char []> config_path = std::make_unique<char []>(path_len);
-    if (!config_path) return false;
+    if (!config_path)
+        return false;
     snprintf(config_path.get(), path_len, "%s/%s", dir, config_name);
-
+    printf ("Config path = %s\n", config_path.get ());
     FILE* fp = fopen(config_path.get(), "r");
-    if (!fp) return false;
+    if (!fp)
+        return false;
 
     int found = 0;
-    char line[LEN];
-    while (fgets(line, sizeof(line), fp)) {
-        const char* p = line;
-        while (*p == ' ' || *p == '\t') p++;
-        if (*p == '\0' || *p == '\n' || *p == '#') continue;
-        while (*p) {
-            while (*p == ' ' || *p == '\t') p++;
-            if (*p == '\0' || *p == '\n' || *p == '#') break;
+    char str[LEN];
+    while (fgets(str, sizeof(str), fp)) {
+        const char* p = str;
+        while (p[0] == ' ' || p[0] == '\t')
+            p++;
+        if (p[0] == '\0' || p[0] == '\n' || p[0] == '#')
+            continue;
+        while (p[0]) {
+            while (p[0] == ' ' || p[0] == '\t')
+                p++;
+            if (p[0] == '\0' || p[0] == '\n' || p[0] == '#')
+                break;
             char* end = nullptr;
             long v = strtol(p, &end, 10);
-            if (end == p) { fclose(fp); return false; }
-            if (found == 0) k = (int)v;
-            else if (found == 1) m = (int)v;
+            if (end == p) {
+                fclose(fp);
+                return false;
+            }
+            if (found == 0)
+                k = (int)v;
+            else if (found == 1)
+                m = (int)v;
             found++;
             p = end;
-            if (found >= 2) break;
+            if (found >= 2)
+                break;
         }
-        if (found >= 2) break;
+        if (found >= 2)
+            break;
     }
     fclose(fp);
     return found >= 2 && k > 0 && m > 0;
@@ -77,19 +92,16 @@ int main(int argc, char* argv[]){
             case io_status::parsing_error: printf("Parsing error!\n"); break;
             default: break;
         }
+        fclose(fp);
         return 3;
     }while(0);
     parser com_parse(stdin);
     command c;
     for (list2_node* curr = data.get_list().get_head(); curr; curr = curr->get_next()){
-        int res_ = data.get_hash_table_name().insert(curr);
+        int res_ = data.get_hash_table().insert(curr);
         if (res_ == -1){
             printf("ERROR\n");
-            return 4;
-        }
-        res_ = data.get_hash_table_phone().insert(curr);
-        if (res_ == -1){
-            printf("ERROR\n");
+            fclose(fp);
             return 4;
         }
     }
@@ -101,13 +113,16 @@ int main(int argc, char* argv[]){
         ret = com_parse.parse(c, dop);
         if (ret != io_status::success){
             printf("Parsing error!\n");
+            fclose(fp);
             return 3;
         }
         switch (c.get_command_type()){
             case command_type::quit:
+                printf("\n");
                 t = (clock() - t) / CLOCKS_PER_SEC;
                 printf ("%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                 answer.delete_list();
+                fclose(fp);
                 return 0;
             case command_type::del:
                 data.delete_command(c);
@@ -122,6 +137,8 @@ int main(int argc, char* argv[]){
                 break;
         }
         dop = com_parse.read();
+        printf("\n");
     }
+    fclose(fp);
     return 0;
 }
