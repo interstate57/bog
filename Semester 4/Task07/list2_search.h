@@ -7,8 +7,64 @@
 #include "comparator.h"
 #include "list.h"
 
+template<class T>
+bool compare_by_field(command& cmd, condition a, const record& b) {
+    throw 5;
+}
+
+template<> bool compare_by_field<int>(command& cmd, condition a, const record& b){
+    return cmd.compare_phone(a, b);
+}
+
+template<> bool compare_by_field<const char*>(command& cmd, condition a, const record& b){
+    return cmd.compare_name(a, b);
+}
+
+template<class T>
+T get_field(command&) {
+    throw 3;
+}
+
+template<> int get_field<int>(command& cmd){
+    return cmd.get_phone();
+}
+
+template<> const char* get_field<const char*>(command& cmd){
+    return cmd.get_name();
+}       
+
+template<class T>
+T get_field(record&) {
+    throw 3;
+}
+
+template<> int get_field<int>(record& cmd){
+    return cmd.get_phone();
+}
+
+template<> const char* get_field<const char*>(record& cmd){
+    return cmd.get_name();
+}   
+
+template<class T>
+int compare_field(T a, T b) {
+    throw 3;
+}
+
+template<> int compare_field<int>(int a, int b){
+    if (a < b)
+        return -1;
+    if (a > b)
+        return 1;
+    return 0;
+}
+
+template<> int compare_field<const char*>(const char* a, const char* b){
+    return strcmp(a, b);
+}
+
 template<typename T>
-class list2_node_search : public vector_m{
+class list2_node_search : public vector_m<T>{
     private:
         list2_node_search<T>* next = nullptr;
         list2_node_search<T>* prev = nullptr;
@@ -57,13 +113,16 @@ class list2_search{
         }
 
         void delete_element(list2_node* a){
-            list2_node_search* curr = head;
-            for (;curr;){
+            list2_node_search<T>* curr = head;
+            list2_node_search<T>* next;
+            for (;curr;curr = next){
+                next = curr->get_next();
                 int len = curr->get_curr_number();
                 for (int i = 0; i < len; i++){
-                    if (curr->get_data_i(i) == a)
+                    if (curr->get_data_i(i) == a){
                         curr->move_left(i);
                         return;
+                    }
                 }
             }
         }
@@ -72,7 +131,7 @@ class list2_search{
             list2_node* dop = x;
             list2_node* res;
             if (head == nullptr){
-                list2_node_search<T>* new_curr = new list2_node_search();
+                list2_node_search<T>* new_curr = new list2_node_search<T>();
                 if (!new_curr) return -1;
                 new_curr->init(m);
                 new_curr->insert(x);
@@ -94,7 +153,7 @@ class list2_search{
             } while (res && curr);
 
             if (res) {
-                list2_node_search<T>* new_curr = new list2_node_search(); /// 
+                list2_node_search<T>* new_curr = new list2_node_search<T>(); /// 
                 if (!new_curr){
                     return -1;
                 }
@@ -216,7 +275,7 @@ class list2_search{
                         fl = 0;
                         break;
                     }
-                    else if (compare_by_field(cmd, condition::eq, *data_j)){
+                    else if (compare_by_field<T>(cmd, condition::eq, *data_j)){
                         if (cmd.apply(*data_j)){
                             if (fl == 0)
                                 fl = 1;
@@ -239,18 +298,7 @@ class list2_search{
         }
 };
 
-template<class T>
-bool compare_by_field(command& cmd, condition a, const record& b) {
-    throw 5;
-}
 
-template<> bool compare_by_field<int>(command& cmd, condition a, const record& b){
-    return cmd.compare_phone(a, b);
-}
-
-template<> bool compare_by_field<const char*>(command& cmd, condition a, const record& b){
-    return cmd.compare_name(a, b);
-}
 
 
 #endif

@@ -98,7 +98,13 @@ int main(int argc, char* argv[]){
     parser com_parse(stdin);
     command c;
     for (list2_node* curr = data.get_list().get_head(); curr; curr = curr->get_next()){
-        int res_ = data.get_hash_table().insert(curr);
+        int res_ = data.get_hash_table_name().insert(curr);
+        if (res_ == -1){
+            printf("ERROR\n");
+            fclose(fp);
+            return 4;
+        }
+        res_ = data.get_hash_table_phone().insert(curr);
         if (res_ == -1){
             printf("ERROR\n");
             fclose(fp);

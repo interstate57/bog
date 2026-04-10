@@ -9,6 +9,7 @@
 #include "enum.h"
 #include "request.h"
 
+
 class record
 {
     protected:
@@ -400,34 +401,5 @@ class command : public record
         friend class parser;
 };
 
-template<class T>
-T get_field(command& cmd) {
-    throw 3;
-}
-
-template<> int get_field<int>(command& cmd){
-    return cmd.get_phone();
-}
-
-template<> const char* get_field<const char*>(command& cmd){
-    return cmd.get_name();
-}       
-
-template<class T>
-int compare_field(T a, T b) {
-    throw 3;
-}
-
-template<> int compare_field<int>(int a, int b){
-    if (a < b)
-        return -1;
-    if (a > b)
-        return 1;
-    return 0;
-}
-
-template<> int compare_field<const char*>(const char* a, const char* b){
-    return strcmp(a, b);
-}
 
 #endif

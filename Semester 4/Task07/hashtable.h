@@ -6,6 +6,7 @@
 #include "list.h"
 #include "comparator.h"
 
+
 template<typename T>
 class hash_table{
     private:
@@ -39,7 +40,7 @@ class hash_table{
             return collection_of_data + i;
         }
         int insert(list2_node* curr){
-            int index = hash_function(get_field(cmd));
+            int index = hash_function(get_field<T>(curr));
             int res = collection_of_data[index].insert(curr);
             if (res != 0)
                 return -1;
@@ -52,8 +53,8 @@ class hash_table{
                 return -1;
             return 0;
         }
-        int remove_element(list2_node* curr) {
-            int index = hash_function(get_field<T>(cmd));
+        void remove_element(list2_node* curr) {
+            int index = hash_function(get_field<T>(curr));
             collection_of_data[index].delete_element(curr);
         }
         int hash_function(T x){

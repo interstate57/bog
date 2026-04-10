@@ -186,4 +186,18 @@ class list2
 };
 
 
+template<class T>
+T get_field(list2_node*) {
+    throw 3;
+}
+
+template<> int get_field<int>(list2_node* x){
+    return x->get_phone();
+}
+
+template<> const char* get_field<const char*>(list2_node* x){
+    return x->get_name();
+}    
+
+
 #endif
