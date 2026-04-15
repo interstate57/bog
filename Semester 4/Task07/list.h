@@ -76,6 +76,8 @@ class list
             }
         }
        io_status insert(list2_node* dop){
+            if (dop->get_was_used())
+                return io_status::success;
             list_node* new_head = new list_node;
             if (!new_head)
                 return io_status::memory;
@@ -83,6 +85,7 @@ class list
             new_head->set_data(dop);
             head = new_head;
             new_head->set_next(old_head);
+            dop->set_was_used(true);
             return io_status::success;
 
         }

@@ -10,6 +10,7 @@ class list2_node : public record
     private:
         list2_node* next = nullptr;
         list2_node* prev = nullptr;
+        bool was_used = false;
     public:
         list2_node() = default;
         list2_node(const list2_node&) = delete;
@@ -39,6 +40,12 @@ class list2_node : public record
         }
         void set_prev(list2_node* r){
             prev = r;
+        }
+        bool get_was_used(){
+            return was_used;
+        }
+        void set_was_used(bool x){
+            was_used = x;
         }
         friend class list2;
 };
@@ -107,6 +114,7 @@ class list2
             list2_node *curr;
             for(curr = head; curr; curr = curr->get_next()){
                 curr->print(cmd.get_ordering(), stdout);
+                curr->set_was_used(false);
             }
         }
 

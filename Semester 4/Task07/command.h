@@ -34,6 +34,9 @@ class record
                 name = nullptr;
             return 0;
         }
+        bool operator==(const record& x){
+            return (x.phone == phone && x.group == group && strcmp(name.get(), x.name.get())==0) ? 1 : 0;
+        }
         // Allow as return value for functions
         record (record &&x) = default; // move constructor
         // Assignement move operator

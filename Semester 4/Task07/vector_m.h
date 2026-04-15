@@ -29,6 +29,8 @@ class vector_m{
             return 0;
         }
         int get_curr_number(){
+            if (curr_number < 0 || curr_number > m)
+                throw(57);
             return curr_number;
         }
         list2_node* get_data_i(int i){

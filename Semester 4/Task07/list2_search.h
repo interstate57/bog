@@ -119,8 +119,25 @@ class list2_search{
                 next = curr->get_next();
                 int len = curr->get_curr_number();
                 for (int i = 0; i < len; i++){
-                    if (curr->get_data_i(i) == a){
+                    if (*(curr->get_data_i(i)) == *a){
                         curr->move_left(i);
+                        if (curr->get_curr_number() == 0){
+                            if (curr->get_prev()){
+                                curr->get_prev()->set_next(next);
+                            }
+                            else{
+                                head = curr->get_next();
+                            }
+                            if (next){
+                                next->set_prev(curr->get_prev());
+                            }
+                            else{
+                                tail = curr->get_prev();
+                            }
+                            delete curr;
+                            curr = 0;
+                            return;
+                        }
                         return;
                     }
                 }
@@ -267,6 +284,14 @@ class list2_search{
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
             list2_node_search<T>* curr = head;
             int fl = 0;
+            /*while(curr && curr->get_next()){
+                if (compare_by_field<T>(cmd, condition::lt, *curr->get_data_i(curr->get_curr_number() - 1))){
+                    curr = curr->get_next();
+                }
+                else{
+                    break;
+                }
+            }*/
             for (;curr;curr = curr->get_next()){
                 int j;
                 for (j = 0; j < m; j++){

@@ -82,11 +82,6 @@ class database{
                         }
                     }
                     else{
-                        list answer_;
-                        command c_(c.get_c_name(), c.get_c_phone(), c.get_c_group(), operation::land);
-                        c_.set_name(c.get_name());
-                        c_.set_phone(c.get_phone());
-                        c_.set_group(c.get_group());
                         if (c_name_ == condition::eq){
                             fl1 = fast_search_name.select(&answer, c);
                         }
@@ -96,19 +91,13 @@ class database{
                         if (fl1 == 1)
                             return 6;
                         if (c_phone_ == condition::eq){
-                            fl2 = fast_search_phone.select(&answer_, c);
+                            fl2 = fast_search_phone.select(&answer, c);
                         }
                         else{
-                            fl2 = command_select(starting_list.get_head(), &answer_, c);
+                            fl2 = command_select(starting_list.get_head(), &answer, c);
                         }
                         if (fl2 == 1)
                             return 6;
-                        list_node* curr = answer_.get_head();
-                        for (;curr;curr = curr->get_next()){
-                            if (!c_.apply(*curr->get_data())){
-                                answer.insert(curr->get_data());
-                            }
-                        }
                     }
                 }
                 else if (c_phone_ != condition::none){
@@ -161,11 +150,6 @@ class database{
                         }
                     }
                     else{
-                        list answer_;
-                        command c_(c.get_c_name(), c.get_c_phone(), c.get_c_group(), operation::land);
-                        c_.set_name(c.get_name());
-                        c_.set_phone(c.get_phone());
-                        c_.set_group(c.get_group());
                         if (c_name_ == condition::eq){
                             fl1 = fast_search_name.select(&answer, c);
                         }
@@ -182,12 +166,6 @@ class database{
                         }
                         if (fl2 == 1)
                             return 6;
-                        list_node* curr = answer_.get_head();
-                        for (;curr;){
-                            if (!c_.apply(*curr->get_data())){
-                                answer.insert(curr->get_data());
-                            }
-                        }
                     }
                 }
                 else if (c_phone_ != condition::none){
