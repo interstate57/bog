@@ -114,6 +114,7 @@ int main(int argc, char* argv[]){
     t = clock();
     char* dop = com_parse.read();
     while (dop){
+        //printf("Command : %s\n", dop);
         command c;
         list answer;
         ret = com_parse.parse(c, dop);

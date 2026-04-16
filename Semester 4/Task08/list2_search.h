@@ -318,7 +318,11 @@ class list2_search{
                     }    
                 }
             }
-            answer->sort(cmp);
+            const ordering* ob = cmd.get_ordering_end();
+            bool need_sort = (ob[0] != ordering::none || ob[1] != ordering::none
+                || ob[2] != ordering::none);
+            if (need_sort)
+                answer->sort(cmp);
             return 0;
         }
 };

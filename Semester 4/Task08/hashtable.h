@@ -57,6 +57,18 @@ class hash_table{
             int index = hash_function(get_field<T>(curr));
             collection_of_data[index].delete_element(curr);
         }
+
+        void go_through_hashtable(list* answer){
+            int i = 0;
+            for (; i < k; i++){
+                list2_node_search<T>* curr = collection_of_data[i].get_head();
+                for (;curr; curr = curr->get_next()){
+                    for (int j = 0; j < curr->get_curr_number(); j++){
+                        answer->insert(curr->get_data_i(j));
+                    }
+                }
+            }
+        }
         int hash_function(T x){
             throw 2;
         }

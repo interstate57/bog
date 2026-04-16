@@ -102,7 +102,8 @@ class database{
             operation op_ = c.get_op();
             condition c_phone_ = c.get_c_phone();
             condition c_name_ = c.get_c_name();
-            if (op_ == operation::lor && c.get_c_group() != condition::none){
+            condition c_group_ = c.get_c_group();
+            if (op_ == operation::lor && c_group_ != condition::none){
                 return command_select(starting_list.get_head(), &answer, c);
             }
             if (c_name_ != condition::none && c_phone_ != condition::none){
@@ -114,7 +115,9 @@ class database{
                         return x.get_fast_search_phone().select(&answer, c);
                     }
                     else{
-                        return command_select(starting_list.get_head(), &answer, c);
+                        if (c_group_ != condition::eq)
+                            return command_select(starting_list.get_head(), &answer, c);
+                        x.go_through_kirpichek(&answer);
                     }
                 }
                 else{
@@ -140,7 +143,9 @@ class database{
                     return x.get_fast_search_phone().select(&answer, c);
                 }
                 else{
-                    return command_select(starting_list.get_head(), &answer, c);
+                    if (c_group_ != condition::eq)
+                            return command_select(starting_list.get_head(), &answer, c);
+                        x.go_through_kirpichek(&answer);
                 }
             }
             else{
@@ -148,9 +153,12 @@ class database{
                     return x.get_fast_search_name().select(&answer, c);
                 }
                 else{
-                    return command_select(starting_list.get_head(), &answer, c);
+                    if (c_group_ != condition::eq)
+                            return command_select(starting_list.get_head(), &answer, c);
+                        x.go_through_kirpichek(&answer);
                 }
             }
+            return 0;
         }
         
 

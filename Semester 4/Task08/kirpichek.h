@@ -49,6 +49,10 @@ class kirpichek{
             fast_search_name.remove_element(curr);
             fast_search_phone.remove_element(curr);
         }
+
+        void go_through_kirpichek(list* answer){
+            fast_search_name.go_through_hashtable(answer);
+        }
 };
 
 
