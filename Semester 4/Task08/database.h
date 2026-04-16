@@ -144,8 +144,8 @@ class database{
                 }
                 else{
                     if (c_group_ != condition::eq)
-                            return command_select(starting_list.get_head(), &answer, c);
-                        x.go_through_kirpichek(&answer);
+                        return command_select(starting_list.get_head(), &answer, c);
+                    x.go_through_kirpichek(&answer);
                 }
             }
             else{
@@ -154,8 +154,8 @@ class database{
                 }
                 else{
                     if (c_group_ != condition::eq)
-                            return command_select(starting_list.get_head(), &answer, c);
-                        x.go_through_kirpichek(&answer);
+                        return command_select(starting_list.get_head(), &answer, c);
+                    x.go_through_kirpichek(&answer);
                 }
             }
             return 0;
