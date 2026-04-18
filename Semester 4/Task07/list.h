@@ -72,6 +72,7 @@ class list
             unsigned int cnt = 0;
             for(curr = head; curr != nullptr; curr = curr->get_next()){
                 curr->data->print(cmd.get_ordering(), fp);
+                curr->data->set_was_used(false);
                 cnt++;
             }
         }

@@ -2,39 +2,25 @@
 #include "enum.h"
 
 char* parser::read(FILE* fp){
+    buf[0] = '\0';
     int i = 0;
-    int fl = 0;
-    int ch = fgetc(fp);
-    if (ch == EOF){
-        return nullptr;
-    }
-    unsigned char s = (unsigned char)ch;
-    while (s != ';'){
-        if (i >= LEN - 2){
-            return nullptr;
+    char line[LEN];
+    while (fgets(line, LEN, fp)) {
+        char* semi = strchr(line, ';');
+        size_t take = semi ? (size_t)(semi - line) : strlen(line);
+        for (size_t p = 0; p < take; ++p) {
+            if (i >= LEN - 2) return nullptr;
+            char s = line[p];
+            buf[i++] = (s == '\n' || s == '\t' || s == '\r') ? ' ' : s;
         }
-        if (s == '\t' || s == '\n'){
-            buf[i] = ' ';
-        } else {
-            buf[i] = (char)s;
+        if (semi) {
+            buf[i] = ';';
+            i++;
+            buf[i] = '\0';
+            return buf + skip_spaces(buf);
         }
-        ch = fgetc(fp);
-        if (ch == EOF){
-            fl = 1;
-            break;
-        }
-        s = (unsigned char)ch;
-        i += 1;
     }
-    if (fl){
-        return nullptr;
-    }
-    if (i >= LEN - 2){
-        return nullptr;
-    }
-    buf[i] = ';';
-    buf[i + 1] = '\0';
-    return buf + skip_spaces(buf);
+    return nullptr;
 }
 bool parser::is_spaces(const char s){
     return (s == ' ' || s == '\t' || s == '\n');
