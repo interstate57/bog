@@ -11,7 +11,7 @@
 #include <memory>
 #include <string.h>
 
-static bool read_config(const char* filename, int& k, int& m) {
+static bool read_config(const char* filename, int& k1, int& m1, int& k2, int& m2) {
     const char* config_name = "config.txt";
     std::unique_ptr<char []> exe_path = std::make_unique<char []>(strlen(filename) + 1);
     if (!exe_path)
@@ -51,19 +51,23 @@ static bool read_config(const char* filename, int& k, int& m) {
                 return false;
             }
             if (found == 0)
-                k = (int)v;
+                k1 = (int)v;
             else if (found == 1)
-                m = (int)v;
+                m1 = (int)v;
+            else if (found == 2)
+                k2 = (int)v;
+            else if (found == 3)
+                m2 = (int)v;
             found++;
             p = end;
-            if (found >= 2)
+            if (found >= 4)
                 break;
         }
-        if (found >= 2)
+        if (found >= 4)
             break;
     }
     fclose(fp);
-    return found >= 2 && k > 0 && m > 0;
+    return found >= 4 && k1 > 0 && m1 > 0 && k2 > 0 && m2 > 0;
 }
 
 int main(int argc, char* argv[]){
@@ -71,16 +75,18 @@ int main(int argc, char* argv[]){
     io_status ret;
     double t = 0;
     int res = 0;
-    int k = 0;
-    int m = 0;
+    int k1 = 0;
+    int m1 = 0;
+    int k2 = 0;
+    int m2 = 0;
     FILE* fp;
-    if (argc != 2 || !read_config(argv[0], k, m)){
+    if (argc != 2 || !read_config(argv[0], k1, m1, k2, m2)){
         printf("Usage: %s filename\n", argv[0]);
         return 1;
     }
     name = argv[1];
     if (!(fp = fopen(name, "r"))) return -1;
-    database data(m, k);
+    database data(k1, m1, k2, m2);
     ret = data.get_list().read(fp);
     do{
         switch(ret){

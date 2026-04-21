@@ -283,7 +283,6 @@ class list2_search{
         int select_command(list* answer, command& cmd){
             comparator cmp(cmd.get_ordering_end()[0], cmd.get_ordering_end()[1], cmd.get_ordering_end()[2]);
             list2_node_search<T>* curr = head;
-            int fl = 0;
             while(curr && curr->get_next()){
                 if (compare_by_field<T>(cmd, condition::lt, *curr->get_data_i(curr->get_curr_number() - 1))){
                     curr = curr->get_next();
@@ -292,36 +291,62 @@ class list2_search{
                     break;
                 }
             }
-            for (;curr;curr = curr->get_next()){
-                int j;
-                for (j = 0; j < m; j++){
-                    list2_node* data_j = curr->get_data_i(j);
-                    if (data_j == nullptr){
-                        fl = 0;
-                        break;
+            int res = dop_poisk(answer, cmd, curr);
+            if (res != 0)
+                return -1;
+            const ordering* ob = cmd.get_ordering_end();
+            bool need_sort = (ob[0] != ordering::none || ob[1] != ordering::none
+                || ob[2] != ordering::none);
+            if (need_sort)
+                answer->sort(cmp);
+            return 0;
+        }
+        int dop_poisk(list* answer, command& cmd, list2_node_search<T>* x){
+            int nach = x->bin_find(get_field<T>(cmd));
+            if (nach < 0)
+                return -1;
+            if (cmd.apply(*x->get_data_i(nach)))
+                answer->insert(x->get_data_i(nach));
+            for (int i = nach - 1; i > -1; i--){
+                list2_node* data_j = x->get_data_i(i);
+                if (cmd.apply(*data_j)){
+                    io_status ret = answer->insert(data_j);
+                    if (ret != io_status::success){
+                        return -1;
                     }
-                    else if (compare_by_field<T>(cmd, condition::eq, *data_j)){
-                        if (cmd.apply(*data_j)){
-                            if (fl == 0)
-                                fl = 1;
-                            io_status ret = answer->insert(data_j);
-                            if (ret != io_status::success){
-                                return 1;
-                            }
+                }
+                else{
+                    break;
+                }
+            }
+            list2_node_search<T>* curr = x;
+            int fl1 = 0;
+            int fl2 = 0;
+            for (; curr; curr = curr->get_next()){
+                if (fl1 == 1)
+                    break;
+                int i = (fl2 == 0) ? nach + 1 : 0;
+                int len = curr->get_curr_number();
+                for (;i < len; i++){
+                    list2_node* data_j = curr->get_data_i(i);
+                    if (cmd.apply(*data_j)){
+                        io_status ret = answer->insert(data_j);
+                        if (ret != io_status::success){
+                            return -1;
                         }
                     }
                     else{
-                        if (fl == 1){
-                            fl = 0;
-                            break;
-                        }
-                    }    
+                        fl1 = 1;
+                        break;
+                    }
                 }
+                fl2 = 1;
             }
-            answer->sort(cmp);
             return 0;
         }
+
 };
+
 
 
 

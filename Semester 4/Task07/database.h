@@ -8,15 +8,18 @@
 
 class database{
     private:
-        int m = 0;
-        int k = 0;
+        int k1 = 0;
+        int m1 = 0;
+        int k2 = 0;
+        int m2 = 0;
         hash_table<const char*> fast_search_name;
         hash_table<int> fast_search_phone;
         list2 starting_list;
     public:
         database() = default;
 
-        database(int x, int y): m(x), k(y), fast_search_name(m, k), fast_search_phone(m, k){
+        database(int x, int y, int a, int b): k1(x), m1(y), k2(a), m2(b), 
+        fast_search_name(k1, m1), fast_search_phone(k2, m2){
         }
 
         ~database() = default;

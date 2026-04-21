@@ -16,8 +16,8 @@ class hash_table{
     public:
         hash_table() = default;
         hash_table(int x, int y){
-            m = x;
-            k = y;
+            k = x;
+            m = y;
             init();
         }
         ~hash_table(){
