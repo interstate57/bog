@@ -291,6 +291,8 @@ class list2_search{
                     break;
                 }
             }
+            if (curr == nullptr)
+                return 0;
             int res = dop_poisk(answer, cmd, curr);
             if (res != 0)
                 return -1;

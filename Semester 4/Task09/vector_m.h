@@ -127,7 +127,7 @@ template<> int vector_m<const char*>::bin_search(list2_node* x){
 }
 
 template<> int vector_m<int>::bin_find(int x){
-    int lhs = 0, rhs = curr_number, mid;
+    int lhs = 0, rhs = curr_number - 1, mid;
     while (lhs <= rhs) {
         mid = (lhs + rhs) / 2;
         if (x == data[mid]->get_phone()){
@@ -145,7 +145,7 @@ template<> int vector_m<int>::bin_find(int x){
 
 
 template<> int vector_m<const char*>::bin_find(const char* x){
-    int lhs = 0, rhs = curr_number, mid;
+    int lhs = 0, rhs = curr_number - 1, mid;
     while (lhs <= rhs) {
         mid = (lhs + rhs) / 2;
         if ((strcmp(x, data[mid]->get_name()) == 0)){
