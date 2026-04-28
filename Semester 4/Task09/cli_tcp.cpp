@@ -69,9 +69,11 @@ int main (void){
             buf[i] = ';';
             i++;
             buf[i] = '\0';
+            writeToServer (sock, buf);
+            readAmountFromServer (sock);
+            i = 0;
+            buf[0] = '\0';
         }
-        writeToServer (sock, buf);
-        readAmountFromServer (sock);
     }
     // Закрываем socket
     close (sock);
@@ -81,8 +83,7 @@ int main (void){
 void writeToServer (int fd, char* buf){
     int nbytes, len, i;
 
-    fprintf (stdout, "Send to server > ");
-    //fgets (buf, BUFLEN, stdin);
+    //fprintf (stdout, "Send to server > %s\n", buf);
     // Удаляем завершающий символ ’\n’ (если есть)
     for (len = 0; buf[len]; len++)
     if (buf[len] == '\n'){

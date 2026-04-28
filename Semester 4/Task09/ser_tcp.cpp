@@ -167,7 +167,6 @@ int main (int argc, char* argv[]){
         }
     }
     fclose(fp);
-    list answer;
     // Основной бесконечный цикл проверки состояния сокетов
     while (1){
         // Проверим, не появились ли данные в каком-либо сокете.
@@ -210,11 +209,13 @@ int main (int argc, char* argv[]){
                         if (ret != io_status::success){
                             sprintf(buf, "ERROR\n");
                             writeToClient(i, buf);
-                            close (sock);
+                            close (i);
+                            FD_CLR (i, &active_set);
+                            break;
                         }
                         cmd.print();
+                        list answer;
                         switch (cmd.get_command_type()){
-                            
                             int len;
                             list_node* curr;
                             case command_type::quit:
@@ -224,7 +225,8 @@ int main (int argc, char* argv[]){
                                 sprintf (buf, "%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                                 answer.delete_list();
                                 writeToClient (i, buf);
-                                close (sock);
+                                close (i);
+                                FD_CLR (i, &active_set);
                                 break;
                             case command_type::stop:
                                 t = (clock() - t) / CLOCKS_PER_SEC;
@@ -233,6 +235,8 @@ int main (int argc, char* argv[]){
                                 sprintf (buf, "%s : Result = %d Elapsed = %.2f\n", argv[0], res, t);
                                 answer.delete_list();
                                 writeToClient (i, buf);
+                                close (i);
+                                FD_CLR (i, &active_set);
                                 close (sock);
                                 return 0;
                             case command_type::del:
@@ -256,8 +260,6 @@ int main (int argc, char* argv[]){
                             default:
                                 break;
                         }
-                        close (i);
-                        FD_CLR (i, &active_set);
                     }
                 }
             }
@@ -333,5 +335,5 @@ io_status convert_str_to_command(char* str, command& cmd){
 }
 
 void convert_record_to_str(char* res, record& cmd){
-    sprintf(res, "%s %d %d\n", cmd.get_name(), cmd.get_phone(), cmd.get_group());
+    sprintf(res, "%s %d %d", cmd.get_name(), cmd.get_phone(), cmd.get_group());
 }
