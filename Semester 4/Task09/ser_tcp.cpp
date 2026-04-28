@@ -207,8 +207,16 @@ int main (int argc, char* argv[]){
                         // данные прочитаны нормально
                         command cmd;
                         io_status ret = convert_str_to_command(buf, cmd);
+                        if (ret != io_status::success){
+                            sprintf(buf, "ERROR\n");
+                            writeToClient(i, buf);
+                            close (sock);
+                        }
+                        cmd.print();
                         switch (cmd.get_command_type()){
+                            
                             int len;
+                            list_node* curr;
                             case command_type::quit:
                                 t = (clock() - t) / CLOCKS_PER_SEC;
                                 sprintf(buf, "1\n");
@@ -239,8 +247,8 @@ int main (int argc, char* argv[]){
                                 res += len;
                                 sprintf(buf, "%d\n", len);
                                 writeToClient(i, buf);
-                                for (int j = 0; j < len; j++){
-                                    list_node* curr = answer.get_head();
+                                curr = answer.get_head();
+                                for (;curr;curr = curr->get_next()){
                                     convert_record_to_str(buf, *curr->get_data());
                                     writeToClient(i, buf);
                                 }

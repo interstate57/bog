@@ -7,7 +7,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include "parser.h"
+#include "enum.h"
 // Определимся с портом, адресом сервера и другими константами.
 // В данном случае берем произвольный порт и адрес обратной связи
 // (тестируем на одной машине).
@@ -15,7 +15,7 @@
 #define SERVER_NAME "127.0.0.1"
 #define BUFLEN 512
 // Две вспомогательные функции для чтения/записи (см. ниже)
-void writeToServer (int fd);
+void writeToServer (int fd, char *buf);
 void readFromServer (int fd);
 void readAmountFromServer (int fd);
 int main (void){
@@ -59,7 +59,9 @@ int main (void){
         char* semi = strchr(line, ';');
         size_t take = semi ? (size_t)(semi - line) : strlen(line);
         for (size_t p = 0; p < take; ++p) {
-            if (i >= LEN - 2) return -1;
+            if (i >= LEN - 2){
+                return -1;
+            } 
             char s = line[p];
             buf[i++] = (s == '\n' || s == '\t' || s == '\r') ? ' ' : s;
         }
@@ -70,7 +72,6 @@ int main (void){
         }
         writeToServer (sock, buf);
         readAmountFromServer (sock);
-        
     }
     // Закрываем socket
     close (sock);
@@ -79,8 +80,7 @@ int main (void){
 }
 void writeToServer (int fd, char* buf){
     int nbytes, len, i;
-    
-    strcpy(buf, "select * where group = 208;");
+
     fprintf (stdout, "Send to server > ");
     //fgets (buf, BUFLEN, stdin);
     // Удаляем завершающий символ ’\n’ (если есть)
