@@ -241,9 +241,13 @@ int main (int argc, char* argv[]){
                                 return 0;
                             case command_type::del:
                                 data.delete_command(cmd);
+                                sprintf(buf, "0\n");
+                                writeToClient(i, buf);
                                 break;
                             case command_type::insert:
                                 data.insert_command(cmd);
+                                sprintf(buf, "0\n");
+                                writeToClient(i, buf);
                                 break;
                             case command_type::select:
                                 data.select_command(cmd, answer);
@@ -337,3 +341,4 @@ io_status convert_str_to_command(char* str, command& cmd){
 void convert_record_to_str(char* res, record& cmd){
     sprintf(res, "%s %d %d", cmd.get_name(), cmd.get_phone(), cmd.get_group());
 }
+

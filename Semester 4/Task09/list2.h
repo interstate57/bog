@@ -52,7 +52,7 @@ class list2_node : public record
 
 class list2
 {
-    private:
+    protected:
         list2_node * head = nullptr;
     public:
         ~list2(){
@@ -189,7 +189,6 @@ class list2
             insert(cmd.get_name(), cmd.get_phone(), cmd.get_group());
             return 0;
         }
-
 
 };
 
