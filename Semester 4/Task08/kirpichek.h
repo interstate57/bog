@@ -6,14 +6,17 @@
 
 class kirpichek{
     private:
-        int m = 0;
-        int k = 0;
+        int k1 = 0;
+        int m1 = 0;
+        int k2 = 0;
+        int m2 = 0;
         hash_table<const char*> fast_search_name;
         hash_table<int> fast_search_phone;
     public:
         kirpichek() = default;
 
-        kirpichek(int x, int y): m(x), k(y), fast_search_name(m, k), fast_search_phone(m, k){
+        kirpichek(int x, int y, int a, int b): k1(x), m1(y), k2(a), m2(b), 
+        fast_search_name(k1, m1), fast_search_phone(k2, m2){
         }
 
         ~kirpichek() = default;
@@ -26,11 +29,13 @@ class kirpichek{
             return fast_search_phone;
         }
 
-        void init(int x, int y){
-            m = x;
-            k = y;
-            fast_search_name.init(m, k);
-            fast_search_phone.init(m, k);
+        void init(int x, int y, int a, int b){
+            k1 = x;
+            m1 = y;
+            k2 = a;
+            m2 = b;
+            fast_search_name.init(k1, m1);
+            fast_search_phone.init(k2, m2);
         }
 
         int insert(list2_node* curr){
@@ -50,8 +55,8 @@ class kirpichek{
             fast_search_phone.remove_element(curr);
         }
 
-        void go_through_kirpichek(list* answer){
-            fast_search_name.go_through_hashtable(answer);
+        void go_through_kirpichek(list* answer, command& cmd){
+            fast_search_name.go_through_hashtable(answer, cmd);
         }
 };
 

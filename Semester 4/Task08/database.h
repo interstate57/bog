@@ -9,17 +9,19 @@
 
 class database{
     private:
-        int m = 0;
-        int k = 0;
+        int k1 = 0;
+        int m1 = 0;
+        int k2 = 0;
+        int m2 = 0;
         kirpichek solo;
         kirpichek* mnogo_kirpichekov = new kirpichek[LEN_GROUP]; 
         list2 starting_list;
     public:
         database() = default;
 
-        database(int x, int y): m(x), k(y), solo(m, k){
+        database(int x, int y, int a, int b): k1(x), m1(y), k2(a), m2(b), solo(k1, m1, k2, m2){
             for (int i = 0; i < LEN_GROUP; i++){
-                mnogo_kirpichekov[i].init(m, k);
+                mnogo_kirpichekov[i].init(k1, m1, k2, m2);
             }
         }
 
@@ -37,6 +39,48 @@ class database{
 
         kirpichek& get_kirpichek_i(int i){
             return mnogo_kirpichekov[i];
+        }
+
+        io_status read (FILE *fp = stdin, unsigned int max_read = -1){
+            list2_node buf;
+            io_status ret;
+            list2_node *curr;
+            int res_;
+            unsigned int cnt = 1;
+            if ((ret = buf.read(fp)) != io_status::success) return ret;
+            ret = starting_list.insert(buf.get_name(), buf.get_phone(), buf.get_group());
+            if (ret != io_status::success){
+                return ret;
+            }
+            curr = starting_list.get_head();
+            res_ = solo.insert(curr);
+            if (res_ == -1){
+                return io_status::memory;
+            }
+            res_ = mnogo_kirpichekov[curr->get_group() - 1].insert(curr);
+            if (res_ == -1){
+                return io_status::memory;
+            }
+            while(buf.read(fp) == io_status::success){
+                if (cnt == max_read) break;
+                ret = starting_list.insert(buf.get_name(), buf.get_phone(), buf.get_group());
+                if (ret != io_status::success){
+                    return ret;
+                }
+                curr = starting_list.get_head();
+                res_ = solo.insert(curr);
+                if (res_ == -1){
+                    return io_status::memory;
+                }
+                res_ = mnogo_kirpichekov[curr->get_group() - 1].insert(curr);
+                if (res_ == -1){
+                    return io_status::memory;
+                }
+            }
+            if (!feof(fp)){
+                return io_status::format;
+            }
+            return io_status::success;
         }
 
         void delete_command(command& c){
@@ -117,7 +161,7 @@ class database{
                     else{
                         if (c_group_ != condition::eq)
                             return command_select(starting_list.get_head(), &answer, c);
-                        x.go_through_kirpichek(&answer);
+                        x.go_through_kirpichek(&answer, c);
                     }
                 }
                 else{
@@ -145,7 +189,7 @@ class database{
                 else{
                     if (c_group_ != condition::eq)
                         return command_select(starting_list.get_head(), &answer, c);
-                    x.go_through_kirpichek(&answer);
+                    x.go_through_kirpichek(&answer, c);
                 }
             }
             else{
@@ -155,7 +199,7 @@ class database{
                 else{
                     if (c_group_ != condition::eq)
                         return command_select(starting_list.get_head(), &answer, c);
-                    x.go_through_kirpichek(&answer);
+                    x.go_through_kirpichek(&answer, c);
                 }
             }
             return 0;

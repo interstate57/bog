@@ -16,7 +16,9 @@ class hash_table{
     public:
         hash_table() = default;
         hash_table(int x, int y){
-            init(x, y);
+            k = x;
+            m = y;
+            init();
         }
         ~hash_table(){
             delete[] collection_of_data;
@@ -25,9 +27,18 @@ class hash_table{
         void set_k(int x){
             k = x;
         }
-        int init(int x, int y){
-            m = x;
-            k = y;
+        int init(){
+            collection_of_data = new list2_search<T>[k];
+            if (!collection_of_data)
+                return -1;
+            for (int i = 0; i < k; i++){
+                collection_of_data[i].init(m);
+            }
+            return 0;
+        }
+        int init(int a, int b){
+            k = a;
+            m = b;
             collection_of_data = new list2_search<T>[k];
             if (!collection_of_data)
                 return -1;
@@ -58,13 +69,14 @@ class hash_table{
             collection_of_data[index].delete_element(curr);
         }
 
-        void go_through_hashtable(list* answer){
+        void go_through_hashtable(list* answer, command& cmd){
             int i = 0;
             for (; i < k; i++){
                 list2_node_search<T>* curr = collection_of_data[i].get_head();
                 for (;curr; curr = curr->get_next()){
                     for (int j = 0; j < curr->get_curr_number(); j++){
-                        answer->insert(curr->get_data_i(j));
+                        if (cmd.apply(*curr->get_data_i(j)))
+                            answer->insert(curr->get_data_i(j));
                     }
                 }
             }
