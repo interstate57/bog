@@ -3,10 +3,10 @@
 dir="$HOME/students/data"
 
 data="\
-a{n}.txt \
-a{n}_sort_g.txt \
-a{n}_sort_n.txt \
-a{n}_sort_v.txt \
+a1000000.txt \
+a1000000_sort_g.txt \
+a1000000_sort_n.txt \
+a1000000_sort_v.txt \
 "
 
 echo "In ${PWD##*/} running ./server ${data_file} port"

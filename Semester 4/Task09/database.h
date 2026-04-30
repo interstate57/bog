@@ -41,6 +41,48 @@ class database{
             return mnogo_kirpichekov[i];
         }
 
+        io_status read (FILE *fp = stdin, unsigned int max_read = -1){
+            list2_node buf;
+            io_status ret;
+            list2_node *curr;
+            int res_;
+            unsigned int cnt = 1;
+            if ((ret = buf.read(fp)) != io_status::success) return ret;
+            ret = starting_list.insert(buf.get_name(), buf.get_phone(), buf.get_group());
+            if (ret != io_status::success){
+                return ret;
+            }
+            curr = starting_list.get_head();
+            res_ = solo.insert(curr);
+            if (res_ == -1){
+                return io_status::memory;
+            }
+            res_ = mnogo_kirpichekov[curr->get_group() - 1].insert(curr);
+            if (res_ == -1){
+                return io_status::memory;
+            }
+            while(buf.read(fp) == io_status::success){
+                if (cnt == max_read) break;
+                ret = starting_list.insert(buf.get_name(), buf.get_phone(), buf.get_group());
+                if (ret != io_status::success){
+                    return ret;
+                }
+                curr = starting_list.get_head();
+                res_ = solo.insert(curr);
+                if (res_ == -1){
+                    return io_status::memory;
+                }
+                res_ = mnogo_kirpichekov[curr->get_group() - 1].insert(curr);
+                if (res_ == -1){
+                    return io_status::memory;
+                }
+            }
+            if (!feof(fp)){
+                return io_status::format;
+            }
+            return io_status::success;
+        }
+
         void delete_command(command& c){
             list answer;
             int res = select_command(c, answer);

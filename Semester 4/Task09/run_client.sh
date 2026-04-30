@@ -8,7 +8,7 @@ do
  (
   echo "Connecting to host=${host} port=${port}"
   ./client ${host} ${port} < "${dir}/commands6_order_order.txt" > /tmp/res-${port}
-  ./client ${host} ${port} < "${dir}/init_commands.txt" >> /tmp/res-${port}
+  ./client ${host} ${port} < "${dir}/i5000000.txt" >> /tmp/res-${port}
 
   for ((i=0; i<20; i++))
   do
