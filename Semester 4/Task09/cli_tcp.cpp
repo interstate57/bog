@@ -11,20 +11,25 @@
 // Определимся с портом, адресом сервера и другими константами.
 // В данном случае берем произвольный порт и адрес обратной связи
 // (тестируем на одной машине).
-#define SERVER_PORT 5555
-#define SERVER_NAME "127.0.0.1"
+
 #define BUFLEN 512
 // Две вспомогательные функции для чтения/записи (см. ниже)
 void writeToServer (int fd, char *buf);
 void readFromServer (int fd);
 void readAmountFromServer (int fd);
-int main (void){
-    // int i;
+int main (int argc, char* argv[]){
+    int SERVER_PORT;
+    char* SERVER_NAME;
     char buf[BUFLEN];
     int err;
     int sock;
     struct sockaddr_in server_addr;
     struct hostent *hostinfo;
+    if (argc != 3 || sscanf(argv[2], "%d", &SERVER_PORT) != 1){
+        printf("Usage: %s server_name server_port\n", argv[0]);
+        return 1;
+    }
+    SERVER_NAME = argv[1];
     // Получаем информацию о сервере по его DNS имени
     // или точечной нотации IP адреса.
     hostinfo = gethostbyname (SERVER_NAME);

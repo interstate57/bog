@@ -17,7 +17,6 @@
 #include "database.h"
 #include "parser.h"
 // Определимся с номером порта и другими константами.
-#define PORT 5555
 #define BUFLEN 512
 
 // Две вспомогательные функции для чтения/записи (см. ниже)
@@ -101,7 +100,13 @@ int main (int argc, char* argv[]){
     int m1 = 0;
     int k2 = 0;
     int m2 = 0;
+    int PORT;
     FILE* fp;
+    if (argc != 3 || !read_config(argv[0], k1, m1, k2, m2) || sscanf(argv[2], "%d", &PORT) != 1){
+        printf("Usage: %s filename port\n", argv[0]);
+        return 1;
+    }
+    name = argv[1];
     // Создаем TCP сокет для приема запросов на соединение
     sock = socket (PF_INET, SOCK_STREAM, 0);
     if (sock < 0){
@@ -131,11 +136,6 @@ int main (int argc, char* argv[]){
     // возможного значения FD_SETSIZE.
     FD_ZERO (&active_set);
     FD_SET (sock, &active_set);
-    if (argc != 2 || !read_config(argv[0], k1, m1, k2, m2)){
-        printf("Usage: %s filename\n", argv[0]);
-        return 1;
-    }
-    name = argv[1];
     if (!(fp = fopen(name, "r"))) return -1;
     database data(k1, m1, k2, m2);
     ret = data.get_list().read(fp);

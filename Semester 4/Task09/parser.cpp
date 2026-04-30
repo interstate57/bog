@@ -68,11 +68,19 @@ io_status parser::parse(command& cmd, char* string){
             return parse_select(cmd, string + i);
         case command_type::quit:
             return parse_quit(string + i);
+        case command_type::stop:
+            return parse_stop(string + i);
         default:
             return io_status::parsing_error;
     }
 }
 io_status parser::parse_quit(const char* string){
+    //printf("%s\n", string);
+    if (string[0] == ';')
+        return io_status::success;
+    return io_status::parsing_error;
+}
+io_status parser::parse_stop(const char* string){
     //printf("%s\n", string);
     if (string[0] == ';')
         return io_status::success;
